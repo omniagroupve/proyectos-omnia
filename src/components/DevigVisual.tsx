@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { devig, impliedProb, edgePct } from "@/lib/devig";
+import { useT } from "@/components/I18nProvider";
 
 /**
  * MOMENTO FIRMA · el devig, visto
@@ -31,6 +32,7 @@ const MARKET = [
 const COLORS = ["bg-accent", "bg-gold", "bg-sky-400"];
 
 export default function DevigVisual() {
+  const s = useT().devig;
   const ref = useRef<HTMLDivElement>(null);
   const [stage, setStage] = useState(0); // 0 esperando · 1 con vig · 2 sin vig · 3 valor
 
@@ -73,7 +75,7 @@ export default function DevigVisual() {
       <div className="border-b border-line px-6 py-4 sm:px-8">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <div>
-            <div className="label">Mercado 1X2 · una casa cualquiera</div>
+            <div className="label">{s.marketLabel}</div>
             <div className="mt-0.5 font-mono text-sm text-muted">
               {MARKET.map((m) => m.odds.toFixed(2)).join("  ·  ")}
             </div>
@@ -129,7 +131,7 @@ export default function DevigVisual() {
             }`}
           >
             <span className="rounded-lg bg-danger/15 px-3 py-1.5 text-xs font-semibold text-danger">
-              ↑ Ese {vig.toFixed(1)}% de más es el margen de la casa
+              {s.marginNotePrefix} {vig.toFixed(1)}% {s.marginNoteSuffix}
             </span>
           </div>
         </div>
@@ -148,18 +150,18 @@ export default function DevigVisual() {
               >
                 <div className="flex items-center gap-2">
                   <span className={`h-2.5 w-2.5 rounded-full ${COLORS[i]}`} />
-                  <span className="text-sm font-semibold">{m.label}</span>
+                  <span className="text-sm font-semibold">{s.selections[m.label] ?? m.label}</span>
                 </div>
 
                 <dl className="mt-3 space-y-1.5 font-mono text-xs">
                   <div className="flex justify-between">
-                    <dt className="text-muted">Cuota justa</dt>
+                    <dt className="text-muted">{s.fairOdds}</dt>
                     <dd className={showFair ? "text-white" : "text-muted/40"}>
                       {showFair ? fairOdds.toFixed(2) : "—"}
                     </dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-muted">Mejor del mercado</dt>
+                    <dt className="text-muted">{s.bestOdds}</dt>
                     <dd className="text-white">{m.best.toFixed(2)}</dd>
                   </div>
                 </dl>
@@ -189,11 +191,10 @@ export default function DevigVisual() {
           }`}
         >
           <p className="text-center text-sm leading-relaxed text-muted">
-            Quitado el margen, <strong className="text-white">{MARKET[bestIdx].label}</strong>{" "}
-            vale {(1 / fair[bestIdx]).toFixed(2)} — y hay una casa pagándolo a{" "}
+            {s.concl1} <strong className="text-white">{s.selections[MARKET[bestIdx].label] ?? MARKET[bestIdx].label}</strong>{" "}
+            {s.concl2} {(1 / fair[bestIdx]).toFixed(2)} {s.concl3}{" "}
             <strong className="text-accent">{MARKET[bestIdx].best.toFixed(2)}</strong>.
-            Eso es un <strong className="text-accent">+{edges[bestIdx].toFixed(1)}%</strong> de
-            valor esperado. El motor hace esta comparación sobre 40 casas, cada dos horas.
+            {" "}{s.concl4} <strong className="text-accent">+{edges[bestIdx].toFixed(1)}%</strong> {s.concl5}
           </p>
         </div>
       </div>

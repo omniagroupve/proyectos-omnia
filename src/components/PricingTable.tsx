@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { TIERS, TIER_ORDER } from "@/lib/config";
+import { useT } from "@/components/I18nProvider";
 
 /**
  * PRICING SÁNDWICH
@@ -19,6 +20,7 @@ import { TIERS, TIER_ORDER } from "@/lib/config";
  * Ese es todo el truco, y es la razón de que Elite exista aunque venda poco.
  */
 export default function PricingTable({ currentTier }: { currentTier?: string }) {
+  const s = useT().pricing;
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,9 +35,9 @@ export default function PricingTable({ currentTier }: { currentTier?: string }) 
       });
       const json = await res.json();
       if (json.url) window.location.href = json.url;
-      else setError(json.error ?? "No se pudo iniciar el pago");
+      else setError(json.error ?? s.genericError);
     } catch {
-      setError("Error de conexión");
+      setError(s.connectionError);
     } finally {
       setLoading(null);
     }
@@ -84,7 +86,7 @@ export default function PricingTable({ currentTier }: { currentTier?: string }) 
 
               {id === "elite" && t.seatCap && (
                 <div className="mt-1 text-xs font-semibold text-gold">
-                  {t.seatCap} plazas máximo · los picks mueven la línea
+                  {t.seatCap} {s.seatCapSuffix}
                 </div>
               )}
 
@@ -112,7 +114,7 @@ export default function PricingTable({ currentTier }: { currentTier?: string }) 
                   isCurrent ? "cursor-default opacity-50" : "",
                 ].join(" ")}
               >
-                {isCurrent ? "Tu plan actual" : loading === id ? "Cargando…" : t.cta}
+                {isCurrent ? s.currentPlan : loading === id ? s.loading : t.cta}
               </button>
             </div>
           );
@@ -122,9 +124,9 @@ export default function PricingTable({ currentTier }: { currentTier?: string }) 
       {error && <p className="mt-4 text-center text-sm text-danger">{error}</p>}
 
       <p className="mt-8 text-center text-xs leading-relaxed text-muted">
-        Cancela cuando quieras desde tu panel. Sin permanencia.
+        {s.disclaimer}
         <br />
-        Pagos gestionados por Lemon Squeezy · impuestos incluidos según tu país.
+        {s.disclaimer2}
       </p>
     </div>
   );

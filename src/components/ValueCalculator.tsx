@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { useT } from "@/components/I18nProvider";
 
 /**
  * CALCULADORA DE VALOR · directa, sin sermones.
@@ -16,6 +17,7 @@ function devigTwoWay(a: number, b: number): [number, number] {
 }
 
 export default function ValueCalculator() {
+  const s = useT().calculator;
   const [odds, setOdds] = useState("2.10");
   const [prob, setProb] = useState("52");
   const [bankroll, setBankroll] = useState("5000");
@@ -61,7 +63,7 @@ export default function ValueCalculator() {
   return (
     <div className="card overflow-hidden">
       <div className="flex border-b border-line">
-        {([["prob", "Sé la probabilidad"], ["sharp", "Desde una casa sharp"]] as const).map(
+        {([["prob", s.tabProb], ["sharp", s.tabSharp]] as const).map(
           ([m, label]) => (
             <button
               key={m}
@@ -80,30 +82,30 @@ export default function ValueCalculator() {
         {/* Entradas */}
         <div className="space-y-4">
           <div>
-            <label className="label mb-1.5 block">Cuota</label>
+            <label className="label mb-1.5 block">{s.odds}</label>
             <input className={field} value={odds} onChange={(e) => setOdds(e.target.value)} inputMode="decimal" />
           </div>
 
           {mode === "prob" ? (
             <div>
-              <label className="label mb-1.5 block">Probabilidad real (%)</label>
+              <label className="label mb-1.5 block">{s.realProb}</label>
               <input className={field} value={prob} onChange={(e) => setProb(e.target.value)} inputMode="decimal" />
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="label mb-1.5 block">Sharp · a favor</label>
+                <label className="label mb-1.5 block">{s.sharpFor}</label>
                 <input className={field} value={sharpA} onChange={(e) => setSharpA(e.target.value)} inputMode="decimal" />
               </div>
               <div>
-                <label className="label mb-1.5 block">Sharp · en contra</label>
+                <label className="label mb-1.5 block">{s.sharpAgainst}</label>
                 <input className={field} value={sharpB} onChange={(e) => setSharpB(e.target.value)} inputMode="decimal" />
               </div>
             </div>
           )}
 
           <div>
-            <label className="label mb-1.5 block">Bankroll ($)</label>
+            <label className="label mb-1.5 block">{s.bankroll}</label>
             <input className={field} value={bankroll} onChange={(e) => setBankroll(e.target.value)} inputMode="decimal" />
           </div>
         </div>
@@ -111,7 +113,7 @@ export default function ValueCalculator() {
         {/* Resultado */}
         <div className="flex flex-col justify-center">
           {!r ? (
-            <p className="text-center text-sm text-muted">Introduce valores válidos</p>
+            <p className="text-center text-sm text-muted">{s.invalidValues}</p>
           ) : (
             <>
               <div
@@ -124,7 +126,7 @@ export default function ValueCalculator() {
                     : "border-line bg-ink/50"
                 }`}
               >
-                <div className="label">Valor esperado</div>
+                <div className="label">{s.expectedValue}</div>
                 <div
                   className={`mt-1 font-mono text-5xl font-bold tabular-nums ${
                     r.ev > 0 ? "text-accent" : "text-danger"
@@ -135,24 +137,24 @@ export default function ValueCalculator() {
                 </div>
                 <div className="mt-2 text-sm font-medium">
                   {good ? (
-                    <span className="text-accent">Apuesta con valor</span>
+                    <span className="text-accent">{s.goodValue}</span>
                   ) : bad ? (
-                    <span className="text-danger">Sin valor</span>
+                    <span className="text-danger">{s.noValue}</span>
                   ) : (
-                    <span className="text-muted">Valor marginal</span>
+                    <span className="text-muted">{s.marginalValue}</span>
                   )}
                 </div>
               </div>
 
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <div className="rounded-xl border border-line bg-ink/50 p-4">
-                  <div className="label">Cuota justa</div>
+                  <div className="label">{s.fairOdds}</div>
                   <div className="mt-1 font-mono text-2xl font-bold tabular-nums">
                     {r.fairOdds.toFixed(2)}
                   </div>
                 </div>
                 <div className="rounded-xl border border-line bg-ink/50 p-4">
-                  <div className="label">Stake (¼ Kelly)</div>
+                  <div className="label">{s.stakeKelly}</div>
                   <div className="mt-1 font-mono text-2xl font-bold tabular-nums text-accent">
                     {r.kelly > 0 ? `$${Math.round(r.stake).toLocaleString("es")}` : "—"}
                   </div>
@@ -163,9 +165,7 @@ export default function ValueCalculator() {
                 href="/precios"
                 className="btn-primary mt-5 w-full"
               >
-                {good
-                  ? "Recibe estas oportunidades automáticamente"
-                  : "Deja que la IA busque las que sí tienen valor"}
+                {good ? s.ctaGood : s.ctaBad}
               </Link>
             </>
           )}

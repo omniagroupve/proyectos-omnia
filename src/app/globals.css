@@ -86,6 +86,7 @@ body {
   /* Botón con brillo al pasar por encima */
   .btn-primary {
     @apply relative overflow-hidden;
+    box-shadow: 0 12px 40px -12px rgba(0, 214, 128, 0.55);
   }
   .btn-primary::before {
     content: "";
@@ -94,6 +95,30 @@ body {
   }
   .btn-primary:hover::before {
     @apply translate-x-full;
+  }
+
+  /* Insignia circular con glow, para iconos destacados (pasos, features) */
+  .icon-badge {
+    @apply mx-auto grid h-16 w-16 place-items-center rounded-2xl text-3xl;
+    background: linear-gradient(135deg, rgba(0, 214, 128, 0.22), rgba(231, 183, 95, 0.14));
+    box-shadow: 0 0 0 1px rgba(0, 214, 128, 0.25) inset, 0 16px 40px -18px rgba(0, 214, 128, 0.55);
+  }
+
+  /* Badge "en vivo" con borde en degradado y glow pulsante */
+  .live-badge {
+    @apply relative rounded-full;
+    background: linear-gradient(180deg, rgba(20,24,29,.9), rgba(14,17,21,.9));
+    box-shadow: 0 0 0 1px rgba(0, 214, 128, 0.3) inset, 0 8px 30px -14px rgba(0, 214, 128, 0.5);
+  }
+
+  /* Tarjeta de stat con acento superior en degradado */
+  .stat-card {
+    @apply relative overflow-hidden;
+  }
+  .stat-card::before {
+    content: "";
+    @apply absolute inset-x-0 top-0 h-[3px];
+    background: linear-gradient(90deg, transparent, theme(colors.accent), transparent);
   }
 }
 

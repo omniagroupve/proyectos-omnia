@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useT } from "@/components/I18nProvider";
 
 /**
  * NARRATIVA POR SCROLL
@@ -13,38 +14,16 @@ import { useEffect, useRef, useState } from "react";
  * pequeña es una trampa de usabilidad.
  */
 
-const STEPS = [
-  {
-    n: "01",
-    t: "Lectura del mercado",
-    d: "Cada dos horas el motor consulta las cuotas de más de 40 operadores para cada evento de 20 competiciones. Las casas de margen bajo, las que aceptan apostadores ganadores, pesan cinco veces más que las recreativas.",
-    stat: "40+",
-    statLabel: "casas por evento",
-  },
-  {
-    n: "02",
-    t: "Eliminación del margen",
-    d: "Se quita el vig de cada casa por separado, con el método power. El orden importa: promediar cuotas con margen y de-vigar después mete un sesgo sistemático, porque cada operador carga un margen distinto.",
-    stat: "3",
-    statLabel: "métodos de devig",
-  },
-  {
-    n: "03",
-    t: "Detección de valor",
-    d: "Con la probabilidad real en la mano, se busca la mejor cuota disponible en cualquier casa. Si paga por encima de esa probabilidad hay ventaja matemática. Por debajo del 2% no se publica nada.",
-    stat: "2%",
-    statLabel: "umbral mínimo",
-  },
-  {
-    n: "04",
-    t: "Verificación por CLV",
-    d: "Al cerrar el partido se compara la cuota tomada con la de cierre del mercado. Es la prueba objetiva de si el modelo va por delante. Sobre datos reales: 83% de los picks batieron el cierre.",
-    stat: "+3.81%",
-    statLabel: "CLV medio medido",
-  },
+const NUMS = [
+  { n: "01", stat: "40+" },
+  { n: "02", stat: "3" },
+  { n: "03", stat: "2%" },
+  { n: "04", stat: "+3.81%" },
 ];
 
 export default function ScrollProcess() {
+  const { steps, pasoLabel } = useT().process;
+  const STEPS = NUMS.map((num, i) => ({ ...num, ...steps[i] }));
   const [active, setActive] = useState(0);
   const refs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -104,7 +83,7 @@ export default function ScrollProcess() {
             <div className="pointer-events-none absolute inset-0 grid-bg opacity-40" />
 
             <div className="relative">
-              <div className="label">Paso {STEPS[active].n}</div>
+              <div className="label">{pasoLabel} {STEPS[active].n}</div>
 
               <div
                 key={active}

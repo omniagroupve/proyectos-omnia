@@ -61,7 +61,7 @@ function outcomeKey(name: string, point?: number): string {
  * Promediar cuotas con vig y de-vigar después mete un sesgo sistemático
  * porque cada casa tiene margen distinto. Este orden importa de verdad.
  */
-function consensusProbs(
+export function consensusProbs(
   bookmakers: Bookmaker[],
   marketKey: string
 ): {
@@ -116,7 +116,7 @@ function consensusProbs(
 }
 
 /** Normaliza probabilidades dentro de cada grupo de línea (spreads/totals). */
-function normalizeByLine(
+export function normalizeByLine(
   probs: Map<string, number>,
   lineByKey: Map<string, number | null>
 ): Map<string, number> {

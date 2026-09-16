@@ -1,5 +1,5 @@
 {
-  "name": "omnia-picks",
+  "name": "pix",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,13 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:engine": "node --experimental-strip-types scripts/test-engine.ts",
+    "test:engine": "node --experimental-strip-types scripts/test-engine.ts && node --experimental-strip-types scripts/test-parlay.ts",
+    "test:parlay": "node --experimental-strip-types scripts/test-parlay.ts",
     "data": "bash scripts/fetch-data.sh",
+    "data:seed": "node --experimental-strip-types scripts/seed-history.ts",
     "backtest": "node --experimental-strip-types scripts/backtest.ts data/*.csv",
     "diagnose": "node --experimental-strip-types scripts/diagnose.ts data/*.csv",
     "validate:model": "node --experimental-strip-types scripts/validate-model.ts data/*.csv"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.125.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.45.4",
     "next": "^15.5.23",

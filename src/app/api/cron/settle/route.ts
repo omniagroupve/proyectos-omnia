@@ -11,6 +11,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { fetchScores } from "@/lib/odds";
 import { clvPct, profitUnits } from "@/lib/devig";
+import { settleParlay, parlayProfitUnits } from "@/lib/parlay";
 import { LEAGUES } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
@@ -91,7 +92,7 @@ export async function GET(req: Request) {
   }
 
   const sb = supabaseAdmin();
-  const report = { scored: 0, settled: 0, clvComputed: 0, errors: [] as string[] };
+  const report = { scored: 0, settled: 0, clvComputed: 0, parlaysSettled: 0, errors: [] as string[] };
 
   // 1) Traer resultados y marcar eventos completados
   for (const league of LEAGUES) {
@@ -168,6 +169,69 @@ export async function GET(req: Request) {
       report.settled++;
     } catch (e) {
       report.errors.push(`pick ${p.id}: ${(e as Error).message}`);
+    }
+  }
+
+  // 3) Liquidar piernas de parlays y, cuando todas estén resueltas, el parlay.
+  //    El CLV del parlay es el de la cuota combinada contra el cierre combinado:
+  //    la misma métrica que en un pick, aplicada al producto.
+  const { data: openParlays } = await sb
+    .from("parlays")
+    .select("id, stake_units, combined_odds, parlay_legs(position, event_id, market, selection, line, odds_taken, result, closing_odds, clv_pct)")
+    .eq("status", "published")
+    .limit(200);
+
+  for (const par of openParlays ?? []) {
+    try {
+      const legs = (par.parlay_legs ?? []) as Array<{
+        position: number; event_id: string; market: string; selection: string; line: number | null;
+        odds_taken: number; result: Res | "pending"; closing_odds: number | null; clv_pct: number | null;
+      }>;
+      if (legs.length === 0) continue;
+
+      // Cada pierna se liquida con el pick equivalente ya resuelto, o con el
+      // marcador del evento si esa pierna no tenía pick asociado.
+      for (const leg of legs.filter((l) => l.result === "pending")) {
+        const { data: ev } = await sb
+          .from("events").select("home_team, away_team, home_score, away_score, completed")
+          .eq("id", leg.event_id).single();
+        if (!ev?.completed || ev.home_score == null || ev.away_score == null) continue;
+
+        const result = resolvePick(leg.market, leg.selection, leg.line, ev.home_team, ev.away_team, ev.home_score, ev.away_score);
+
+        const { data: closing } = await sb
+          .from("odds_snapshots").select("payload").eq("event_id", leg.event_id)
+          .order("captured_at", { ascending: false }).limit(1).single();
+        const closingOdds = closing ? findClosingOdds(closing.payload, leg.market, leg.selection, leg.line) : null;
+
+        await sb.from("parlay_legs").update({
+          result,
+          closing_odds: closingOdds,
+          clv_pct: closingOdds ? Math.round(clvPct(Number(leg.odds_taken), closingOdds) * 1000) / 1000 : null,
+        }).eq("parlay_id", par.id).eq("position", leg.position);
+
+        leg.result = result;
+        leg.closing_odds = closingOdds;
+      }
+
+      const status = settleParlay(legs.map((l) => l.result));
+      if (status === "pending") continue;
+
+      const settledLegs = legs.map((l) => ({ odds: Number(l.odds_taken), result: l.result as Res | "void" }));
+      const closingCombined = legs.every((l) => l.closing_odds)
+        ? legs.reduce((o, l) => o * Number(l.closing_odds), 1)
+        : null;
+
+      await sb.from("parlays").update({
+        status,
+        closing_odds: closingCombined ? Math.round(closingCombined * 1000) / 1000 : null,
+        clv_pct: closingCombined ? Math.round(clvPct(Number(par.combined_odds), closingCombined) * 1000) / 1000 : null,
+        profit_units: parlayProfitUnits(settledLegs, Number(par.stake_units)),
+        settled_at: new Date().toISOString(),
+      }).eq("id", par.id);
+      report.parlaysSettled++;
+    } catch (e) {
+      report.errors.push(`parlay ${par.id}: ${(e as Error).message}`);
     }
   }
 

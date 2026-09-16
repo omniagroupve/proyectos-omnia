@@ -5,14 +5,21 @@
 export type TierId = "free" | "pro" | "elite";
 
 /**
- * PRICING SÁNDWICH (efecto decoy)
- * ────────────────────────────────
- * Free  → captura el tráfico SEO. Se monetiza con ads + afiliados.
- * Pro   → el plan que QUIERES vender. Todo el valor real.
- * Elite → el ancla. Su trabajo principal es hacer que Pro parezca barato.
+ * PRICING SÁNDWICH (efecto decoy) · calibrado para LatAm
+ * ──────────────────────────────────────────────────────
+ * Free  → el producto de verdad para el recreativo. Monetiza por AFILIACIÓN,
+ *         que es el ingreso principal del negocio, no un extra.
+ * Pro   → el plan que QUIERES vender. Destapa los números al que ya entiende.
+ * Elite → el ancla. Su trabajo es hacer que Pro parezca la opción sensata.
  *
- * Regla: Elite ≈ 2.5x Pro. Si Elite fuera 1.3x, la gente compararía features.
- * A 2.5x nadie compara: Pro se lee como "la opción sensata".
+ * POR QUÉ ESTOS PRECIOS Y NO $197/$497:
+ * La regla del 5% (abajo) exige un bankroll de 20× el precio mensual. A $197
+ * eso son $3.940, que excluye a prácticamente todo el mercado LatAm. A $19 son
+ * $380: el bankroll real de un apostador habitual de la región. El precio alto
+ * no era caro, era matemáticamente incompatible con nuestro propio ICP.
+ *
+ * Elite a 2.6× Pro mantiene el efecto sándwich: a esa distancia nadie compara
+ * funcionalidades, simplemente lee Pro como "la opción razonable".
  */
 export const TIERS = {
   free: {
@@ -21,16 +28,16 @@ export const TIERS = {
     price: 0,
     priceLabel: "$0",
     cadence: "para siempre",
-    tagline: "Prueba el track record antes de pagar",
+    tagline: "Arma parlays y compara cuotas sin pagar nada",
     features: [
-      "1 pick al día, con 3h de retraso",
-      "Track record histórico completo y auditable",
-      "Análisis previos de todos los partidos",
-      "Calculadora de valor esperado",
+      "Parlays con IA todos los días",
+      "Comparador de cuotas de todas las casas de tu país",
+      "Calculadora de valor esperado, sin registro",
+      "Track record público completo",
     ],
     limits: [
-      "Sin picks en tiempo real",
-      "Sin props ni live",
+      "Los parlays llegan con 3h de retraso",
+      "Sin alertas por Telegram",
       "Con publicidad",
     ],
     cta: "Empezar gratis",
@@ -39,17 +46,17 @@ export const TIERS = {
   pro: {
     id: "pro" as const,
     name: "Pro",
-    price: 197,
-    priceLabel: "$197",
+    price: 19,
+    priceLabel: "$19",
     cadence: "/ mes",
-    tagline: "Para quien apuesta en serio con bankroll de $5k+",
+    tagline: "Para quien ya sabe que la cuota importa más que el pronóstico",
     features: [
-      "Todos los picks en tiempo real (sin retraso)",
-      "Alertas instantáneas por Telegram y email",
-      "Todos los deportes y mercados principales",
-      "Stake sugerido con Kelly fraccionado sobre tu bankroll",
-      "Dashboard de rendimiento personal (tu ROI, no el nuestro)",
-      "Comparador de cuotas entre casas",
+      "Parlays en tiempo real, sin retraso",
+      "Parlays con IA ilimitados",
+      "Alertas instantáneas por Telegram",
+      "CLV y track record completo de cada pick",
+      "Stake sugerido sobre tu bankroll (Kelly fraccionado)",
+      "Tu rendimiento personal, no el nuestro",
       "Sin publicidad",
     ],
     limits: [],
@@ -60,18 +67,17 @@ export const TIERS = {
   elite: {
     id: "elite" as const,
     name: "Elite",
-    price: 497,
-    priceLabel: "$497",
+    price: 49,
+    priceLabel: "$49",
     cadence: "/ mes",
-    tagline: "Bankroll de $25k+. Plazas limitadas por diseño.",
+    tagline: "Para bankroll alto. Plazas limitadas por diseño.",
     features: [
       "Todo lo de Pro",
       "Player props y mercados en vivo",
-      "Picks de alta convicción antes que el resto del mercado",
+      "Picks de alta convicción antes que el resto",
       "Modelo de arbitraje y middles",
-      "Sesión 1:1 mensual de gestión de bankroll",
-      "Línea directa con el equipo cuantitativo",
       "Acceso a la API de picks",
+      "Línea directa con el equipo cuantitativo",
     ],
     limits: [],
     cta: "Solicitar plaza",
@@ -83,6 +89,15 @@ export const TIERS = {
     seatCap: 50,
   },
 } satisfies Record<TierId, Record<string, unknown>>;
+
+/**
+ * Bankroll mínimo recomendado para cada plan, según la regla del 5%.
+ * Es 20× el precio mensual. Se enseña en el propio comparador de planes:
+ * decirle a alguien que NO compre es lo que hace que el que compra se quede.
+ */
+export function minBankrollFor(tier: TierId): number {
+  return TIERS[tier].price * 20;
+}
 
 export const TIER_ORDER: TierId[] = ["free", "pro", "elite"];
 
@@ -110,36 +125,84 @@ export interface LeagueConfig {
   name: string;       // nombre en español
   group: string;
   seo: boolean;
-  priority: number;   // 1 = máxima. Ordena la ingesta si el presupuesto aprieta.
+  /**
+   * 1 = se sondea cada 2h · 2 = cada 4h · 3 = cada 8h.
+   * No es sólo un orden: es el presupuesto de créditos (ver POLL_HOURS).
+   */
+  priority: 1 | 2 | 3;
+  /** País principal, para destacar la liga local a cada visitante. */
+  country?: string;
 }
 
+/**
+ * CONTROL DE CRÉDITOS · por qué el sondeo va escalonado
+ * ──────────────────────────────────────────────────────
+ * Una llamada a /odds cuesta (nº mercados × nº regiones) créditos: con
+ * h2h+spreads+totals en eu+us son 6 por liga y llamada.
+ *
+ * Sondear 40 ligas cada 2h serían 86.000 créditos/mes y el plan de $59 trae
+ * 100.000: te quedas sin margen para el histórico ni para un mes con más
+ * partidos. Escalonando por prioridad bajan a ~46.000 y caben de sobra las
+ * ligas de toda LatAm, que es lo que queremos: que SIEMPRE haya algo que
+ * enseñar, sin bajar el umbral de valor.
+ */
+export const POLL_HOURS: Record<1 | 2 | 3, number> = { 1: 2, 2: 4, 3: 8 };
+
+/**
+ * Qué ligas tocan a esta hora. El cron corre cada 2h y llama a esto, así que
+ * el escalonado es automático y no hay que acordarse de nada.
+ */
+export function leaguesForHour(utcHour: number): LeagueConfig[] {
+  return LEAGUES.filter((l) => utcHour % POLL_HOURS[l.priority] === 0);
+}
+
+/**
+ * Universo de competiciones. Cubre toda LatAm porque el producto tiene que
+ * tener algo que enseñar cada día, en cualquier país y a cualquier hora.
+ *
+ * Los `key` son sport_keys de The Odds API y cambian cuando una competición
+ * está fuera de temporada. `npm run leagues:verify` los contrasta contra el
+ * endpoint /sports (que es gratis y no consume créditos) y avisa de los que
+ * ya no existen o están inactivos. Córrelo al configurar la API key y una vez
+ * al mes.
+ */
 export const LEAGUES: LeagueConfig[] = [
-  // ── Fútbol · España y LatAm (máxima prioridad SEO en español)
-  { key: "soccer_spain_la_liga",       slug: "laliga",        name: "LaLiga",                group: "Fútbol", seo: true, priority: 1 },
-  { key: "soccer_uefa_champs_league",  slug: "champions",     name: "Champions League",      group: "Fútbol", seo: true, priority: 1 },
-  { key: "soccer_epl",                 slug: "premier",       name: "Premier League",        group: "Fútbol", seo: true, priority: 1 },
-  { key: "soccer_mexico_ligamx",       slug: "liga-mx",       name: "Liga MX",               group: "Fútbol", seo: true, priority: 1 },
-  { key: "soccer_conmebol_copa_libertadores", slug: "libertadores", name: "Copa Libertadores", group: "Fútbol", seo: true, priority: 1 },
-  { key: "soccer_italy_serie_a",       slug: "serie-a",       name: "Serie A",               group: "Fútbol", seo: true, priority: 2 },
-  { key: "soccer_germany_bundesliga",  slug: "bundesliga",    name: "Bundesliga",            group: "Fútbol", seo: true, priority: 2 },
-  { key: "soccer_france_ligue_one",    slug: "ligue-1",       name: "Ligue 1",               group: "Fútbol", seo: true, priority: 2 },
-  { key: "soccer_argentina_primera_division", slug: "liga-argentina", name: "Liga Profesional Argentina", group: "Fútbol", seo: true, priority: 2 },
-  { key: "soccer_brazil_campeonato",   slug: "brasileirao",   name: "Brasileirão",           group: "Fútbol", seo: true, priority: 2 },
-  { key: "soccer_uefa_europa_league",  slug: "europa-league", name: "Europa League",         group: "Fútbol", seo: true, priority: 2 },
-  { key: "soccer_usa_mls",             slug: "mls",           name: "MLS",                   group: "Fútbol", seo: true, priority: 3 },
+  // ── Fútbol · LatAm (el corazón del producto) ────────────────────────────
+  { key: "soccer_mexico_ligamx",              slug: "liga-mx",           name: "Liga MX",                    group: "Fútbol", seo: true, priority: 1, country: "MX" },
+  { key: "soccer_argentina_primera_division", slug: "liga-argentina",    name: "Liga Profesional Argentina", group: "Fútbol", seo: true, priority: 1, country: "AR" },
+  { key: "soccer_brazil_campeonato",          slug: "brasileirao",       name: "Brasileirão",                group: "Fútbol", seo: true, priority: 1, country: "BR" },
+  { key: "soccer_colombia_primera_a",         slug: "liga-colombia",     name: "Liga BetPlay",               group: "Fútbol", seo: true, priority: 1, country: "CO" },
+  { key: "soccer_chile_campeonato",           slug: "liga-chile",        name: "Primera División de Chile",  group: "Fútbol", seo: true, priority: 1, country: "CL" },
+  { key: "soccer_conmebol_copa_libertadores", slug: "libertadores",      name: "Copa Libertadores",          group: "Fútbol", seo: true, priority: 1 },
+  { key: "soccer_conmebol_copa_sudamericana", slug: "sudamericana",      name: "Copa Sudamericana",          group: "Fútbol", seo: true, priority: 2 },
+  { key: "soccer_brazil_serie_b",             slug: "brasileirao-b",     name: "Brasileirão Série B",        group: "Fútbol", seo: true, priority: 3, country: "BR" },
+  { key: "soccer_peru_primera_division",      slug: "liga-peru",         name: "Liga 1 de Perú",             group: "Fútbol", seo: true, priority: 3, country: "PE" },
 
-  // ── USA
-  { key: "basketball_nba",             slug: "nba",           name: "NBA",                   group: "Baloncesto", seo: true, priority: 1 },
-  { key: "americanfootball_nfl",       slug: "nfl",           name: "NFL",                   group: "Fútbol americano", seo: true, priority: 1 },
-  { key: "baseball_mlb",               slug: "mlb",           name: "MLB",                   group: "Béisbol", seo: true, priority: 1 },
-  { key: "icehockey_nhl",              slug: "nhl",           name: "NHL",                   group: "Hockey", seo: true, priority: 3 },
-  { key: "americanfootball_ncaaf",     slug: "ncaaf",         name: "NCAA Football",         group: "Fútbol americano", seo: false, priority: 3 },
-  { key: "basketball_ncaab",           slug: "ncaab",         name: "NCAA Basketball",       group: "Baloncesto", seo: false, priority: 3 },
+  // ── Fútbol · Europa (la que ve todo LatAm) ──────────────────────────────
+  { key: "soccer_spain_la_liga",              slug: "laliga",            name: "LaLiga",                     group: "Fútbol", seo: true, priority: 1, country: "ES" },
+  { key: "soccer_uefa_champs_league",         slug: "champions",         name: "Champions League",           group: "Fútbol", seo: true, priority: 1 },
+  { key: "soccer_epl",                        slug: "premier",           name: "Premier League",             group: "Fútbol", seo: true, priority: 1 },
+  { key: "soccer_italy_serie_a",              slug: "serie-a",           name: "Serie A",                    group: "Fútbol", seo: true, priority: 2 },
+  { key: "soccer_germany_bundesliga",         slug: "bundesliga",        name: "Bundesliga",                 group: "Fútbol", seo: true, priority: 2 },
+  { key: "soccer_france_ligue_one",           slug: "ligue-1",           name: "Ligue 1",                    group: "Fútbol", seo: true, priority: 2 },
+  { key: "soccer_uefa_europa_league",         slug: "europa-league",     name: "Europa League",              group: "Fútbol", seo: true, priority: 2 },
+  { key: "soccer_spain_segunda_division",     slug: "laliga-2",          name: "LaLiga Hypermotion",         group: "Fútbol", seo: true, priority: 3, country: "ES" },
+  { key: "soccer_portugal_primeira_liga",     slug: "liga-portugal",     name: "Primeira Liga",              group: "Fútbol", seo: true, priority: 3 },
+  { key: "soccer_netherlands_eredivisie",     slug: "eredivisie",        name: "Eredivisie",                 group: "Fútbol", seo: true, priority: 3 },
+  { key: "soccer_usa_mls",                    slug: "mls",               name: "MLS",                        group: "Fútbol", seo: true, priority: 2 },
 
-  // ── Otros
-  { key: "basketball_euroleague",      slug: "euroliga",      name: "Euroliga",              group: "Baloncesto", seo: true, priority: 3 },
-  { key: "tennis_atp_aus_open_singles",slug: "atp",           name: "ATP",                   group: "Tenis", seo: true, priority: 2 },
-  { key: "mma_mixed_martial_arts",     slug: "ufc",           name: "UFC / MMA",             group: "MMA", seo: true, priority: 2 },
+  // ── USA · el relleno perfecto para la madrugada de LatAm ────────────────
+  { key: "basketball_nba",                    slug: "nba",               name: "NBA",                        group: "Baloncesto", seo: true, priority: 1 },
+  { key: "americanfootball_nfl",              slug: "nfl",               name: "NFL",                        group: "Fútbol americano", seo: true, priority: 1 },
+  { key: "baseball_mlb",                      slug: "mlb",               name: "MLB",                        group: "Béisbol", seo: true, priority: 1 },
+  { key: "icehockey_nhl",                     slug: "nhl",               name: "NHL",                        group: "Hockey", seo: true, priority: 3 },
+  { key: "americanfootball_ncaaf",            slug: "ncaaf",             name: "NCAA Football",              group: "Fútbol americano", seo: false, priority: 3 },
+  { key: "basketball_ncaab",                  slug: "ncaab",             name: "NCAA Basketball",            group: "Baloncesto", seo: false, priority: 3 },
+
+  // ── Otros deportes ──────────────────────────────────────────────────────
+  { key: "basketball_euroleague",             slug: "euroliga",          name: "Euroliga",                   group: "Baloncesto", seo: true, priority: 3 },
+  { key: "mma_mixed_martial_arts",            slug: "ufc",               name: "UFC / MMA",                  group: "MMA", seo: true, priority: 2 },
+  { key: "soccer_fifa_world_cup",             slug: "mundial",           name: "Mundial",                    group: "Fútbol", seo: true, priority: 1 },
 ];
 
 export const SEO_LEAGUES = LEAGUES.filter((l) => l.seo);

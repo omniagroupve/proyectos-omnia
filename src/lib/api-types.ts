@@ -188,6 +188,16 @@ export interface BuildParlayResponse {
     window: { from: string; to: string };
   };
   aiRequestId: string | null;
+  /**
+   * Presente cuando `parlays` viene vacío. No es un error: con esos filtros
+   * no había valor real, y bajar el umbral para fabricar uno sería engañar.
+   * `suggestion` trae qué proponerle al usuario para que encuentre algo.
+   */
+  noValue?: {
+    reason: string;
+    suggestion: string;
+    candidatesConsidered: number;
+  };
 }
 
 export interface EvaluateParlayRequest {

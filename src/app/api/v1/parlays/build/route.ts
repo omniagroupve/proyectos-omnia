@@ -92,8 +92,28 @@ export async function POST(req: Request) {
   }));
 
   const built = buildParlays(candidates, { legs: intent.legs, risk: intent.risk, maxResults: count });
+
+  // Que no haya valor NO es un error: es la respuesta honesta. Bajar el umbral
+  // para que siempre salga algo es exactamente lo que convierte un producto
+  // como este en humo. Devolvemos 200 con el motivo y qué probar en su lugar.
   if (built.length === 0) {
-    return errors.notFound("Ningún parlay con valor para esos filtros. Prueba con otra liga, más horas o menos piernas");
+    const res: BuildParlayResponse = {
+      parlays: [],
+      intent,
+      aiRequestId: null,
+      noValue: {
+        reason: candidates.length === 0
+          ? "No hay partidos con cuotas analizadas en esa ventana."
+          : `Se analizaron ${candidates.length} selecciones y ninguna combinación llegó al mínimo de valor.`,
+        suggestion: intent.leagues.length > 0
+          ? "Prueba sin filtrar por liga, o amplía a los próximos días."
+          : intent.legs > 2
+          ? "Prueba con menos piernas: cuantas más, más difícil que todas tengan valor."
+          : "Amplía la ventana a los próximos días o baja el nivel de riesgo.",
+        candidatesConsidered: candidates.length,
+      },
+    };
+    return ok(res);
   }
 
   const narration = await narrateParlays(built, body.prompt ?? "");

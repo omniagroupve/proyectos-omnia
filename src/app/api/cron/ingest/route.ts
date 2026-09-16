@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { fetchOdds, eventSlug, isNearClose } from "@/lib/odds";
 import { analyzeEvent, selectDailyPortfolio, assignTier } from "@/lib/model";
-import { LEAGUES, ENGINE, FREE_DELAY_HOURS } from "@/lib/config";
+import { LEAGUES, leaguesForHour, ENGINE, FREE_DELAY_HOURS } from "@/lib/config";
 import type { CandidatePick } from "@/lib/model";
 
 export const dynamic = "force-dynamic";
@@ -27,8 +27,6 @@ export async function GET(req: Request) {
 
   const sb = supabaseAdmin();
   const url = new URL(req.url);
-  // ?priority=1 permite ingestas escalonadas para ahorrar créditos
-  const maxPriority = Number(url.searchParams.get("priority") ?? 3);
 
   const report = {
     leagues: 0,
@@ -40,7 +38,13 @@ export async function GET(req: Request) {
   };
 
   const allCandidates: CandidatePick[] = [];
-  const targets = LEAGUES.filter((l) => l.priority <= maxPriority);
+
+  // Sondeo escalonado por prioridad: las ligas grandes cada 2h, las de relleno
+  // cada 4h u 8h. Así cabe toda LatAm en el plan de créditos (ver POLL_HOURS).
+  // ?all=1 fuerza el barrido completo, para la primera ingesta o para depurar.
+  const targets = url.searchParams.get("all") === "1"
+    ? LEAGUES
+    : leaguesForHour(new Date().getUTCHours());
 
   for (const league of targets) {
     try {

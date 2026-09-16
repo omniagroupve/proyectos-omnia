@@ -1,0 +1,38 @@
+{
+  "name": "pix",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test:engine": "node --experimental-strip-types scripts/test-engine.ts && node --experimental-strip-types scripts/test-parlay.ts",
+    "test:parlay": "node --experimental-strip-types scripts/test-parlay.ts",
+    "test:api": "node --experimental-strip-types scripts/test-api.ts",
+    "leagues:verify": "node --experimental-strip-types scripts/verify-leagues.ts",
+    "books:verify": "node --experimental-strip-types scripts/verify-books.ts",
+    "data": "bash scripts/fetch-data.sh",
+    "data:seed": "node --experimental-strip-types scripts/seed-history.ts",
+    "backtest": "node --experimental-strip-types scripts/backtest.ts data/*.csv",
+    "diagnose": "node --experimental-strip-types scripts/diagnose.ts data/*.csv",
+    "validate:model": "node --experimental-strip-types scripts/validate-model.ts data/*.csv"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.125.0",
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.45.4",
+    "next": "^15.5.23",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3"
+  }
+}

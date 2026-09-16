@@ -3,6 +3,7 @@ import { ok, errors, getApiUser, supabaseForRequest, readJson } from "@/lib/api/
 import { buildParlays, legFromPick, type ParlayLeg } from "@/lib/parlay";
 import { parseIntent, narrateParlays, estimateCostUsd, AI_LIMITS, type Intent } from "@/lib/ai";
 import { legLabel } from "@/lib/api/legs";
+import { mapParlayRow, PARLAY_SELECT } from "@/lib/api/parlay-rows";
 import { DEMO_PARLAYS } from "@/lib/demo-parlays";
 import { FREE_DELAY_HOURS } from "@/lib/config";
 import type { BuildParlayRequest, BuildParlayResponse, Parlay } from "@/lib/api-types";
@@ -36,6 +37,43 @@ export async function POST(req: Request) {
   if (!user) return errors.unauthorized();
   const sb = supabaseForRequest(req);
   const admin = supabaseAdmin();
+
+  // ── Plan gratuito: servir la tanda pre-generada por el cron ─────────────
+  // No se llama a la IA ni se consume cuota. El coste de la IA deja de crecer
+  // con el número de usuarios gratuitos, que es lo que hace viable el plan.
+  // RLS decide cuáles puede ver (la ventana de retraso del free).
+  if (user.tier === "free") {
+    const { data: rows, error: preErr } = await sb
+      .from("parlays").select(PARLAY_SELECT)
+      .eq("status", "published")
+      .order("published_at", { ascending: false })
+      .limit(20);
+    if (preErr) return errors.internal(preErr.message);
+
+    const intentRisk = body.risk ?? "medium";
+    const todos = (rows ?? []).map(mapParlayRow);
+    // Primero los del riesgo pedido; si no hay, cualquiera antes que nada.
+    const preferidos = todos.filter((p) => p.risk === intentRisk);
+    const parlays = (preferidos.length ? preferidos : todos).slice(0, count);
+
+    const res: BuildParlayResponse = {
+      parlays,
+      intent: {
+        sports: body.sports ?? [], leagues: body.leagues ?? [],
+        legs: body.legs ?? 3, risk: intentRisk,
+        window: { from: new Date().toISOString(), to: new Date(Date.now() + 72 * 3600_000).toISOString() },
+      },
+      aiRequestId: null,
+      ...(parlays.length === 0 && {
+        noValue: {
+          reason: "Todavía no hay parlays publicados para tu plan.",
+          suggestion: "Los del plan gratuito se publican con unas horas de retraso. Vuelve más tarde o pásate a Pro para armarlos a tu medida.",
+          candidatesConsidered: 0,
+        },
+      }),
+    };
+    return ok(res);
+  }
 
   // Cuota diaria por plan. El contador se incrementa de forma atómica ANTES de
   // llamar a la IA: si dos peticiones entran a la vez, sólo una pasa el límite.
@@ -138,7 +176,9 @@ export async function POST(req: Request) {
       legs_count: p.legsCount, joint_prob: p.jointProb, combined_odds: p.combinedOdds, fair_odds: p.fairOdds,
       edge_pct: p.edgePct, stake_units: p.stakeUnits, tier_required: user.tier, status: "published",
       published_at: now.toISOString(),
-      free_visible_at: user.tier === "free" ? now.toISOString() : new Date(now.getTime() + FREE_DELAY_HOURS * 3600_000).toISOString(),
+      // Aquí el usuario es Pro o Elite (el free sale antes con la tanda del
+      // cron), así que su parlay a medida entra al plan gratuito con retraso.
+      free_visible_at: new Date(now.getTime() + FREE_DELAY_HOURS * 3600_000).toISOString(),
       ai_request_id: aiRow?.id ?? null,
     }).select("id").single();
     if (row) {

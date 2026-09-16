@@ -11,6 +11,7 @@
     "test:parlay": "node --experimental-strip-types scripts/test-parlay.ts",
     "test:api": "node --experimental-strip-types scripts/test-api.ts",
     "leagues:verify": "node --experimental-strip-types scripts/verify-leagues.ts",
+    "books:verify": "node --experimental-strip-types scripts/verify-books.ts",
     "data": "bash scripts/fetch-data.sh",
     "data:seed": "node --experimental-strip-types scripts/seed-history.ts",
     "backtest": "node --experimental-strip-types scripts/backtest.ts data/*.csv",

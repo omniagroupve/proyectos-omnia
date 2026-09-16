@@ -17,7 +17,25 @@ import { createHash } from "node:crypto";
 import type { RiskLevel, ParlayEvaluation } from "./parlay.ts";
 import type { Tier } from "./api-types.ts";
 
-export const AI_MODEL = "claude-opus-5";
+/**
+ * DOS MODELOS, DOS TRABAJOS DISTINTOS
+ * ────────────────────────────────────
+ * Narrar un parlay es volumen alto y tarea sencilla: recibe cifras ya
+ * calculadas y escribe dos frases. Haiku lo hace bien y cuesta ~5x menos.
+ * Responder preguntas libres es volumen bajo (sólo Pro) y sí pide cabeza.
+ *
+ * Y lo más barato de todo: sin ANTHROPIC_API_KEY no se llama a ningún modelo.
+ * Las plantillas de `templateNarration()` producen español correcto y honesto
+ * por $0. Arranca así y enciende el LLM cuando el producto ya facture.
+ */
+export const AI_MODEL_NARRATION = process.env.AI_MODEL_NARRATION ?? "claude-haiku-4-5";
+export const AI_MODEL_CHAT = process.env.AI_MODEL_CHAT ?? "claude-opus-5";
+
+/**
+ * Interruptor de coste. `templates` no gasta un céntimo; `ai` enciende el
+ * modelo. Por defecto: IA si hay key, plantillas si no.
+ */
+export const NARRATION_MODE = (process.env.NARRATION_MODE ?? "auto") as "auto" | "templates" | "ai";
 
 /** Construcciones con IA por día según plan. null = sin límite. */
 export const AI_LIMITS: Record<Tier, number | null> = { free: 1, pro: 20, elite: null };
@@ -118,13 +136,20 @@ function hash(s: string): string {
   return createHash("sha256").update(s).digest("hex").slice(0, 32);
 }
 
-async function structured<T>(kind: string, user: string, schema: Record<string, unknown>, maxTokens = 4000): Promise<AiCallResult<T>> {
+/** El fallback por rechazo sólo existe en los modelos de gama alta. */
+const supportsFallback = (model: string) => model.startsWith("claude-opus-5") || model.startsWith("claude-fable");
+
+async function structured<T>(
+  kind: string, user: string, schema: Record<string, unknown>,
+  model: string, maxTokens = 4000
+): Promise<AiCallResult<T>> {
   const t0 = Date.now();
   const res = await client().beta.messages.create({
-    model: AI_MODEL,
+    model,
     max_tokens: maxTokens,
-    betas: ["server-side-fallback-2026-07-01"],
-    fallbacks: "default",
+    ...(supportsFallback(model)
+      ? { betas: ["server-side-fallback-2026-07-01" as const], fallbacks: "default" as const }
+      : {}),
     system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
     messages: [{ role: "user", content: user }],
     output_config: { format: { type: "json_schema", schema } },
@@ -179,7 +204,8 @@ export async function parseIntent(prompt: string, ctx: IntentContext): Promise<A
     "hoursAhead: 24 si dice hoy/esta noche, 96 si dice fin de semana, 72 si no dice nada.",
     `Petición: """${prompt.slice(0, 500)}"""`,
   ].join("\n");
-  const r = await structured<{ sports: string[]; leagues: string[]; legs: number; risk: RiskLevel; hoursAhead: number }>("intent", user, INTENT_SCHEMA, 800);
+  const r = await structured<{ sports: string[]; leagues: string[]; legs: number; risk: RiskLevel; hoursAhead: number }>(
+    "intent", user, INTENT_SCHEMA, AI_MODEL_NARRATION, 800);
   const validLeagues = new Set(ctx.availableLeagues.map((l) => l.slug));
   const validSports = new Set(ctx.availableSports.map((s) => s.key));
   return {
@@ -215,7 +241,7 @@ function templateNarration(p: ParlayEvaluation, i: number): Narrated {
 
 export async function narrateParlays(parlays: ParlayEvaluation[], intentPrompt: string): Promise<AiCallResult<Narrated[]>> {
   if (parlays.length === 0) return { data: [], meta: mockMeta("") };
-  if (!isAiConfigured()) {
+  if (NARRATION_MODE === "templates" || !isAiConfigured()) {
     return { data: parlays.map(templateNarration), meta: mockMeta(JSON.stringify(parlays.map((p) => p.legs.map((l) => l.label))) ) };
   }
   const payload = parlays.map((p, index) => ({
@@ -234,7 +260,8 @@ export async function narrateParlays(parlays: ParlayEvaluation[], intentPrompt: 
     "Devuelve JSON con el mismo index y las mismas positions.",
     JSON.stringify(payload),
   ].join("\n");
-  const r = await structured<{ parlays: Array<{ index: number; title: string; summary: string; legs: Array<{ position: number; rationale: string }> }> }>("build", user, EXPLAIN_SCHEMA, 6000);
+  const r = await structured<{ parlays: Array<{ index: number; title: string; summary: string; legs: Array<{ position: number; rationale: string }> }> }>(
+    "build", user, EXPLAIN_SCHEMA, AI_MODEL_NARRATION, 6000);
   const data = parlays.map((p, i) => {
     const n = r.data.parlays.find((x) => x.index === i);
     if (!n) return templateNarration(p, i);
@@ -268,10 +295,11 @@ export async function explainParlay(parlay: ParlayEvaluation & { title?: string;
     "Responde en máximo 120 palabras, en español, sin prometer nada.",
   ].join("\n");
   const res = await client().beta.messages.create({
-    model: AI_MODEL,
+    model: AI_MODEL_CHAT,
     max_tokens: 1000,
-    betas: ["server-side-fallback-2026-07-01"],
-    fallbacks: "default",
+    ...(supportsFallback(AI_MODEL_CHAT)
+      ? { betas: ["server-side-fallback-2026-07-01" as const], fallbacks: "default" as const }
+      : {}),
     system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
     messages: [{ role: "user", content: user }],
   });
@@ -287,10 +315,19 @@ export async function explainParlay(parlay: ParlayEvaluation & { title?: string;
   };
 }
 
-/** Coste aproximado en USD para el log. Precios de lista de claude-opus-5. */
+/** Precios de lista por millón de tokens (entrada, salida). */
+const PRICES: Record<string, [number, number]> = {
+  "claude-haiku-4-5": [1, 5],
+  "claude-sonnet-5": [2, 10],
+  "claude-opus-5": [5, 25],
+};
+
+/** Coste aproximado en USD para el log. Sin esto no sabes qué te cuesta crecer. */
 export function estimateCostUsd(meta: AiCallResult<unknown>["meta"]): number | null {
   if (meta.mocked || meta.inputTokens == null || meta.outputTokens == null) return null;
+  const [inPrice, outPrice] = PRICES[meta.model] ?? PRICES["claude-opus-5"];
   const cached = meta.cacheRead ?? 0;
   const fresh = Math.max(0, meta.inputTokens - cached);
-  return +(fresh * 5 / 1e6 + cached * 0.5 / 1e6 + meta.outputTokens * 25 / 1e6).toFixed(6);
+  // La lectura de caché cuesta una décima parte de la entrada normal.
+  return +(fresh * inPrice / 1e6 + cached * inPrice * 0.1 / 1e6 + meta.outputTokens * outPrice / 1e6).toFixed(6);
 }

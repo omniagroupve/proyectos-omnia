@@ -10,9 +10,30 @@
 // Por eso el plan de $59 (100k créditos) es el mínimo viable para "todos
 // los deportes". El de $30 se te queda corto en la primera semana.
 
-import { ENGINE } from "./config";
+import { ENGINE } from "./config.ts";
 
 const BASE = process.env.ODDS_API_BASE || "https://api.the-odds-api.com/v4";
+
+/**
+ * FRENO DE MANO GLOBAL
+ * ────────────────────
+ * Con PIX_PAUSE_EXTERNAL=1 ninguna llamada de pago sale a la red, en ningún
+ * archivo. Sirve para desarrollar y dejar trabajar a un agente sin que un
+ * bucle mal escrito se coma los créditos del mes.
+ *
+ * Los crons lo consultan arriba y salen limpio; el guardia de `get()` es la
+ * segunda barrera, por si alguien añade una ruta nueva y se le olvida mirar.
+ */
+export function externalPaused(): boolean {
+  return process.env.PIX_PAUSE_EXTERNAL === "1";
+}
+
+export class ExternalPausedError extends Error {
+  constructor(api = "The Odds API") {
+    super(`${api} en pausa (PIX_PAUSE_EXTERNAL=1). No se hizo ninguna llamada.`);
+    this.name = "ExternalPausedError";
+  }
+}
 
 export interface Outcome {
   name: string;
@@ -78,6 +99,8 @@ function readQuota(res: Response): QuotaInfo {
 }
 
 async function get<T>(path: string, params: Record<string, string>): Promise<{ data: T; quota: QuotaInfo }> {
+  if (externalPaused()) throw new ExternalPausedError();
+
   const url = new URL(`${BASE}${path}`);
   url.searchParams.set("apiKey", apiKey());
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);

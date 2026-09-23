@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "Bash(npm run lint)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run test:engine)",
+      "Bash(npm run test:parlay)",
+      "Bash(npm run test:api)",
+      "Bash(npm run backtest:*)",
+      "Bash(npm run diagnose:*)",
+      "Bash(npm run validate:model)",
+      "Bash(npm install)",
+      "Bash(npm ci)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push -u origin claude/*)",
+      "Bash(git push origin claude/*)",
+      "Bash(git fetch:*)",
+      "Bash(git checkout -b claude/*)",
+      "Bash(curl -s http://localhost:*)",
+      "Bash(curl -s -o /dev/null http://localhost:*)",
+      "Read(//home/user/proyectos-omnia/**)",
+      "Edit(//home/user/proyectos-omnia/src/**)",
+      "Edit(//home/user/proyectos-omnia/apps/**)",
+      "Edit(//home/user/proyectos-omnia/scripts/**)",
+      "Edit(//home/user/proyectos-omnia/supabase/**)",
+      "Edit(//home/user/proyectos-omnia/docs/**)"
+    ],
+    "ask": [
+      "Bash(npm run data:seed)",
+      "Bash(npm run books:verify)",
+      "Bash(npm run leagues:verify)",
+      "Bash(npm run data)",
+      "Bash(npx vercel:*)",
+      "Bash(vercel:*)",
+      "Bash(supabase:*)",
+      "Bash(curl:*)",
+      "Bash(gh:*)",
+      "Edit(//home/user/proyectos-omnia/.env*)"
+    ],
+    "deny": [
+      "Bash(git push:*origin main*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean -f:*)",
+      "Bash(git branch -D:*)",
+      "Read(//home/user/proyectos-omnia/.env.local)",
+      "Read(//home/user/proyectos-omnia/apps/web/.env.local)"
+    ]
+  },
+  "env": {
+    "PIX_PAUSE_EXTERNAL": "1",
+    "TELEGRAM_DRY_RUN": "1"
+  }
+}

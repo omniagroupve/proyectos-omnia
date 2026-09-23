@@ -13,6 +13,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { fetchRecentResults, fetchCurrentSeason, isApiFootballConfigured, sameTeam } from "@/lib/apifootball";
+import { externalPaused } from "@/lib/odds";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -21,6 +22,9 @@ export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
   if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "no autorizado" }, { status: 401 });
+  }
+  if (externalPaused()) {
+    return NextResponse.json({ ok: true, paused: true, nota: "PIX_PAUSE_EXTERNAL=1: no se llamó a API-Football." });
   }
   if (!isApiFootballConfigured()) {
     return NextResponse.json({ ok: false, error: "APIFOOTBALL_KEY no configurada" }, { status: 503 });
@@ -64,6 +68,13 @@ export async function GET(req: Request) {
       report.leagues++;
       report.fixtures += fixtures.length;
       report.quotaRemaining = quota.remaining;
+
+      // API-Football corta por llamadas/día, no por créditos. Dejamos un
+      // margen para que el resto de crons del día no se queden sin cupo.
+      if (quota.remaining !== null && quota.remaining < 200) {
+        report.errors.push(`Cupo bajo (${quota.remaining} llamadas). Cron detenido.`);
+        break;
+      }
 
       for (const ev of pending) {
         // Ventana de 36 h: cubre aplazamientos de horario sin casar la jornada

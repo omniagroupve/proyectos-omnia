@@ -132,6 +132,51 @@ Si tocas la matemática, `npm run test:engine` tiene que seguir en verde.
 
 ---
 
+## Autonomía · qué hago solo y qué no
+
+Este acuerdo está aquí porque **no tengo memoria entre sesiones**: cada vez
+arranco leyendo este archivo. Si no está escrito, no existe.
+
+### Hago solo, sin preguntar
+
+Escribir y refactorizar código · correr `build`, `test:engine`, `test:api` y
+`tsc` · arreglar errores de tipos y de CI · commitear y subir a la rama de
+trabajo `claude/*` · vigilar el PR y responder a comentarios de revisión ·
+investigar, leer y documentar.
+
+Todo esto es reversible con git. Si me equivoco, se deshace.
+
+### Nunca solo, aunque me digan "hazlo todo tú"
+
+- **Mandar mensajes a usuarios reales** (broadcast de Telegram sin
+  `TELEGRAM_DRY_RUN=1`). No se deshace.
+- **Desplegar a producción** o correr migraciones contra la base de datos real.
+- **Tocar el dinero**: Lemon Squeezy, precios, enlaces de afiliación.
+- **`git push` a `main`**, force-push, o borrar ramas.
+- **Abrir cuentas o gastar dinero del dueño** (no puedo, y tampoco debo).
+- **Decidir precio, marca, mercado o texto legal.** Puedo recomendar con
+  números; la decisión es suya.
+
+No es que técnicamente no pueda: es que las consecuencias caen sobre él y no
+se deshacen.
+
+### Frenos que hacen esto seguro
+
+| Variable | Qué hace |
+|---|---|
+| `PIX_PAUSE_EXTERNAL=1` | Ninguna llamada de pago sale a la red (Odds API, API-Football, Anthropic). La IA cae a plantillas. **Puesto por defecto en `.claude/settings.json`.** |
+| `TELEGRAM_DRY_RUN=1` | El broadcast calcula a quién enviaría y no envía nada. **Puesto por defecto.** |
+| `NARRATION_MODE=templates` | Fuerza coste de IA $0 aunque haya API key. |
+
+Los crons de `ingest`, `settle` y `fixtures` además se detienen solos cuando
+queda poco saldo. `parlays/build` y `parlays/[id]/explain` tienen cuota diaria
+por plan, incrementada de forma atómica **antes** de llamar al modelo.
+
+Para una corrida real: quitar `PIX_PAUSE_EXTERNAL` del entorno. Es una decisión
+consciente, no un descuido.
+
+---
+
 ## Seguridad
 
 - `SUPABASE_SERVICE_ROLE_KEY` **nunca** con prefijo `NEXT_PUBLIC_`.

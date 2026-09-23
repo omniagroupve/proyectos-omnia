@@ -11,7 +11,7 @@
 // pasarse implica un 429 y bloqueo temporal del bot.
 
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/server";
+import { supabaseAdmin, isSupabaseConfigured } from "@/lib/supabase/server";
 import { sendMessage, formatPick, type PickMessage } from "@/lib/telegram";
 import { canAccess, type TierId } from "@/lib/config";
 
@@ -22,10 +22,25 @@ const BATCH = 25;
 const PAUSE_MS = 1100;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+/**
+ * SIMULACRO
+ * ─────────
+ * Con TELEGRAM_DRY_RUN=1 se calcula todo — a quién le tocaría cada pick, con
+ * qué texto — pero no se envía nada ni se marca como notificado.
+ *
+ * Existe por un motivo concreto: ejecutar esta ruta en local con las claves de
+ * producción manda mensajes REALES a personas reales, y eso no se deshace.
+ * Ponlo a 1 en cualquier entorno que no sea producción.
+ */
+const dryRun = () => process.env.TELEGRAM_DRY_RUN === "1";
+
 export async function POST(req: Request) {
   const secret = process.env.CRON_SECRET;
   if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "no autorizado" }, { status: 401 });
+  }
+  if (!isSupabaseConfigured()) {
+    return NextResponse.json({ ok: false, error: "Base de datos no configurada." }, { status: 503 });
   }
 
   const sb = supabaseAdmin();
@@ -58,7 +73,7 @@ export async function POST(req: Request) {
     (s) => !s.tier_expires_at || new Date(s.tier_expires_at) > new Date()
   );
 
-  const report = { picks: picks.length, sent: 0, failed: 0, channel: 0 };
+  const report = { picks: picks.length, sent: 0, failed: 0, channel: 0, dryRun: dryRun(), wouldSend: 0 };
 
   for (const p of picks) {
     const ev = (p as unknown as {
@@ -85,6 +100,11 @@ export async function POST(req: Request) {
     const recipients = active.filter((s) =>
       canAccess(s.tier as TierId, p.tier_required as TierId)
     );
+
+    if (dryRun()) {
+      report.wouldSend += recipients.length;
+      continue;   // ni envía ni marca como notificado: el pick sigue pendiente
+    }
 
     for (let i = 0; i < recipients.length; i += BATCH) {
       const slice = recipients.slice(i, i + BATCH);
@@ -115,6 +135,9 @@ export async function GET(req: Request) {
 
   const channel = process.env.TELEGRAM_CHANNEL_PUBLIC;
   if (!channel) return NextResponse.json({ ok: true, note: "canal público sin configurar" });
+  if (!isSupabaseConfigured()) {
+    return NextResponse.json({ ok: false, error: "Base de datos no configurada." }, { status: 503 });
+  }
 
   const sb = supabaseAdmin();
   const { data: picks } = await sb
@@ -134,6 +157,7 @@ export async function GET(req: Request) {
     const ev = (p as unknown as {
       events: { home_team: string; away_team: string; sport_title: string; commence_time: string };
     }).events;
+    if (dryRun()) { posted++; continue; }
     try {
       await sendMessage(channel, formatPick({
         sport: ev.sport_title, home: ev.home_team, away: ev.away_team,
@@ -152,5 +176,5 @@ export async function GET(req: Request) {
     }
   }
 
-  return NextResponse.json({ ok: true, posted });
+  return NextResponse.json({ ok: true, posted, dryRun: dryRun() });
 }

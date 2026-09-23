@@ -15,7 +15,7 @@
 // La IA en vivo queda para Pro y Elite, que es volumen bajo y sí lo pagan.
 
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/server";
+import { supabaseAdmin, isSupabaseConfigured } from "@/lib/supabase/server";
 import { buildParlays, legFromPick, type ParlayLeg, type RiskLevel } from "@/lib/parlay";
 import { narrateParlays, estimateCostUsd } from "@/lib/ai";
 import { legLabel } from "@/lib/api/legs";
@@ -46,6 +46,9 @@ export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
   if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "no autorizado" }, { status: 401 });
+  }
+  if (!isSupabaseConfigured()) {
+    return NextResponse.json({ ok: false, error: "Base de datos no configurada." }, { status: 503 });
   }
 
   const sb = supabaseAdmin();

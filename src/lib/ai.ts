@@ -41,6 +41,9 @@ export const NARRATION_MODE = (process.env.NARRATION_MODE ?? "auto") as "auto" |
 export const AI_LIMITS: Record<Tier, number | null> = { free: 1, pro: 20, elite: null };
 
 export function isAiConfigured(): boolean {
+  // El freno de mano global apaga también la IA: con PIX_PAUSE_EXTERNAL=1 se
+  // cae a plantillas en vez de llamar al modelo. Coste $0, cero sorpresas.
+  if (process.env.PIX_PAUSE_EXTERNAL === "1") return false;
   return Boolean(process.env.ANTHROPIC_API_KEY);
 }
 

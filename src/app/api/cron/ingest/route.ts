@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/server";
+import { supabaseAdmin, isSupabaseConfigured } from "@/lib/supabase/server";
 import { fetchOdds, eventSlug, isNearClose } from "@/lib/odds";
 import { analyzeEvent, selectDailyPortfolio, assignTier } from "@/lib/model";
 import { LEAGUES, leaguesForHour, ENGINE, FREE_DELAY_HOURS } from "@/lib/config";
@@ -23,6 +23,11 @@ function authorized(req: Request): boolean {
 export async function GET(req: Request) {
   if (!authorized(req)) {
     return NextResponse.json({ error: "no autorizado" }, { status: 401 });
+  }
+  // Sin base de datos, degradar limpio. Un 500 con traza en un cron sólo
+  // sirve para que el monitor grite sin decir qué pasa.
+  if (!isSupabaseConfigured()) {
+    return NextResponse.json({ ok: false, error: "Base de datos no configurada." }, { status: 503 });
   }
 
   const sb = supabaseAdmin();

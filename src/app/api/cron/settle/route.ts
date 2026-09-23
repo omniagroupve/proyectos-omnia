@@ -8,8 +8,8 @@
 // Ese es exactamente el argumento de venta.
 
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/server";
-import { fetchScores } from "@/lib/odds";
+import { supabaseAdmin, isSupabaseConfigured } from "@/lib/supabase/server";
+import { fetchScores, externalPaused } from "@/lib/odds";
 import { clvPct, profitUnits } from "@/lib/devig";
 import { settleParlay, parlayProfitUnits } from "@/lib/parlay";
 import { LEAGUES } from "@/lib/config";
@@ -90,14 +90,28 @@ export async function GET(req: Request) {
   if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "no autorizado" }, { status: 401 });
   }
+  if (!isSupabaseConfigured()) {
+    return NextResponse.json({ ok: false, error: "Base de datos no configurada." }, { status: 503 });
+  }
 
   const sb = supabaseAdmin();
-  const report = { scored: 0, settled: 0, clvComputed: 0, parlaysSettled: 0, errors: [] as string[] };
+  const report = { scored: 0, settled: 0, clvComputed: 0, parlaysSettled: 0, creditsRemaining: null as number | null, errors: [] as string[] };
 
-  // 1) Traer resultados y marcar eventos completados
-  for (const league of LEAGUES) {
+  // 1) Traer resultados y marcar eventos completados.
+  //    Con el freno de mano puesto se salta la parte de red y se liquida con
+  //    lo que ya haya en la base: útil para probar sin gastar créditos.
+  for (const league of externalPaused() ? [] : LEAGUES) {
     try {
-      const { data: scores } = await fetchScores(league.key, 3);
+      const { data: scores, quota } = await fetchScores(league.key, 3);
+      report.creditsRemaining = quota.remaining;
+
+      // Mismo freno que en la ingesta: quedarse sin créditos a mitad de mes es
+      // peor que liquidar unas pocas ligas más tarde.
+      if (quota.remaining !== null && quota.remaining < 2000) {
+        report.errors.push(`Créditos bajos (${quota.remaining}). Liquidación detenida.`);
+        break;
+      }
+
       for (const s of scores) {
         if (!s.completed || !s.scores) continue;
         const home = s.scores.find((x) => x.name === s.home_team);

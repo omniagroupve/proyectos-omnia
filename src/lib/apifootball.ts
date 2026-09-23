@@ -12,6 +12,8 @@
 // liga y día es nada. El contador viene en las cabeceras y se registra igual
 // que los créditos de The Odds API.
 
+import { externalPaused, ExternalPausedError } from "./odds.ts";
+
 const BASE = process.env.APIFOOTBALL_BASE || "https://v3.football.api-sports.io";
 
 export interface ApiFootballQuota {
@@ -54,6 +56,8 @@ function key(): string {
 async function get<T>(path: string, params: Record<string, string>): Promise<{ data: T; quota: ApiFootballQuota }> {
   const url = new URL(`${BASE}${path}`);
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
+
+  if (externalPaused()) throw new ExternalPausedError("API-Football");
 
   const res = await fetch(url.toString(), {
     headers: { "x-apisports-key": key() },

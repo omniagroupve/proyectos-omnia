@@ -5,10 +5,18 @@
 //
 // OJO CON LOS CRÉDITOS: una llamada a /odds cuesta
 //   créditos = nº de mercados × nº de regiones
-// Pedir h2h,spreads,totals en eu,us = 6 créditos por llamada, por liga.
-// Con 20 ligas cada 2h → 20 × 6 × 12 = 1.440 créditos/día ≈ 43k/mes.
-// Por eso el plan de $59 (100k créditos) es el mínimo viable para "todos
-// los deportes". El de $30 se te queda corto en la primera semana.
+//
+// Con el escalonado por prioridad de `leaguesForHour`, las 29 ligas salen a
+// 225 llamadas/día = 6.750/mes. Lo que decide el plan es cuántos mercados y
+// regiones pidas encima de esas llamadas:
+//
+//   h2h + eu            →   6.750 créditos/mes   plan de $30 (20k): sobra
+//   h2h + eu,us         →  13.500                plan de $30: cabe
+//   3 mercados + eu,us  →  40.500                aquí sí hace falta el de $59
+//
+// Por eso .env.example arranca en h2h + eu: spreads y totals se encienden
+// cuando el negocio los pague. `npm run doctor` calcula esto con la
+// configuración real y dice qué plan toca.
 
 import { ENGINE } from "./config.ts";
 

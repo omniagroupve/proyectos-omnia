@@ -35,8 +35,11 @@ del juego.
 ```bash
 npm run dev              # desarrollo
 npm run build            # producción — debe pasar antes de cualquier commit
-npm run test:engine      # 72 tests: 37 del motor matemático + 35 de parlays
+npm run test:engine      # 84 tests: 37 del motor + 35 de parlays + 12 de frenos
 npm run test:parlay      # sólo los del motor de parlays
+npm run test:api         # 40 de integración de /api/v1 (con `npm run dev` arriba)
+npm run doctor           # qué falta en el entorno · sin red · no imprime claves
+npm run doctor -- --online   # además pregunta saldo, base de datos y bot
 npm run validate:model   # valida Dixon-Coles por recuperación de parámetros
 npm run data             # descarga el histórico (Europa + ARG/BRA/MEX/USA + tenis)
 npm run data:seed        # carga ese histórico en Supabase (hist_matches/hist_odds)
@@ -84,7 +87,18 @@ src/app/
 supabase/
   schema.sql            Base original (profiles, events, odds_snapshots, picks…)
   migrations/002_pix.sql  Catálogo, jurisdicciones, histórico propio, parlays, IA
+
+.github/workflows/
+  ci.yml                Backend (124 pruebas) y frontend, en cada push
+  cron.yml              EL RELOJ: despierta las rutas de cron por horario
 ```
+
+**El motor corre desde GitHub Actions, no desde Vercel.** El plan Hobby sólo
+ejecuta un cron al día, que no sirve para sondear cada 2h. `vercel.json` se
+queda por si algún día se pasa a Pro; si se pasa, hay que desactivar
+`cron.yml` o cada ruta se llamaría dos veces. Los horarios sólo se disparan
+desde la rama principal y necesitan los secretos `PIX_URL` y `CRON_SECRET` en
+el repo. Puesta en marcha completa en `docs/encender-el-motor.md`.
 
 ---
 
@@ -168,6 +182,11 @@ se deshacen.
 | `TELEGRAM_DRY_RUN=1` | El broadcast calcula a quién enviaría y no envía nada. **Puesto por defecto.** |
 | `NARRATION_MODE=templates` | Fuerza coste de IA $0 aunque haya API key. |
 
+`npm run doctor` carga `.env.local` para poder diagnosticar, pero **nunca
+imprime el valor de una clave**: sólo si está y si tiene la forma correcta. Su
+salida se puede pegar en cualquier sitio. El archivo en sí sigue siendo
+ilegible para el agente (`deny` en `.claude/settings.json`).
+
 Los crons de `ingest`, `settle` y `fixtures` además se detienen solos cuando
 queda poco saldo. `parlays/build` y `parlays/[id]/explain` tienen cuota diaria
 por plan, incrementada de forma atómica **antes** de llamar al modelo.
@@ -188,7 +207,7 @@ consciente, no un descuido.
 
 ## Estado actual
 
-- Build limpio, 38 rutas, 37/37 tests en verde.
+- Build limpio, 38 rutas. 84/84 pruebas del motor y 40/40 de la API en verde.
 - Backtest sobre 207 partidos reales: **CLV +3.81%, 83% bate el cierre**,
   control (apostar todo) −4.94%.
 - Modelo validado: recupera ataque r=0.91, defensa r=0.94, ventaja de campo
@@ -221,4 +240,8 @@ picks cualquier cambio es sobreajuste.
 - Las fuentes cargan por `<link>` a Google Fonts. **Migrar a
   `next/font/google`** para autoalojarlas: quita la petición externa y el salto
   de layout. Está comentado en `src/app/layout.tsx`.
-- Vercel Hobby sólo permite 1 cron diario. Para producción hace falta Pro.
+- `next lint` no tiene configuración de ESLint: abre un asistente interactivo,
+  así que CI no lo ejecuta. O se configura ESLint o se quita el script.
+- `apps/web/` sigue siendo un esqueleto a la espera de que Codex meta ahí
+  `pix-local`. Los cables (`lib/api.ts`, `lib/supabase.ts`, `vite.config.ts`)
+  ya están puestos.

@@ -140,11 +140,10 @@ export interface LeagueConfig {
  * Una llamada a /odds cuesta (nº mercados × nº regiones) créditos: con
  * h2h+spreads+totals en eu+us son 6 por liga y llamada.
  *
- * Sondear 40 ligas cada 2h serían 86.000 créditos/mes y el plan de $59 trae
- * 100.000: te quedas sin margen para el histórico ni para un mes con más
- * partidos. Escalonando por prioridad bajan a ~46.000 y caben de sobra las
- * ligas de toda LatAm, que es lo que queremos: que SIEMPRE haya algo que
- * enseñar, sin bajar el umbral de valor.
+ * Sondear las 29 ligas cada 2h serían 10.440 llamadas/mes. Escalonando por
+ * prioridad bajan a 6.750, que es lo que permite cubrir toda LatAm dentro del
+ * plan más barato de The Odds API sin bajar el umbral de valor: el objetivo es
+ * que SIEMPRE haya algo que enseñar, a cualquier hora y en cualquier país.
  */
 export const POLL_HOURS: Record<1 | 2 | 3, number> = { 1: 2, 2: 4, 3: 8 };
 

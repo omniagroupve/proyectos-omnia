@@ -209,6 +209,16 @@ Y en Supabase (pestaña SQL Editor), pega y ejecuta en este orden:
 
 > `.env.local` **nunca** se sube a GitHub. Ya está bloqueado, pero que lo sepas.
 
+Para comprobar de una sola vez que no falta nada:
+
+```bash
+npm run doctor
+```
+
+Y para poner Pix en internet y que trabaje solo —despliegue, el reloj que lo
+despierta cada 2h y la primera carga de datos— sigue con
+**`docs/encender-el-motor.md`**.
+
 ---
 
 ## Chuleta de comandos

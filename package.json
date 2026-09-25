@@ -11,6 +11,7 @@
     "test:parlay": "node --experimental-strip-types scripts/test-parlay.ts",
     "test:brakes": "node --experimental-strip-types scripts/test-brakes.ts",
     "test:api": "node --experimental-strip-types scripts/test-api.ts",
+    "doctor": "node --env-file-if-exists=.env.local --experimental-strip-types scripts/doctor.ts",
     "leagues:verify": "node --experimental-strip-types scripts/verify-leagues.ts",
     "books:verify": "node --experimental-strip-types scripts/verify-books.ts",
     "data": "bash scripts/fetch-data.sh",

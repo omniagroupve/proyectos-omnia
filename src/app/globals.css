@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-ink text-white antialiased;
+  font-feature-settings: "ss01", "cv01";
+  background-image:
+    radial-gradient(60rem 40rem at 50% -10%, rgba(0, 214, 128, 0.07), transparent 70%),
+    radial-gradient(40rem 30rem at 85% 20%, rgba(231, 183, 95, 0.05), transparent 70%);
+  background-attachment: fixed;
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-6xl px-5;
+  }
+  .card {
+    @apply rounded-2xl border border-line bg-panel/70 backdrop-blur;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold transition;
+  }
+  .btn-primary {
+    @apply btn bg-accent text-ink hover:brightness-110;
+  }
+  .btn-ghost {
+    @apply btn border border-line text-white hover:border-accent/60 hover:text-accent;
+  }
+  .label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-muted;
+  }
+  .stat {
+    @apply font-mono text-3xl font-bold tabular-nums;
+  }
+}
+
+.blur-locked {
+  filter: blur(6px);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── Animaciones globales ─────────────────────────────────────────────── */
+
+/* Nadie debería marearse usando la web. No negociable. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer components {
+  /* Texto con gradiente animado, para el titular */
+  .text-gradient {
+    @apply bg-gradient-to-r from-accent via-emerald-300 to-accent bg-clip-text text-transparent;
+    background-size: 200% auto;
+    animation: gradient-pan 8s ease infinite;
+  }
+
+  /* Tarjeta que reacciona al puntero */
+  .card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+  .card-hover:hover {
+    @apply -translate-y-1 border-accent/40;
+    box-shadow: 0 20px 50px -22px rgba(0, 214, 128, 0.35);
+  }
+
+  /* Barrido de luz para elementos que cargan */
+  .shimmer {
+    @apply relative overflow-hidden;
+  }
+  .shimmer::after {
+    content: "";
+    @apply absolute inset-0 -translate-x-full animate-shimmer;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent);
+  }
+
+  /* Botón con brillo al pasar por encima */
+  .btn-primary {
+    @apply relative overflow-hidden;
+    box-shadow: 0 12px 40px -12px rgba(0, 214, 128, 0.55);
+  }
+  .btn-primary::before {
+    content: "";
+    @apply absolute inset-0 -translate-x-full transition-transform duration-500;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
+  }
+  .btn-primary:hover::before {
+    @apply translate-x-full;
+  }
+
+  /* Insignia circular con glow, para iconos destacados (pasos, features) */
+  .icon-badge {
+    @apply mx-auto grid h-16 w-16 place-items-center rounded-2xl text-3xl;
+    background: linear-gradient(135deg, rgba(0, 214, 128, 0.22), rgba(231, 183, 95, 0.14));
+    box-shadow: 0 0 0 1px rgba(0, 214, 128, 0.25) inset, 0 16px 40px -18px rgba(0, 214, 128, 0.55);
+  }
+
+  /* Badge "en vivo" con borde en degradado y glow pulsante */
+  .live-badge {
+    @apply relative rounded-full;
+    background: linear-gradient(180deg, rgba(20,24,29,.9), rgba(14,17,21,.9));
+    box-shadow: 0 0 0 1px rgba(0, 214, 128, 0.3) inset, 0 8px 30px -14px rgba(0, 214, 128, 0.5);
+  }
+
+  /* Tarjeta de stat con acento superior en degradado */
+  .stat-card {
+    @apply relative overflow-hidden;
+  }
+  .stat-card::before {
+    content: "";
+    @apply absolute inset-x-0 top-0 h-[3px];
+    background: linear-gradient(90deg, transparent, theme(colors.accent), transparent);
+  }
+}
+
+/* Malla de fondo sutil, da profundidad sin pesar */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(34,38,46,.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,38,46,.5) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 40%, transparent 100%);
+}
+
+/* ── Grano de película ────────────────────────────────────────────────────
+   Un degradado perfectamente liso se lee como plantilla. El grano rompe el
+   banding en las transiciones oscuras y da textura. SVG inline: cero peticiones. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+}

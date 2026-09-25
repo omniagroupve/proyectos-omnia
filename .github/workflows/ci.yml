@@ -1,0 +1,117 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# CI · la red de seguridad
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Dos trabajos en paralelo:
+#   · la cocina (backend): tipos, compilación y las 124 pruebas
+#   · el salón (apps/web): tipos y compilación, que es lo que detecta al
+#     instante un cambio de contrato que rompa el frontend de Codex
+#
+# Existe porque buena parte del código de este repo lo escribe un agente que
+# empuja solo a `claude/*`: sin esto, un fallo se descubre días después y a
+# mano.
+#
+# LOS FRENOS VAN FIJOS EN EL ENTORNO. Aunque alguien añadiera una clave de API
+# a los secretos del repo, este workflow no puede gastar créditos ni mandar un
+# mensaje de Telegram a nadie.
+#
+# No corre `npm run lint`: `next lint` sin configuración de ESLint abre un
+# asistente interactivo y colgaría el runner hasta agotar el tiempo.
+
+name: CI
+
+on:
+  push:
+    branches: ["main", "claude/**"]
+  pull_request:
+  workflow_dispatch:
+
+# Un push nuevo cancela la verificación anterior de la misma rama.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  PIX_PAUSE_EXTERNAL: "1"
+  TELEGRAM_DRY_RUN: "1"
+
+jobs:
+  verificar:
+    name: Backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Instalar
+        run: npm ci
+
+      - name: Tipos
+        run: npx tsc --noEmit
+
+      - name: Compilar
+        run: npm run build
+
+      - name: Motor, parlays y frenos
+        run: npm run test:engine
+
+      # Informativo: sin claves siempre dirá que faltan. Sirve para ver de un
+      # vistazo, en cada run, qué entiende Pix de su entorno.
+      - name: Diagnóstico del entorno
+        run: npm run doctor || true
+
+      - name: Levantar el servidor
+        run: |
+          npm start > /tmp/pix-server.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -sf http://localhost:3000/api/v1/parlays/demo > /dev/null; then
+              echo "servidor arriba tras ${i} intentos"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::el servidor no respondió en 80s"
+          cat /tmp/pix-server.log
+          exit 1
+
+      - name: Contrato de /api/v1
+        run: npm run test:api
+
+      - name: Registro del servidor (si algo falló)
+        if: failure()
+        run: cat /tmp/pix-server.log || true
+
+  # El contrato entre cocina y salón es un alias de TypeScript: `@pix/contract`
+  # apunta a src/lib/api-types.ts. Si el backend cambia el contrato, esto se
+  # pone rojo en el mismo push, que es justo lo que hace falta cuando dos
+  # motores trabajan en paralelo sobre el mismo repositorio.
+  salon:
+    name: Frontend (apps/web)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Instalar
+        working-directory: apps/web
+        run: npm ci
+
+      - name: Tipos y compilación
+        working-directory: apps/web
+        run: npm run build

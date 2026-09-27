@@ -1,12 +1,47 @@
-# Omnia Picks · MVP end-to-end
+# Pix
 
-Plataforma de picks de apuestas con modelo cuantitativo, suscripciones en 3 tiers
-y motor de SEO programático. Next.js 15 + Supabase + Lemon Squeezy.
+Armas tu parlay y Pix te dice si vale. Comparamos la cuota que te pagan con la
+que de verdad vale, con un modelo cuantitativo sobre el consenso de 40+ casas.
 
-**Estado:** compila en limpio, 38 rutas, 37 tests del motor en verde, modelo
-propio validado y backtest con datos reales (CLV +3.81%, 83% bate el cierre).
+No es una casa de apuestas: no aceptamos apuestas ni custodiamos dinero. El
+boleto lo juega el usuario donde quiera.
 
-👉 **Empieza por [`docs/empezar-hoy.md`](docs/empezar-hoy.md).**
+Next.js 15 · Supabase · Lemon Squeezy · Telegram
+
+**Estado:** compila en limpio, 50 rutas, 124 pruebas en verde (84 del motor +
+40 de la API), modelo propio validado y backtest con datos reales (CLV +3.81%,
+83% bate el cierre).
+
+---
+
+## Desplegar ahora mismo · 3 minutos, sin configurar nada
+
+**El sitio funciona sin una sola variable de entorno.** Está verificado: las
+13 páginas públicas responden 200 con el entorno vacío, y las rutas que
+necesitan base de datos devuelven un 503 limpio en vez de reventar.
+
+Eso significa que se puede publicar hoy y conectarle el motor después:
+
+1. [vercel.com/new](https://vercel.com/new) → importa este repositorio
+2. **Deploy** — sin tocar Environment Variables
+3. Listo: hay web pública con el constructor de parlays funcionando
+
+Lo que se ve con el entorno vacío:
+
+| Funciona | Espera a las llaves |
+|---|---|
+| `/armar` · el constructor, con matemática real | Picks del motor en vivo |
+| Calculadora de valor | Track record y CLV |
+| Precios, guías, legal, SEO | Cuentas y suscripciones |
+| Imagen para compartir e icono | Telegram |
+
+Después, cuando tengas las cuentas (~$31/mes), sigue con
+**[`docs/encender-el-motor.md`](docs/encender-el-motor.md)**: es la guía que
+lleva de las llaves a Pix trabajando solo.
+
+Para configurar en local sin tecnicismos:
+**[`docs/EMPIEZA-AQUI.md`](docs/EMPIEZA-AQUI.md)**.
+Para saber qué falta en tu entorno: `npm run doctor`.
 
 ---
 
@@ -34,9 +69,10 @@ cp .env.example .env.local
 Regístrate en [the-odds-api.com](https://the-odds-api.com) y copia la key.
 
 > **Elige bien el plan.** Una llamada a `/odds` cuesta `nº mercados × nº regiones`
-> créditos. Con `h2h,spreads,totals` en `eu,us` son 6 créditos por liga y llamada.
-> 20 ligas cada 2h = ~43.000 créditos/mes. **El plan de $30 (20k) se queda corto
-> en la primera semana; necesitas el de $59 (100k).**
+> créditos. Con el sondeo escalonado que ya está programado, las 29 ligas son
+> 6.750 llamadas/mes, así que **con `h2h` + `eu` el plan de $30 (20k) sobra**.
+> Pedir 3 mercados en 2 regiones multiplica por 6 y sí exige el de $59 (100k).
+> `npm run doctor` calcula esto con tu configuración y te dice qué plan toca.
 >
 > Para arrancar más barato: pon `ODDS_REGIONS=eu` y `ODDS_MARKETS=h2h` (1 crédito
 > por llamada) y usa `?priority=1` en el cron. Entras con el plan de $30.

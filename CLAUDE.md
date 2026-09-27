@@ -6,9 +6,14 @@ programático. Next.js 15 · Supabase · Lemon Squeezy · Telegram · Anthropic.
 
 Marca vigente: **Pix** (antes Omnia Picks). No rotular nada como Omnia.
 
-Reparto de trabajo: **Codex hace el frontend** (`pix-local`, React + Vite),
-**este repo es el backend** y expone `/api/v1`. El contrato vive en
-`src/lib/api-types.ts` y `docs/api-v1.md`; el front lo importa tal cual.
+Reparto de trabajo: **la web que se publica es la de Next.js en `src/app/`**,
+backend y frontend en el mismo despliegue. `apps/web/` (React + Vite) sigue
+reservado a Codex como segundo frontend; consume el mismo `/api/v1`. El
+contrato vive en `src/lib/api-types.ts` y `docs/api-v1.md`.
+
+**El sitio se despliega sin ninguna variable de entorno**: las páginas públicas
+responden 200 con el entorno vacío y las que necesitan base de datos dan 503
+limpio. Eso permite publicar antes de tener las llaves.
 
 ---
 
@@ -77,6 +82,10 @@ src/app/api/v1/    ← lo que consume Codex
   me · me/parlays · performance           Perfil, parlays guardados, track record
 
 src/app/
+  armar/                LA PANTALLA PRINCIPAL · constructor de parlays, pública
+                        y funcional sin claves (evalúa contra /parlays/evaluate)
+  opengraph-image.tsx   Imagen al compartir · icon.tsx: favicon. Generadas con
+                        next/og, sin archivos que mantener
   api/cron/ingest       Cada 2h: cuotas → snapshot → análisis → picks → broadcast
   api/cron/fixtures     Cada 3h: resultados oficiales de API-Football
   api/cron/settle       Cada 3h: liquidación de picks y parlays → CLV
@@ -207,7 +216,7 @@ consciente, no un descuido.
 
 ## Estado actual
 
-- Build limpio, 38 rutas. 84/84 pruebas del motor y 40/40 de la API en verde.
+- Build limpio, 50 rutas. 84/84 pruebas del motor y 40/40 de la API en verde.
 - Backtest sobre 207 partidos reales: **CLV +3.81%, 83% bate el cierre**,
   control (apostar todo) −4.94%.
 - Modelo validado: recupera ataque r=0.91, defensa r=0.94, ventaja de campo

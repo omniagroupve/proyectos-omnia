@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useT } from "@/components/I18nProvider";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
-const BRAND = process.env.NEXT_PUBLIC_BRAND || "Omnia Picks";
+const BRAND = process.env.NEXT_PUBLIC_BRAND || "Pix";
 
 export function Nav() {
   const s = useT().nav;
@@ -12,12 +12,13 @@ export function Nav() {
     <header className="sticky top-0 z-50 border-b border-line/70 bg-ink/85 backdrop-blur">
       <nav className="container-x flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold tracking-tight">
-          <span className="grid h-7 w-7 place-items-center rounded-lg bg-accent font-mono text-sm text-ink">
-            Ω
+          <span className="grid h-7 w-7 place-items-center rounded-lg bg-accent font-mono text-sm font-bold text-ink">
+            P
           </span>
           {BRAND}
         </Link>
         <div className="hidden items-center gap-7 text-sm text-muted md:flex">
+          <Link href="/armar" className="font-semibold text-white hover:text-accent">{s.build}</Link>
           <Link href="/picks" className="hover:text-white">{s.picks}</Link>
           <Link href="/rendimiento" className="hover:text-white">{s.performance}</Link>
           <Link href="/pronosticos" className="hover:text-white">{s.matches}</Link>
@@ -28,7 +29,7 @@ export function Nav() {
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
           <Link href="/login" className="text-sm text-muted hover:text-white">{s.login}</Link>
-          <Link href="/precios" className="btn-primary !px-4 !py-2">{s.cta}</Link>
+          <Link href="/armar" className="btn-primary !px-4 !py-2">{s.cta}</Link>
         </div>
       </nav>
     </header>
@@ -47,6 +48,7 @@ export function Footer() {
         <div>
           <div className="label mb-3">{s.product}</div>
           <ul className="space-y-2">
+            <li><Link href="/armar" className="hover:text-white">Armar parlay</Link></li>
             <li><Link href="/rendimiento" className="hover:text-white">{s.trackRecord}</Link></li>
             <li><Link href="/precios" className="hover:text-white">{s.pricing}</Link></li>
             <li><Link href="/pronosticos" className="hover:text-white">{s.matches}</Link></li>

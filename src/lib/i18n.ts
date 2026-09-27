@@ -5,6 +5,7 @@ export const DEFAULT_LOCALE: Locale = "es";
 export const dict = {
   es: {
     nav: {
+      build: "Armar parlay",
       picks: "IA Picks",
       performance: "Rendimiento",
       matches: "Pronósticos",
@@ -35,7 +36,7 @@ export const dict = {
       heroTitle2: "con IA, no con corazonadas",
       heroSubtitle: "Nuestra IA revisa miles de cuotas y te arma el parlay con más probabilidades de pegar. Tú eliges el deporte, ella hace las cuentas.",
       ctaStart: "Arma tu parlay gratis",
-      ctaAudit: "Ver picks de hoy",
+      ctaAudit: "Ver el track record",
       heroDisclaimer: "Gratis para empezar · +18",
       stats: [
         { l: "de acierto" },
@@ -140,6 +141,7 @@ export const dict = {
   },
   en: {
     nav: {
+      build: "Build parlay",
       picks: "AI Picks",
       performance: "Performance",
       matches: "Match Previews",
@@ -170,7 +172,7 @@ export const dict = {
       heroTitle2: "with AI, not hunches",
       heroSubtitle: "Our AI scans thousands of odds and builds you the parlay most likely to hit. You pick the sport, it does the math.",
       ctaStart: "Build your parlay free",
-      ctaAudit: "See today's picks",
+      ctaAudit: "See the track record",
       heroDisclaimer: "Free to start · 18+",
       stats: [
         { l: "hit rate" },

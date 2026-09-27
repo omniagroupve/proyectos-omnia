@@ -4,7 +4,7 @@ import { I18nProvider } from "@/components/I18nProvider";
 import { Nav, Footer } from "@/components/SiteChrome";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://tudominio.com";
-const BRAND = process.env.NEXT_PUBLIC_BRAND || "Omnia Picks";
+const BRAND = process.env.NEXT_PUBLIC_BRAND || "Pix";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),

@@ -125,3 +125,94 @@ export const DEMO_EVENTS_TONIGHT = [
   { id: "demo-ev-4", leagueSlug: "nba", sportKey: "basketball", homeTeam: "Boston Celtics", awayTeam: "Charlotte Hornets", commenceTime: tonight(0) },
   { id: "demo-ev-5", leagueSlug: "nba", sportKey: "basketball", homeTeam: "Denver Nuggets", awayTeam: "Utah Jazz", commenceTime: tonight(2) },
 ];
+
+/**
+ * PISCINA DE SELECCIONES · lo que el usuario puede tocar en /armar
+ * ────────────────────────────────────────────────────────────────
+ * Con base de datos, el constructor usa los picks reales del motor. Sin ella,
+ * usa esto: así la pantalla más importante del producto funciona recién
+ * clonado el repo, sin claves y sin gastar un crédito.
+ *
+ * `fairProb` es la probabilidad justa (ya de-vigada) y es lo que permite que
+ * `/api/v1/parlays/evaluate` haga la matemática de verdad sobre estas piernas
+ * sin tocar la base de datos. Los números son plausibles, no inventados al
+ * azar: cada cuota está por encima de su justa en el margen que dice el edge.
+ */
+export interface DemoCandidate {
+  eventId: string;
+  label: string;          // "Club América vs Chivas"
+  pick: string;           // "Gana América"
+  market: "h2h" | "spreads" | "totals";
+  selection: string;
+  line: number | null;
+  odds: number;
+  fairProb: number;
+  book: string;
+  league: string;
+  sport: string;
+  commenceTime: string;
+  rationale: string;
+}
+
+export const DEMO_CANDIDATES: DemoCandidate[] = [
+  {
+    eventId: "demo-ev-1", label: "Club América vs Chivas", pick: "Gana América",
+    market: "h2h", selection: "Club América", line: null, odds: 1.95, fairProb: 0.56,
+    book: "Caliente", league: "Liga MX", sport: "Fútbol", commenceTime: tonight(2),
+    rationale: "El consenso de 28 casas sitúa a América en 56 %. Caliente paga 1.95 · cuota justa 1.79.",
+  },
+  {
+    eventId: "demo-ev-1", label: "Club América vs Chivas", pick: "Más de 2.5 goles",
+    market: "totals", selection: "Over", line: 2.5, odds: 2.05, fairProb: 0.51,
+    book: "Betano", league: "Liga MX", sport: "Fútbol", commenceTime: tonight(2),
+    rationale: "Cuatro de los últimos cinco Clásicos pasaron de 2.5. El mercado lo pone en 51 %.",
+  },
+  {
+    eventId: "demo-ev-2", label: "Boca Juniors vs Racing", pick: "Boca −0.5",
+    market: "spreads", selection: "Boca Juniors", line: -0.5, odds: 2.10, fairProb: 0.52,
+    book: "Betano", league: "Liga Argentina", sport: "Fútbol", commenceTime: tonight(0),
+    rationale: "Pinnacle y Betfair tienen a Boca en 52 %. Betano lo paga como si fuera 47 %.",
+  },
+  {
+    eventId: "demo-ev-2", label: "Boca Juniors vs Racing", pick: "Menos de 2.5 goles",
+    market: "totals", selection: "Under", line: 2.5, odds: 1.72, fairProb: 0.60,
+    book: "bplay", league: "Liga Argentina", sport: "Fútbol", commenceTime: tonight(0),
+    rationale: "Los dos últimos Boca–Racing acabaron 1-0. Las casas sharp lo ven en 60 %.",
+  },
+  {
+    eventId: "demo-ev-3", label: "Flamengo vs Palmeiras", pick: "Más de 2.5 goles",
+    market: "totals", selection: "Over", line: 2.5, odds: 1.81, fairProb: 0.56,
+    book: "Bet365", league: "Brasileirão", sport: "Fútbol", commenceTime: tonight(23),
+    rationale: "Ambos llegan con 3+ goles de media en sus últimos cinco. El mercado lo pone en 56 %.",
+  },
+  {
+    eventId: "demo-ev-3", label: "Flamengo vs Palmeiras", pick: "Gana Flamengo",
+    market: "h2h", selection: "Flamengo", line: null, odds: 2.25, fairProb: 0.47,
+    book: "Betano", league: "Brasileirão", sport: "Fútbol", commenceTime: tonight(23),
+    rationale: "Flamengo en el Maracaná: 47 % para el consenso, 44 % implícito en Betano.",
+  },
+  {
+    eventId: "demo-ev-4", label: "Celtics vs Hornets", pick: "Gana Boston",
+    market: "h2h", selection: "Boston Celtics", line: null, odds: 1.28, fairProb: 0.81,
+    book: "Bet365", league: "NBA", sport: "Baloncesto", commenceTime: tonight(0),
+    rationale: "Favorito claro. 81 % para el consenso frente al 78 % implícito de la cuota.",
+  },
+  {
+    eventId: "demo-ev-4", label: "Celtics vs Hornets", pick: "Boston −9.5",
+    market: "spreads", selection: "Boston Celtics", line: -9.5, odds: 1.90, fairProb: 0.55,
+    book: "Caliente", league: "NBA", sport: "Baloncesto", commenceTime: tonight(0),
+    rationale: "La línea sharp está en −10.5. Caliente la deja en −9.5 al mismo precio.",
+  },
+  {
+    eventId: "demo-ev-5", label: "Nuggets vs Jazz", pick: "Gana Denver",
+    market: "h2h", selection: "Denver Nuggets", line: null, odds: 1.36, fairProb: 0.76,
+    book: "Betano", league: "NBA", sport: "Baloncesto", commenceTime: tonight(2),
+    rationale: "76 % para el consenso. La cuota implica 73,5 %: hay 2,5 puntos de margen.",
+  },
+  {
+    eventId: "demo-ev-5", label: "Nuggets vs Jazz", pick: "Más de 224.5 puntos",
+    market: "totals", selection: "Over", line: 224.5, odds: 1.87, fairProb: 0.55,
+    book: "bplay", league: "NBA", sport: "Baloncesto", commenceTime: tonight(2),
+    rationale: "Dos de los ataques más rápidos de la liga. El total sharp está en 227.5.",
+  },
+];

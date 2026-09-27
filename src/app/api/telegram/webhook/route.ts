@@ -27,7 +27,7 @@ interface TgUpdate {
 }
 
 const HELP = [
-  "*Omnia IA Picks*",
+  "*Pix*",
   "",
   "`/vincular CÓDIGO` — conecta tu cuenta",
   "`/stats` — rendimiento actual",

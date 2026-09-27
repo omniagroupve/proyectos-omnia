@@ -79,7 +79,7 @@ export default async function GuiaPage({
             headline: g.h1,
             description: g.description,
             dateModified: g.updated,
-            author: { "@type": "Organization", name: process.env.NEXT_PUBLIC_BRAND ?? "Omnia Picks" },
+            author: { "@type": "Organization", name: process.env.NEXT_PUBLIC_BRAND ?? "Pix" },
           }),
         }}
       />

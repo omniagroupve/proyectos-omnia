@@ -49,7 +49,7 @@ export default function HomeContent({
           </p>
 
           <div className="mt-11 flex animate-fade-up flex-wrap justify-center gap-3 [animation-delay:240ms]">
-            <Link href="/precios" className="btn-primary !px-8 !py-4 !text-base">
+            <Link href="/armar" className="btn-primary !px-8 !py-4 !text-base">
               {s.ctaStart}
             </Link>
             <Link href="/rendimiento" className="btn-ghost !px-8 !py-4 !text-base">

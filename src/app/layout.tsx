@@ -8,12 +8,22 @@ const BRAND = process.env.NEXT_PUBLIC_BRAND || "Pix";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
+  // El término por el que queremos que nos encuentren es "app de predicciones
+  // deportivas con IA": es como se busca la categoría, y es lo que somos.
   title: {
-    default: `${BRAND} · IA Picks para apuestas deportivas`,
+    default: `${BRAND} · App de predicciones deportivas con IA`,
     template: `%s · ${BRAND}`,
   },
   description:
-    "IA Picks generados por un modelo cuantitativo sobre el consenso de 40+ casas. Track record auditable, CLV publicado, sin promesas de ganancias.",
+    "Predicciones deportivas con IA para 29 ligas. Calculamos la probabilidad exacta de los 121 marcadores posibles de cada partido y la comparamos con lo que pagan 40+ casas. Historial público, incluidas las que fallan. No aceptamos apuestas.",
+  keywords: [
+    "predicciones deportivas con IA",
+    "app de predicciones deportivas",
+    "pronósticos deportivos inteligencia artificial",
+    "AI sports predictions",
+    "parlay con IA",
+    "comparador de cuotas",
+  ],
   openGraph: {
     type: "website",
     locale: "es_ES",

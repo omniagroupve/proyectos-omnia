@@ -4,7 +4,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "nodejs";
-export const alt = "Pix · Arma tu parlay y te decimos si vale";
+export const alt = "Pix · Predicciones deportivas con IA que puedes auditar";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -39,14 +39,15 @@ export default function Image() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 76, fontWeight: 700, lineHeight: 1.05 }}>
-            Arma tu parlay.
+          <div style={{ fontSize: 68, fontWeight: 700, lineHeight: 1.08 }}>
+            Predicciones deportivas con IA
           </div>
-          <div style={{ fontSize: 76, fontWeight: 700, lineHeight: 1.05, color: "#00D680" }}>
-            Te decimos si vale.
+          <div style={{ fontSize: 68, fontWeight: 700, lineHeight: 1.08, color: "#00D680" }}>
+            que puedes auditar.
           </div>
-          <div style={{ fontSize: 30, color: "#8A929E", marginTop: 26, maxWidth: 880 }}>
-            Comparamos la cuota que te pagan con la que de verdad vale. Gratis y sin registro.
+          <div style={{ fontSize: 28, color: "#8A929E", marginTop: 26, maxWidth: 900 }}>
+            121 marcadores calculados por partido · 40+ casas comparadas · 29 ligas.
+            Historial público, incluidas las que fallan.
           </div>
         </div>
 

@@ -1,8 +1,17 @@
 # Pix · contexto del proyecto
 
-Plataforma donde el usuario **arma su parlay con ayuda de IA**: picks de un
-modelo cuantitativo, comparador de cuotas, suscripciones en 3 tiers y SEO
-programático. Next.js 15 · Supabase · Lemon Squeezy · Telegram · Anthropic.
+**App de predicciones deportivas con IA.** Así se posiciona y así se busca la
+categoría: *AI sports prediction app*. El usuario arma su parlay con ayuda de
+la IA, con picks de un modelo cuantitativo, comparador de cuotas,
+suscripciones en 3 tiers y SEO programático.
+Next.js 15 · Supabase · Lemon Squeezy · Telegram · Anthropic.
+
+**Los números del marketing son los del código, y sólo esos.** Se pueden usar
+en portada porque son verificables: 121 marcadores calculados por partido
+(matriz 11×11 de Dixon-Coles, `maxGoals: 10`), 40+ casas comparadas, 29 ligas,
+3 métodos de de-vig, casas sharp ponderadas ×5, y del backtest sobre 207
+partidos: CLV +3.81% y 83% bate el cierre. **No inventes cifras de escaparate**
+(«500 factores», «10.000 simulaciones»): si no sale del código, no se publica.
 
 Marca vigente: **Pix** (antes Omnia Picks). No rotular nada como Omnia.
 
@@ -68,7 +77,7 @@ src/lib/
   market-summary.ts  Snapshot de cuotas → mejor cuota y cuota justa por selección
   api-types.ts    CONTRATO de /api/v1 — el frontend importa de aquí
   api/http.ts     Respuestas uniformes, auth por Bearer/cookie, país del request
-  config.ts       Precios, 21 ligas, pesos de casas, umbrales
+  config.ts       Precios, 29 ligas, pesos de casas, umbrales
   telegram.ts     Cliente del bot y formateo de picks
   auth.ts         Sesión + tier efectivo
 

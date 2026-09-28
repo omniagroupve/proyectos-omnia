@@ -21,16 +21,25 @@ export function Reveal({
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) { setShown(true); return; }
+    if (reduced || typeof IntersectionObserver === "undefined") { setShown(true); return; }
 
     const el = ref.current;
-    if (!el) return;
+    if (!el) { setShown(true); return; }
+
     const io = new IntersectionObserver(
       ([e]) => { if (e.isIntersecting) { setShown(true); io.disconnect(); } },
       { threshold: 0.12, rootMargin: "0px 0px -60px 0px" }
     );
     io.observe(el);
-    return () => io.disconnect();
+
+    // RED DE SEGURIDAD. Esto empieza en opacity:0, así que si el observador
+    // no llega a dispararse —captura headless, navegador raro, scroll dentro
+    // de un contenedor— el visitante se queda mirando una página en blanco.
+    // Pasado un segundo y medio se muestra igual: el efecto es un adorno, el
+    // contenido no.
+    const red = setTimeout(() => { setShown(true); io.disconnect(); }, 1500);
+
+    return () => { clearTimeout(red); io.disconnect(); };
   }, []);
 
   return (
@@ -68,15 +77,24 @@ export function CountUp({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const [val, setVal] = useState(0);
+  // Arranca en el valor FINAL, no en cero. Así el HTML del servidor ya trae
+  // el número bueno: lo ve Google, lo ve quien tenga el JS roto y lo ve una
+  // captura. Un titular de marketing que dice "0 %" es peor que no tenerlo.
+  const [val, setVal] = useState(to);
   const done = useRef(false);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) { setVal(to); return; }
+    if (reduced || typeof IntersectionObserver === "undefined") { setVal(to); return; }
 
     const el = ref.current;
-    if (!el) return;
+    if (!el) { setVal(to); return; }
+
+    // Sólo merece la pena animar lo que aún no se ha visto.
+    const caja = el.getBoundingClientRect();
+    if (caja.top < window.innerHeight && caja.bottom > 0) { setVal(to); return; }
+    setVal(0);
+
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting || done.current) return;
       done.current = true;
@@ -91,7 +109,12 @@ export function CountUp({
       requestAnimationFrame(tick);
     }, { threshold: 0.4 });
     io.observe(el);
-    return () => io.disconnect();
+
+    const red = setTimeout(() => {
+      if (!done.current) { done.current = true; io.disconnect(); setVal(to); }
+    }, 1500);
+
+    return () => { clearTimeout(red); io.disconnect(); };
   }, [to, duration]);
 
   return (

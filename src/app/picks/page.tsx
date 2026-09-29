@@ -1,18 +1,27 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
-import { supabaseServer } from "@/lib/supabase/server";
+import { supabaseServer, isSupabaseConfigured } from "@/lib/supabase/server";
+import { demoPicks } from "@/lib/demo-parlays";
 import PickCard, { type PickView } from "@/components/PickCard";
 import TelegramConnect from "@/components/TelegramConnect";
 import { canAccess, TIERS, type TierId, FREE_DELAY_HOURS } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Picks del día", robots: { index: false } };
+export const metadata = {
+  title: "Picks de hoy de la IA",
+  description:
+    "Las predicciones que el modelo publica hoy, con su cuota, su casa y su razón. Las que fallan se publican igual.",
+};
 
 export default async function PicksPage() {
   const user = await getSessionUser();
-  if (!user) redirect("/login?next=/picks");
+
+  // SIN SESIÓN NO SE REDIRIGE AL LOGIN. Quien llega de un anuncio o de
+  // Telegram tiene que ver el producto antes de dar un correo: un muro de
+  // registro en la pantalla que anuncia el menú mata la conversión. Se
+  // enseñan los picks del plan gratuito y se invita a entrar para el resto.
+  if (!user) return <PicksPublicos />;
 
   const sb = await supabaseServer();
 
@@ -108,6 +117,84 @@ export default async function PicksPage() {
             ))}
         </div>
       </section>
+    </div>
+  );
+}
+
+
+/**
+ * Vista para visitantes. Usa los picks reales del plan gratuito si hay base de
+ * datos; si no, la piscina de ejemplo, marcada como tal.
+ */
+async function PicksPublicos() {
+  let picks = demoPicks() as unknown as PickView[];
+  let demo = true;
+
+  if (isSupabaseConfigured()) {
+    try {
+      const sb = await supabaseServer();
+      const { data } = await sb
+        .from("picks")
+        .select(`
+          id, market, selection, line, odds_taken, book, edge_pct, stake_units,
+          confidence, rationale, tier_required, published_at, result, clv_pct, profit_units,
+          events!inner ( home_team, away_team, sport_title, league_slug, slug, commence_time )
+        `)
+        .eq("result", "pending")
+        .lte("free_visible_at", new Date().toISOString())
+        .order("confidence", { ascending: false })
+        .limit(12);
+      if (data?.length) { picks = data as unknown as PickView[]; demo = false; }
+    } catch {
+      // Una base a medio configurar no debe tumbar una página pública.
+    }
+  }
+
+  return (
+    <div className="container-x py-12">
+      <header className="mb-10 max-w-2xl">
+        <div className="label mb-3">Picks de hoy</div>
+        <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
+          Lo que la IA publica hoy
+        </h1>
+        <p className="mt-4 leading-relaxed text-muted">
+          Cada pick sale con su cuota, la casa que la paga y la razón por la que
+          el modelo la considera barata. Queda registrado con la hora: cuando
+          falla, se publica igual.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link href="/armar" className="btn-primary">Armar mi parlay</Link>
+          <Link href="/rendimiento" className="btn-ghost">Ver el historial</Link>
+        </div>
+      </header>
+
+      {demo && (
+        <p className="card mb-8 p-4 text-xs leading-relaxed text-muted">
+          <strong className="text-white">Datos de ejemplo.</strong> Cuotas
+          realistas para que veas el formato. Con el motor conectado a cuotas en
+          vivo, aquí salen los picks del día.
+        </p>
+      )}
+
+      <div className="grid gap-4">
+        {picks.map((p) => (
+          <PickCard key={p.id} pick={p} bankroll={500} unitPct={1} />
+        ))}
+      </div>
+
+      <div className="card mt-10 border-accent/40 bg-accent/5 p-6">
+        <h2 className="font-semibold">Los ves con {FREE_DELAY_HOURS}h de retraso</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted">
+          Para cuando llegan aquí, el mercado ya corrigió la cuota. Es a
+          propósito: así compruebas que el modelo acierta antes de pagar nada.
+          Con Pro los recibes en el momento de publicarse, que es cuando la
+          cuota todavía tiene valor.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Link href="/precios" className="btn-primary">Ver los planes</Link>
+          <Link href="/login" className="btn-ghost">Entrar</Link>
+        </div>
+      </div>
     </div>
   );
 }

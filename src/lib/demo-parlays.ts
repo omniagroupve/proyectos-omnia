@@ -216,3 +216,37 @@ export const DEMO_CANDIDATES: DemoCandidate[] = [
     rationale: "Dos de los ataques más rápidos de la liga. El total sharp está en 227.5.",
   },
 ];
+
+/**
+ * Los mismos candidatos, con la forma que espera `PickCard`.
+ * Sirven para que /picks tenga algo que enseñar a quien todavía no se ha
+ * registrado y no haya base de datos conectada. Van marcados como demo en la
+ * propia pantalla: nunca se presentan como historial real.
+ */
+export function demoPicks() {
+  return DEMO_CANDIDATES.slice(0, 6).map((c, i) => ({
+    id: `demo-pick-${i}`,
+    market: c.market,
+    selection: c.selection,
+    line: c.line,
+    odds_taken: c.odds,
+    book: c.book,
+    edge_pct: Math.round((c.fairProb * c.odds - 1) * 1000) / 10,
+    stake_units: Math.round(Math.min(5, (c.fairProb * c.odds - 1) / (c.odds - 1) * 0.25 * 100) * 10) / 10,
+    confidence: 3,
+    rationale: c.rationale,
+    tier_required: i < 2 ? "free" : "pro",
+    published_at: new Date(Date.now() - (i + 1) * 900_000).toISOString(),
+    result: "pending",
+    clv_pct: null,
+    profit_units: null,
+    events: {
+      home_team: c.label.split(" vs ")[0] ?? c.label,
+      away_team: c.label.split(" vs ")[1] ?? "",
+      sport_title: c.sport,
+      league_slug: c.league,
+      slug: "",
+      commence_time: c.commenceTime,
+    },
+  }));
+}

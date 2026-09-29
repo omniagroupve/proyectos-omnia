@@ -8,7 +8,7 @@ boleto lo juega el usuario donde quiera.
 
 Next.js 15 · Supabase · Lemon Squeezy · Telegram
 
-**Estado:** compila en limpio, 50 rutas, 124 pruebas en verde (84 del motor +
+**Estado:** compila en limpio, 50 rutas, 137 pruebas en verde (84 del motor +
 40 de la API), modelo propio validado y backtest con datos reales (CLV +3.81%,
 83% bate el cierre).
 

@@ -14,7 +14,7 @@ export default function GuiasIndex() {
     <div className="container-x py-14">
       <h1 className="text-4xl font-bold tracking-tight">Guías</h1>
       <p className="mt-3 max-w-2xl text-muted">
-        Los conceptos que hacen que apostar sea una decisión de inversión y no
+        Los conceptos que convierten una apuesta en una decisión medida y no en
         una corazonada. Sin trucos, sin sistemas infalibles.
       </p>
 

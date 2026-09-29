@@ -49,7 +49,8 @@ del juego.
 ```bash
 npm run dev              # desarrollo
 npm run build            # producción — debe pasar antes de cualquier commit
-npm run test:engine      # 84 tests: 37 del motor + 35 de parlays + 12 de frenos
+npm run test:engine      # 97: 37 motor + 35 parlays + 12 frenos + 13 cumplimiento
+npm run test:cumplimiento # sólo las de texto legal · fallan si vuelve «inversión»
 npm run test:parlay      # sólo los del motor de parlays
 npm run test:api         # 40 de integración de /api/v1 (con `npm run dev` arriba)
 npm run doctor           # qué falta en el entorno · sin red · no imprime claves
@@ -107,7 +108,7 @@ supabase/
   migrations/002_pix.sql  Catálogo, jurisdicciones, histórico propio, parlays, IA
 
 .github/workflows/
-  ci.yml                Backend (124 pruebas) y frontend, en cada push
+  ci.yml                Backend (137 pruebas) y frontend, en cada push
   cron.yml              EL RELOJ: despierta las rutas de cron por horario
 ```
 
@@ -225,7 +226,9 @@ consciente, no un descuido.
 
 ## Estado actual
 
-- Build limpio, 50 rutas. 84/84 pruebas del motor y 40/40 de la API en verde.
+- Build limpio, 50 rutas. 97/97 pruebas del motor y 40/40 de la API en verde.
+- **14 páginas públicas verifican 200 con el entorno vacío**, y las rutas con
+  base de datos degradan a 503 limpio. Cero errores 500.
 - Backtest sobre 207 partidos reales: **CLV +3.81%, 83% bate el cierre**,
   control (apostar todo) −4.94%.
 - Modelo validado: recupera ataque r=0.91, defensa r=0.94, ventaja de campo

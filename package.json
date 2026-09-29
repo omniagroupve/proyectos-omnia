@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test:engine": "node --experimental-strip-types scripts/test-engine.ts && node --experimental-strip-types scripts/test-parlay.ts && node --experimental-strip-types scripts/test-brakes.ts && node --experimental-strip-types scripts/test-cumplimiento.ts",
     "test:parlay": "node --experimental-strip-types scripts/test-parlay.ts",
     "test:brakes": "node --experimental-strip-types scripts/test-brakes.ts",
@@ -34,6 +34,8 @@
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
     "autoprefixer": "^10.4.20",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^15.5.26",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3"

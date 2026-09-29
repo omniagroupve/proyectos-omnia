@@ -48,6 +48,7 @@ del juego.
 
 ```bash
 npm run dev              # desarrollo
+npm run lint             # ESLint · 0 errores, 1 aviso conocido (las fuentes)
 npm run build            # producción — debe pasar antes de cualquier commit
 npm run test:engine      # 97: 37 motor + 35 parlays + 12 frenos + 13 cumplimiento
 npm run test:cumplimiento # sólo las de texto legal · fallan si vuelve «inversión»
@@ -261,8 +262,12 @@ picks cualquier cambio es sobreajuste.
 - Las fuentes cargan por `<link>` a Google Fonts. **Migrar a
   `next/font/google`** para autoalojarlas: quita la petición externa y el salto
   de layout. Está comentado en `src/app/layout.tsx`.
-- `next lint` no tiene configuración de ESLint: abre un asistente interactivo,
-  así que CI no lo ejecuta. O se configura ESLint o se quita el script.
+- Queda **un aviso de lint**, y es real: el `<link>` a Google Fonts en
+  `layout.tsx`. El cambio a `next/font/google` está escrito y probado, pero
+  falla al compilar aquí porque necesita descargar las fuentes y este entorno
+  no tiene salida a internet. Listo para aplicar en
+  `docs/parches/fuentes-autoalojadas.patch` — instrucciones en
+  `docs/parches/LEEME.md`.
 - `apps/web/` sigue siendo un esqueleto a la espera de que Codex meta ahí
   `pix-local`. Los cables (`lib/api.ts`, `lib/supabase.ts`, `vite.config.ts`)
   ya están puestos.

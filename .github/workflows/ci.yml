@@ -14,9 +14,7 @@
 # LOS FRENOS VAN FIJOS EN EL ENTORNO. Aunque alguien añadiera una clave de API
 # a los secretos del repo, este workflow no puede gastar créditos ni mandar un
 # mensaje de Telegram a nadie.
-#
-# No corre `npm run lint`: `next lint` sin configuración de ESLint abre un
-# asistente interactivo y colgaría el runner hasta agotar el tiempo.
+
 
 name: CI
 
@@ -57,6 +55,9 @@ jobs:
 
       - name: Tipos
         run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
 
       - name: Compilar
         run: npm run build

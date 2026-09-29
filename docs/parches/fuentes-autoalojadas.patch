@@ -1,0 +1,77 @@
+diff --git a/src/app/layout.tsx b/src/app/layout.tsx
+index f352a91..3661a98 100644
+--- a/src/app/layout.tsx
++++ b/src/app/layout.tsx
+@@ -1,8 +1,32 @@
+ import type { Metadata } from "next";
++import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+ import "./globals.css";
+ import { I18nProvider } from "@/components/I18nProvider";
+ import { Nav, Footer } from "@/components/SiteChrome";
+ 
++/**
++ * FUENTES AUTOALOJADAS
++ * ────────────────────
++ * next/font descarga los ficheros en tiempo de compilación y los sirve desde
++ * nuestro dominio. Frente al <link> a Google Fonts: una petición externa
++ * menos, nada que pedirle a un tercero en cada visita, y sin el salto de
++ * maquetación al cambiar de la fuente de reserva a la definitiva.
++ * `display: swap` mantiene el texto legible mientras carga.
++ */
++const display = Space_Grotesk({
++  subsets: ["latin"],
++  weight: ["400", "500", "600", "700"],
++  variable: "--fuente-display",
++  display: "swap",
++});
++
++const mono = JetBrains_Mono({
++  subsets: ["latin"],
++  weight: ["400", "500", "700"],
++  variable: "--fuente-mono",
++  display: "swap",
++});
++
+ const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://tudominio.com";
+ const BRAND = process.env.NEXT_PUBLIC_BRAND || "Pix";
+ 
+@@ -36,23 +60,8 @@ export const metadata: Metadata = {
+ 
+ export default function RootLayout({ children }: { children: React.ReactNode }) {
+   return (
+-    <html lang="es">
++    <html lang="es" className={`${display.variable} ${mono.variable}`}>
+       <head>
+-        {/*
+-          Space Grotesk (display) + JetBrains Mono (cifras tabulares).
+-          Se cargan por <link> en lugar de next/font/google porque el build
+-          de este entorno no tiene acceso a fonts.googleapis.com.
+-
+-          MEJORA RECOMENDADA en tu máquina: cambia a `next/font/google`.
+-          Autoaloja los ficheros, elimina la petición externa y quita el
+-          desplazamiento de layout al cargar. Gana en Core Web Vitals.
+-        */}
+-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+-        <link
+-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+-          rel="stylesheet"
+-        />
+       </head>
+       <body>
+         <I18nProvider>
+diff --git a/tailwind.config.ts b/tailwind.config.ts
+index 37b64b3..bde044e 100644
+--- a/tailwind.config.ts
++++ b/tailwind.config.ts
+@@ -14,8 +14,8 @@ export default {
+         gold: "#E7B75F",
+       },
+       fontFamily: {
+-        sans: ["Space Grotesk", "ui-sans-serif", "system-ui", "-apple-system", "sans-serif"],
+-        mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
++        sans: ["var(--fuente-display)", "ui-sans-serif", "system-ui", "-apple-system", "sans-serif"],
++        mono: ["var(--fuente-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+       },
+       keyframes: {
+         "fade-up": {

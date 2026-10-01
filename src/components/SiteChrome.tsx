@@ -53,6 +53,8 @@ export function Footer() {
             <li><Link href="/precios" className="hover:text-white">{s.pricing}</Link></li>
             <li><Link href="/pronosticos" className="hover:text-white">{s.matches}</Link></li>
             <li><Link href="/herramientas/calculadora-valor" className="hover:text-white">{s.calculator}</Link></li>
+            <li><Link href="/preguntas" className="hover:text-white">Preguntas frecuentes</Link></li>
+            <li><Link href="/predicciones" className="hover:text-white">Predicciones por país</Link></li>
           </ul>
         </div>
         <div>

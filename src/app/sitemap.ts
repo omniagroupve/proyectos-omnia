@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { PAISES } from "@/lib/paises";
 import { SEO_LEAGUES } from "@/lib/config";
 import { GUIDES } from "@/lib/guides";
 import { supabasePublic, isSupabaseConfigured } from "@/lib/supabase/server";
@@ -24,6 +25,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticUrls: MetadataRoute.Sitemap = [
     { url: base, lastModified: now, changeFrequency: "daily", priority: 1 },
     { url: `${base}/armar`, lastModified: now, changeFrequency: "daily", priority: 0.95 },
+    { url: `${base}/picks`, lastModified: now, changeFrequency: "hourly", priority: 0.9 },
+    { url: `${base}/preguntas`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${base}/predicciones`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
+    // Una URL por país: es la puerta de entrada de quien busca su liga.
+    ...PAISES.map((p) => ({
+      url: `${base}/predicciones/${p.slug}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    })),
     { url: `${base}/precios`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${base}/rendimiento`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
     { url: `${base}/pronosticos`, lastModified: now, changeFrequency: "hourly", priority: 0.8 },

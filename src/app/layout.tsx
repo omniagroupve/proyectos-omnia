@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { I18nProvider } from "@/components/I18nProvider";
 import { Nav, Footer } from "@/components/SiteChrome";
+import { LEAGUES } from "@/lib/config";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://tudominio.com";
 const BRAND = process.env.NEXT_PUBLIC_BRAND || "Pix";
@@ -34,6 +35,62 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+/**
+ * Datos estructurados del sitio.
+ *
+ * `Organization` y `WebSite` son la base que usa Google para el panel de
+ * marca y el cuadro de búsqueda. `SoftwareApplication` es lo que nos clasifica
+ * como app —la categoría por la que queremos salir— y permite declarar que el
+ * plan de entrada cuesta cero.
+ *
+ * `isAccessibleForFree` y la descripción dejan explícito lo que más se
+ * malinterpreta: que esto analiza cuotas, no acepta apuestas.
+ */
+function datosEstructurados() {
+  const org = {
+    "@type": "Organization",
+    "@id": `${SITE}/#organizacion`,
+    name: BRAND,
+    url: SITE,
+    logo: `${SITE}/icon`,
+    description:
+      "Servicio de información y análisis de mercados deportivos. No es una casa de apuestas.",
+    areaServed: ["MX", "AR", "BR", "CO", "CL", "PE", "VE", "ES", "US"],
+  };
+
+  const sitio = {
+    "@type": "WebSite",
+    "@id": `${SITE}/#sitio`,
+    url: SITE,
+    name: BRAND,
+    inLanguage: "es",
+    publisher: { "@id": `${SITE}/#organizacion` },
+  };
+
+  const app = {
+    "@type": "SoftwareApplication",
+    "@id": `${SITE}/#app`,
+    name: BRAND,
+    applicationCategory: "SportsApplication",
+    operatingSystem: "Web",
+    url: `${SITE}/armar`,
+    description:
+      `App de predicciones deportivas con IA. Calcula la probabilidad real de cada partido ` +
+      `sobre ${LEAGUES.length} competiciones y la compara con las cuotas de más de 40 casas ` +
+      `para detectar dónde pagan por encima de lo que vale.`,
+    isAccessibleForFree: true,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      description: "Constructor de parlays, calculadora e historial, sin registro.",
+    },
+    publisher: { "@id": `${SITE}/#organizacion` },
+  };
+
+  return { "@context": "https://schema.org", "@graph": [org, sitio, app] };
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
@@ -55,6 +112,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(datosEstructurados()) }}
+        />
         <I18nProvider>
           <Nav />
           <main>{children}</main>

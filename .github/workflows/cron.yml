@@ -1,0 +1,149 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# MOTOR · lo que mantiene vivo el track record
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# POR QUÉ EXISTE
+# ──────────────
+# `vercel.json` declara cinco crons, pero el plan Hobby de Vercel sólo ejecuta
+# UNO AL DÍA. En el camino gratuito, sin esto, la ingesta de cuotas no corre,
+# la liquidación no corre y el CLV no se acumula: el activo del negocio no se
+# construye. GitHub Actions da horarios gratis, y el repo ya está aquí.
+#
+# `vercel.json` se queda como está por si algún día pasas a Vercel Pro. Si
+# pasas, borra este archivo o desactívalo: si no, cada ruta se llamaría dos
+# veces y gastarías el doble de créditos de The Odds API.
+#
+# QUÉ NECESITA (dos secretos en Settings → Secrets and variables → Actions)
+# ─────────────────────────────────────────────────────────────────────────
+#   PIX_URL       https://tu-dominio.com   (sin barra al final)
+#   CRON_SECRET   el mismo que tiene el despliegue en sus variables
+#
+# Sin ellos cada ejecución sale en verde sin hacer nada, para que un repo sin
+# configurar no se llene de correos de fallo.
+#
+# TRES COSAS QUE CONVIENE SABER
+# ─────────────────────────────
+#  1. Los horarios SÓLO se disparan desde la rama principal. Mientras esto
+#     viva en `claude/*` está dormido. "Run workflow" sí funciona desde
+#     cualquier rama, para probar.
+#  2. GitHub no es puntual: con carga alta retrasa los horarios 10-15 minutos.
+#     Para la ingesta cada 2 h da igual; el broadcast a veces sale a los 40.
+#  3. GitHub apaga los horarios tras 60 días sin actividad en el repo y avisa
+#     por correo. Se reactivan con un clic.
+
+name: Motor
+
+on:
+  schedule:
+    - cron: "0 */2 * * *"    # ingesta de cuotas → análisis → picks
+    - cron: "15 */3 * * *"   # resultados oficiales (API-Football)
+    - cron: "30 */3 * * *"   # liquidación de picks y parlays → CLV
+    - cron: "20 */6 * * *"   # parlays pre-generados del día
+    - cron: "*/30 * * * *"   # canal público de Telegram
+  workflow_dispatch:
+    inputs:
+      ruta:
+        description: "Qué llamar a mano"
+        required: true
+        default: ingest
+        type: choice
+        options:
+          - ingest
+          - fixtures
+          - settle
+          - parlays
+          - broadcast
+
+permissions:
+  contents: read
+
+# Dos ejecuciones de la misma ruta a la vez duplicarían picks y gasto.
+concurrency:
+  group: motor-${{ github.event.schedule || inputs.ruta }}
+  cancel-in-progress: false
+
+jobs:
+  llamar:
+    name: Llamar al backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Decidir qué toca
+        id: cual
+        env:
+          PROGRAMADO: ${{ github.event.schedule }}
+          MANUAL: ${{ inputs.ruta }}
+        run: |
+          set -euo pipefail
+          case "$PROGRAMADO" in
+            "0 */2 * * *")  ruta="api/cron/ingest"        ;;
+            "15 */3 * * *") ruta="api/cron/fixtures"      ;;
+            "30 */3 * * *") ruta="api/cron/settle"        ;;
+            "20 */6 * * *") ruta="api/cron/parlays"       ;;
+            "*/30 * * * *") ruta="api/telegram/broadcast" ;;
+            "")
+              # Disparo manual desde la pestaña Actions.
+              case "$MANUAL" in
+                ingest)    ruta="api/cron/ingest"        ;;
+                fixtures)  ruta="api/cron/fixtures"      ;;
+                settle)    ruta="api/cron/settle"        ;;
+                parlays)   ruta="api/cron/parlays"       ;;
+                broadcast) ruta="api/telegram/broadcast" ;;
+                *) echo "::error::ruta desconocida: $MANUAL"; exit 1 ;;
+              esac
+              ;;
+            *) echo "::error::horario sin ruta asignada: $PROGRAMADO"; exit 1 ;;
+          esac
+          echo "ruta=$ruta" >> "$GITHUB_OUTPUT"
+          echo "Toca: /$ruta"
+
+      # El broadcast va por GET a propósito: GET publica en el canal público,
+      # y los mensajes directos a suscriptores los dispara la propia ingesta
+      # por POST al terminar de publicar picks (src/app/api/cron/ingest).
+      - name: Llamar
+        env:
+          PIX_URL: ${{ secrets.PIX_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          RUTA: ${{ steps.cual.outputs.ruta }}
+        run: |
+          set -uo pipefail
+
+          if [ -z "${PIX_URL:-}" ] || [ -z "${CRON_SECRET:-}" ]; then
+            echo "::notice::Faltan los secretos PIX_URL y/o CRON_SECRET. No hay backend al que llamar todavía; esto no es un fallo."
+            exit 0
+          fi
+
+          # La cabecera va por fichero para que el secreto no aparezca en la
+          # línea de comandos del proceso.
+          cabecera="$(mktemp)"
+          respuesta="$(mktemp)"
+          trap 'rm -f "$cabecera" "$respuesta"' EXIT
+          printf 'Authorization: Bearer %s\n' "$CRON_SECRET" > "$cabecera"
+
+          destino="${PIX_URL%/}/$RUTA"
+          echo "→ $destino"
+
+          codigo=$(curl -sS --max-time 540 --retry 2 --retry-connrefused \
+            -o "$respuesta" -w '%{http_code}' -H "@$cabecera" "$destino") || codigo="000"
+
+          echo "HTTP $codigo"
+          head -c 4000 "$respuesta"
+          echo
+
+          case "$codigo" in
+            2*)
+              exit 0 ;;
+            401)
+              echo "::error::401 · el CRON_SECRET del repo no coincide con el del despliegue."
+              exit 1 ;;
+            503)
+              echo "::warning::503 · el backend responde pero le falta configuración (normalmente Supabase). Corre 'npm run doctor' con las variables del despliegue."
+              exit 0 ;;
+            000)
+              echo "::error::no se pudo contactar con $destino · ¿está desplegado y es correcta PIX_URL?"
+              exit 1 ;;
+            *)
+              echo "::error::respuesta inesperada ($codigo)."
+              exit 1 ;;
+          esac

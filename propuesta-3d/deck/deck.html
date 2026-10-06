@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Propuesta · Diseño web 3D e inmersivo</title>
+<link rel="stylesheet" href="fonts.css">
+<style>
+/* Lienzo: diapositivas de 1920×1080. Cada página = una sección navegable (enlaces internos → anotaciones del PDF). */
+:root {
+  --void: #080912;
+  --deep: #10122a;
+  --panel: #161a3a;
+  --line: #2a2f5e;
+  --paper: #f2f0fa;
+  --mist: #a6aacb;
+  --rim: #5be4ff;
+  --key: #ffb088;
+  --cobalt: #7a74ff;
+  --ink-on-key: #1a0f0a;
+  --display: 'Unbounded', 'Arial Black', sans-serif;
+  --body: 'Figtree', 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+@page { size: 1920px 1080px; margin: 0; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; background: var(--void); }
+body { color: var(--paper); font: 400 26px/1.45 var(--body); -webkit-font-smoothing: antialiased; }
+.slide { position: relative; width: 1920px; height: 1080px; overflow: hidden; break-after: page; page-break-after: always;
+  background:
+    radial-gradient(900px 620px at 88% 18%, #1b2170 0%, transparent 70%),
+    radial-gradient(700px 520px at 6% 100%, #3a1f2a 0%, transparent 72%),
+    var(--void); }
+.slide:last-child { break-after: auto; page-break-after: auto; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+a { color: inherit; text-decoration: none; }
+p, h2 { margin: 0; }
+h2 { font-weight: inherit; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+img { display: block; }
+
+/* Barra superior y navegación */
+.chrome-top { position: absolute; left: 80px; right: 80px; top: 40px; height: 48px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
+.brand { font: 700 22px/1 var(--display); letter-spacing: .04em; display: flex; gap: 14px; align-items: baseline; }
+.brand small { font: 400 15px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mist); }
+.tabs { display: flex; gap: 6px; }
+.tabs a { font: 500 19px/1 var(--body); color: var(--mist); padding: 12px 18px; border-radius: 999px; border: 1px solid transparent; }
+.tabs a.on { color: var(--paper); border-color: var(--line); background: var(--deep); }
+.chrome-bottom { position: absolute; left: 80px; right: 80px; bottom: 36px; height: 52px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
+.navbtn { display: inline-flex; align-items: center; gap: 10px; font: 600 19px/1 var(--body); padding: 14px 20px; border-radius: 999px; border: 1px solid var(--line); background: var(--deep); color: var(--paper); }
+.navbtn .ar { font-family: var(--mono); color: var(--rim); }
+.ham { width: 18px; height: 14px; background: linear-gradient(var(--rim) 0 2px, transparent 2px 6px, var(--rim) 6px 8px, transparent 8px 12px, var(--rim) 12px 14px); }
+.pager { display: flex; gap: 10px; align-items: center; }
+.count { font: 400 17px/1 var(--mono); letter-spacing: .08em; color: var(--mist); margin-right: 8px; }
+.count b { color: var(--paper); font-weight: 600; }
+
+/* Tipografía */
+.eyebrow { font: 400 18px/1.3 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--rim); }
+.title { font: 600 68px/1.08 var(--display); letter-spacing: -.012em; text-wrap: balance; }
+.title em { font-style: normal; color: var(--key); }
+.lede { font-size: 28px; line-height: 1.5; color: var(--mist); text-wrap: pretty; }
+.muted { color: var(--mist); }
+.mono { font-family: var(--mono); }
+.k { color: var(--key); }
+.r { color: var(--rim); }
+
+/* Botones */
+.btn { display: inline-flex; align-items: center; gap: 12px; font: 600 22px/1 var(--body); padding: 20px 30px; border-radius: 999px; border: 1px solid var(--line); color: var(--paper); background: var(--deep); }
+.btn.key { background: var(--key); border-color: var(--key); color: var(--ink-on-key); }
+.btn.rim { border-color: var(--rim); }
+.chip { display: inline-block; font: 500 20px/1.2 var(--body); padding: 12px 18px; border-radius: 999px; border: 1px dashed var(--line); color: var(--mist); }
+.metric { display: inline-flex; align-items: center; gap: 10px; font: 400 18px/1.3 var(--mono); padding: 12px 16px; border-radius: 12px; background: #5be4ff12; border: 1px solid #5be4ff40; color: var(--rim); }
+
+/* Placas con volumen (sombra + canto inferior) */
+.slab { position: relative; background: linear-gradient(160deg, #1b1f48 0%, #121534 60%, #0f1230 100%); border: 1px solid var(--line); border-radius: 26px;
+  box-shadow: 0 2px 0 #3a3f7a inset, 0 10px 0 -1px #0b0d24, 0 10px 0 0 var(--line), 0 40px 60px -24px #000c; }
+.tag { display: inline-block; font: 400 16px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--key); border: 1px solid #ffb08866; border-radius: 999px; padding: 10px 14px; }
+.kv b { display: block; font: 400 16px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--rim); margin-bottom: 10px; }
+.bul li { position: relative; padding-left: 26px; color: var(--mist); }
+.bul li + li { margin-top: 6px; }
+.bul li::before { content: ''; position: absolute; left: 2px; top: .62em; width: 9px; height: 9px; border-radius: 3px; background: var(--key); }
+
+/* Marco de navegador para los mockups */
+.browser { position: absolute; border-radius: 26px; border: 1px solid var(--line); background: radial-gradient(70% 70% at 50% 45%, #1a1f5c 0%, #0c0e22 75%); overflow: hidden;
+  box-shadow: 0 50px 90px -30px #000e, 0 0 0 10px #ffffff06; }
+.browser .bar { position: absolute; top: 0; left: 0; right: 0; height: 52px; display: flex; align-items: center; gap: 10px; padding: 0 20px; background: #0b0d22cc; border-bottom: 1px solid var(--line); z-index: 2; }
+.browser .dot { width: 12px; height: 12px; border-radius: 50%; }
+.browser .url { margin-left: 14px; font: 400 15px/1 var(--mono); color: var(--mist); background: var(--deep); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; }
+.render { position: absolute; }
+.render img { width: 100%; height: 100%; }
+
+/* Callouts sobre renders */
+svg.leaders { position: absolute; inset: 0; width: 1920px; height: 1080px; pointer-events: none; z-index: 3; overflow: visible; }
+.callout { position: absolute; z-index: 4; }
+.callout.card { background: #0d0f26ee; border: 1px solid var(--line); border-radius: 16px; padding: 14px 18px; font-size: 20px; line-height: 1.35; max-width: 340px; box-shadow: 0 20px 40px -18px #000c; }
+.callout.card b { display: block; font: 600 20px/1.2 var(--display); margin-bottom: 4px; }
+.callout.card .mono { font-size: 15px; color: var(--mist); }
+
+/* ---------- Diapositivas ---------- */
+
+/* 1 · Portada */
+#s1 .copy { position: absolute; left: 120px; top: 220px; width: 820px; display: grid; gap: 34px; }
+#s1 .title { font-size: 104px; line-height: 1.0; font-weight: 700; }
+#s1 .hero { position: absolute; right: -120px; top: 150px; width: 1240px; height: 777px; z-index: 2; }
+#s1 .grid { position: absolute; left: 0; bottom: 0; width: 1920px; height: 430px; z-index: 1; }
+#s1 .ctas { display: flex; gap: 16px; }
+#s1 .hint { font: 400 17px/1.4 var(--mono); color: var(--mist); }
+
+/* 2 · Índice */
+#s2 .head { position: absolute; left: 120px; top: 150px; width: 1680px; display: flex; justify-content: space-between; align-items: end; }
+#s2 .cards { position: absolute; left: 120px; top: 330px; width: 1680px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px 30px; }
+#s2 .card { display: grid; grid-template-columns: 150px 1fr; gap: 6px 22px; align-items: center; padding: 26px 28px 30px; min-height: 250px; }
+#s2 .card img { grid-row: span 3; width: 150px; height: 150px; }
+#s2 .card .n { font: 400 17px/1 var(--mono); color: var(--rim); letter-spacing: .1em; }
+#s2 .card .t { font: 600 30px/1.15 var(--display); }
+#s2 .card .d { font-size: 21px; color: var(--mist); line-height: 1.35; }
+#s2 .card .go { position: absolute; right: 24px; top: 22px; font: 400 18px/1 var(--mono); color: var(--key); }
+
+/* 3 · Por qué 3D */
+#s3 .head { position: absolute; left: 120px; top: 150px; width: 1500px; display: grid; gap: 20px; }
+#s3 .cols { position: absolute; left: 120px; top: 380px; width: 1680px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+#s3 .col { padding: 30px 34px 36px; display: grid; gap: 18px; align-content: start; min-height: 440px; }
+#s3 .col img { width: 130px; height: 130px; margin: -10px 0 0 -10px; }
+#s3 .lbl { font: 400 16px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+#s3 .before { color: var(--mist); font-size: 25px; min-height: 2.9em; }
+#s3 .after { font: 600 28px/1.3 var(--body); }
+#s3 .arrow { font: 400 22px/1 var(--mono); color: var(--rim); }
+#s3 .note { position: absolute; left: 120px; top: 880px; width: 1680px; font-size: 25px; color: var(--mist); }
+#s3 .note b { color: var(--paper); }
+
+/* 4 · Skills */
+#s4 .render { left: 70px; top: 80px; width: 870px; height: 940px; }
+#s4 .head { position: absolute; left: 1010px; top: 118px; width: 820px; display: grid; gap: 12px; }
+#s4 .head .title { font-size: 56px; }
+#s4 .list { position: absolute; left: 1010px; top: 372px; width: 830px; display: grid; gap: 8px; }
+#s4 .item { display: grid; grid-template-columns: 56px 1fr; gap: 0 8px; padding: 4px 0; }
+#s4 .item .n { grid-row: span 3; font: 400 18px/1.6 var(--mono); color: var(--rim); }
+#s4 .item .t { font: 600 25px/1.25 var(--display); }
+#s4 .item .d { font-size: 21px; color: var(--mist); line-height: 1.35; }
+#s4 .item .tools { font: 400 15.5px/1.4 var(--mono); color: var(--key); }
+
+/* 5 · Método */
+#s5 .head { position: absolute; left: 120px; top: 150px; width: 1250px; display: grid; gap: 18px; }
+#s5 .target { position: absolute; right: 110px; top: 100px; width: 320px; height: 320px; }
+#s5 .steps { position: absolute; left: 120px; top: 390px; width: 1680px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; align-items: stretch; }
+#s5 .step { padding: 30px 32px 34px; display: grid; gap: 14px; }
+#s5 .step:nth-child(1) { transform: translateY(90px); }
+#s5 .step:nth-child(2) { transform: translateY(45px); }
+#s5 .step .n { font: 600 54px/1 var(--display); color: transparent; -webkit-text-stroke: 1.5px var(--rim); }
+#s5 .step .t { font: 600 32px/1.15 var(--display); }
+#s5 .step p { color: var(--mist); font-size: 23px; }
+#s5 .qs { position: absolute; left: 120px; top: 845px; width: 1680px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+#s5 .qs .lbl { font: 400 16px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mist); margin-right: 8px; }
+
+/* 6–8 · Casos */
+.case .text { position: absolute; top: 140px; width: 700px; display: grid; gap: 26px; align-content: start; }
+.case .quote { font: 600 40px/1.2 var(--display); text-wrap: balance; }
+.case .kv p, .case .kv li { font-size: 22px; }
+.case .metrics { display: flex; flex-wrap: wrap; gap: 10px; }
+#s6 .browser { left: 80px; top: 130px; width: 1000px; height: 840px; }
+#s6 .render { left: 130px; top: 175px; width: 800px; height: 800px; }
+#s6 .text { left: 1140px; }
+#s7 .browser { left: 840px; top: 130px; width: 1000px; height: 840px; }
+#s7 .render { left: 870px; top: 190px; width: 940px; height: 769px; }
+#s7 .text { left: 100px; }
+#s8 .top { position: absolute; left: 120px; top: 130px; width: 1680px; display: flex; gap: 40px; align-items: end; justify-content: space-between; }
+#s8 .top .quote { max-width: 1050px; }
+#s8 .browser { left: 120px; top: 330px; width: 1680px; height: 430px; }
+#s8 .render { left: 230px; top: 330px; width: 1460px; height: 584px; }
+#s8 .cols { position: absolute; left: 120px; top: 790px; width: 1680px; display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 40px; }
+#s8 .cols .kv p, #s8 .cols li { font-size: 21px; }
+.ui-mock { position: absolute; z-index: 4; background: #0d0f26f2; border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; box-shadow: 0 24px 50px -20px #000e; }
+.ui-mock .row { display: flex; gap: 8px; align-items: center; }
+.ui-mock .row + .row { margin-top: 10px; }
+.ui-mock .lab { font: 400 13px/1 var(--mono); letter-spacing: .08em; color: var(--mist); text-transform: uppercase; width: 64px; }
+.ui-mock .c { font: 600 16px/1 var(--body); padding: 8px 11px; border-radius: 9px; border: 1px solid var(--line); background: var(--panel); }
+.ui-mock .c.on { background: var(--key); color: var(--ink-on-key); border-color: var(--key); }
+.ui-mock .read { margin-top: 12px; font: 400 15px/1.4 var(--mono); }
+.ui-mock .track { width: 230px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--key) 0 60%, var(--line) 60%); position: relative; }
+.ui-mock .track::after { content: ''; position: absolute; left: 60%; top: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: var(--key); }
+
+/* 9 · Matriz */
+#s9 .head { position: absolute; left: 120px; top: 140px; width: 1680px; display: grid; gap: 14px; }
+#s9 table { position: absolute; left: 120px; top: 300px; width: 1680px; border-collapse: separate; border-spacing: 0; font-size: 22px; }
+#s9 th { text-align: left; font: 400 15px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mist); padding: 0 20px 16px; }
+#s9 td { padding: 12px 20px; border-top: 1px solid var(--line); vertical-align: middle; }
+#s9 td:first-child { font-weight: 600; width: 340px; }
+#s9 td:first-child span { display: inline-flex; align-items: center; gap: 14px; }
+#s9 td:first-child img { width: 48px; height: 48px; }
+#s9 td:nth-child(2) { color: var(--mist); font-style: italic; width: 450px; }
+#s9 td:last-child { font: 400 18px/1.35 var(--mono); color: var(--rim); width: 380px; }
+#s9 .foot { position: absolute; left: 120px; top: 890px; font-size: 22px; color: var(--mist); }
+
+/* 10–12 · Higgsfield */
+#s10 .head { position: absolute; left: 120px; top: 135px; width: 1480px; display: grid; gap: 18px; }
+#s10 .two { position: absolute; left: 120px; top: 470px; width: 1680px; display: grid; grid-template-columns: 1fr 1fr; gap: 34px; }
+#s10 .box { padding: 30px 36px 34px; display: grid; gap: 16px; align-content: start; min-height: 360px; }
+#s10 .box.free { border-color: #5be4ff80; }
+#s10 .box.paid { border-color: #ffb08880; }
+#s10 .box .h { display: flex; align-items: center; gap: 16px; font: 600 34px/1.1 var(--display); }
+#s10 .box .h img { width: 84px; height: 84px; margin: -14px -6px -14px -12px; }
+#s10 .box li { font-size: 23px; }
+#s10 .src { position: absolute; left: 120px; top: 900px; width: 1680px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+#s10 .src .lbl { font: 400 16px/1.3 var(--mono); color: var(--mist); margin-right: 6px; }
+.linkchip { display: inline-flex; align-items: center; gap: 8px; font: 400 17px/1 var(--mono); color: var(--rim); border: 1px solid #5be4ff55; border-radius: 999px; padding: 11px 15px; background: #5be4ff0d; }
+
+#s11 .head { position: absolute; left: 120px; top: 135px; width: 1680px; display: grid; gap: 14px; }
+#s11 .lane { position: absolute; left: 120px; width: 1680px; }
+#s11 .lane.a { top: 348px; }
+#s11 .lane.b { top: 612px; }
+#s11 .lane .lt { font: 400 17px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 18px; }
+#s11 .lane ol { display: grid; gap: 22px; }
+#s11 .lane.a ol { grid-template-columns: repeat(3, 1fr); }
+#s11 .lane.b ol { grid-template-columns: repeat(4, 1fr); }
+#s11 .lane li { padding: 18px 22px 22px; display: grid; grid-template-columns: 84px 1fr; gap: 4px 14px; align-items: start; min-height: 170px; }
+#s11 .lane li img { width: 84px; height: 84px; grid-row: span 2; margin-top: -4px; }
+#s11 .lane li .n { font: 400 16px/1.3 var(--mono); color: var(--rim); }
+#s11 .lane.b li .n { color: var(--key); }
+#s11 .lane li p { font-size: 21px; line-height: 1.35; }
+#s11 .lane li p .muted { font-size: 19px; }
+#s11 .docs { position: absolute; left: 120px; top: 890px; width: 1680px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+#s12 .head { position: absolute; left: 120px; top: 135px; width: 1680px; display: grid; gap: 14px; }
+#s12 .render { left: 160px; top: 175px; width: 1600px; height: 700px; }
+#s12 .care { position: absolute; left: 120px; top: 810px; width: 1680px; padding: 22px 34px 24px; display: grid; gap: 14px; }
+#s12 .care .lbl { font: 400 16px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--key); }
+#s12 .care ul { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 50px; }
+#s12 .care li { font-size: 21px; margin: 0; }
+
+/* 13 · Proceso */
+#s13 .head { position: absolute; left: 120px; top: 140px; width: 1680px; display: grid; gap: 14px; }
+#s13 .track { position: absolute; left: 120px; top: 375px; width: 1680px; height: 2px; background: linear-gradient(90deg, var(--rim), var(--key)); opacity: .7; }
+#s13 .stages { position: absolute; left: 120px; top: 315px; width: 1680px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; }
+#s13 .stage { display: grid; gap: 12px; align-content: start; }
+#s13 .stage img { width: 116px; height: 116px; margin-left: -14px; }
+#s13 .stage .when { font: 400 17px/1 var(--mono); color: var(--key); letter-spacing: .06em; }
+#s13 .stage .t { font: 600 28px/1.15 var(--display); }
+#s13 .stage p { color: var(--mist); font-size: 21px; line-height: 1.38; }
+#s13 .stage .out { margin-top: 6px; padding: 14px 16px; font-size: 19px; color: var(--paper); line-height: 1.3; }
+#s13 .stage .out span { display: block; font: 400 13px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--rim); margin-bottom: 8px; }
+#s13 .foot { position: absolute; left: 120px; top: 920px; font-size: 21px; color: var(--mist); }
+#s13 .need { position: absolute; left: 120px; top: 800px; width: 1680px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+#s13 .need .lbl { font: 400 16px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--key); margin-right: 8px; }
+
+/* 14 · Versión 3D + contacto */
+#s14 .devices { position: absolute; left: -40px; top: 170px; width: 1150px; height: 721px; z-index: 2; }
+#s14 .grid { position: absolute; left: 0; bottom: 0; width: 1920px; height: 400px; z-index: 1; }
+#s14 .right { position: absolute; left: 1120px; top: 140px; width: 700px; display: grid; gap: 26px; z-index: 3; }
+#s14 .right .title { font-size: 50px; }
+#s14 .qrrow { display: flex; gap: 26px; align-items: center; }
+#s14 #qr { width: 190px; height: 190px; padding: 14px; background: var(--paper); border-radius: 20px; flex: none; }
+#s14 #qr svg { width: 100%; height: 100%; display: block; }
+#s14 .qrrow p { font-size: 21px; color: var(--mist); }
+#s14 .contact { padding: 28px 30px; display: grid; gap: 16px; }
+#s14 .contact .t { font: 600 30px/1.2 var(--display); }
+#s14 .contact .row { display: flex; flex-wrap: wrap; gap: 12px; }
+#s14 .email { font: 400 22px/1 var(--mono); color: var(--paper); }
+</style>
+</head>
+<body>
+
+<!-- ============ 1 · PORTADA ============ -->
+<section class="slide" id="s1" data-tab="inicio">
+  <svg class="grid" data-grid viewBox="0 0 1920 430" aria-hidden="true"></svg>
+  <div class="copy">
+    <h2 class="eyebrow">Propuesta · Diseño web 3D e inmersivo</h2>
+    <p class="title">Webs que tus clientes pueden <em>recorrer</em>.</p>
+    <p class="lede">Diseño experiencias 3D en el navegador para que tus clientes entiendan tu producto, lo exploren solos y te escriban con la decisión casi tomada.</p>
+    <div class="ctas">
+      <a class="btn key" href="#s2">Ver el índice <span class="mono">→</span></a>
+      <a class="btn rim" data-if="webUrl" data-cfg-href="webUrl" href="#">Abrir versión 3D <span class="mono">↗</span></a>
+    </div>
+  </div>
+  <div class="render hero"><img src="../assets/renders/hero.png" alt="Ventana de navegador en 3D con objetos que salen de la pantalla"></div>
+</section>
+
+<!-- ============ 2 · ÍNDICE ============ -->
+<section class="slide" id="s2" data-tab="inicio">
+  <div class="head">
+    <div style="display:grid; gap: 14px">
+      <h2 class="eyebrow">Índice</h2>
+      <p class="title">Qué vas a encontrar</p>
+    </div>
+    <p class="lede" style="max-width: 560px; font-size: 23px">Toca una tarjeta para ir directo. En cada página tienes un botón para volver aquí.</p>
+  </div>
+  <div class="cards">
+    <a class="card slab" href="#s3"><img src="../assets/renders/icon-spark.png" alt=""><span class="n">PÁG. 03</span><span class="t">Por qué 3D</span><span class="d">Cuándo el 3D vende y cuándo sobra.</span><span class="go">→</span></a>
+    <a class="card slab" href="#s4"><img src="../assets/renders/icon-layers.png" alt=""><span class="n">PÁG. 04</span><span class="t">Skills</span><span class="d">Las seis capas de cada proyecto.</span><span class="go">→</span></a>
+    <a class="card slab" href="#s5"><img src="../assets/renders/icon-target.png" alt=""><span class="n">PÁG. 05–09</span><span class="t">Resolver dolores</span><span class="d">Método, tres casos y una guía por sector.</span><span class="go">→</span></a>
+    <a class="card slab" href="#s10"><img src="../assets/renders/icon-play.png" alt=""><span class="n">PÁG. 10–12</span><span class="t">Higgsfield</span><span class="d">IA para imágenes y video: qué es gratis y qué no.</span><span class="go">→</span></a>
+    <a class="card slab" href="#s13"><img src="../assets/renders/icon-steps.png" alt=""><span class="n">PÁG. 13</span><span class="t">Proceso</span><span class="d">Etapas, tiempos y entregables.</span><span class="go">→</span></a>
+    <a class="card slab" href="#s14"><img src="../assets/renders/icon-chat.png" alt=""><span class="n">PÁG. 14</span><span class="t">Versión 3D y contacto</span><span class="d">Mírala en 3D de verdad y hablemos.</span><span class="go">→</span></a>
+  </div>
+</section>
+
+<!-- ============ 3 · POR QUÉ 3D ============ -->
+<section class="slide" id="s3" data-tab="inicio">
+  <div class="head">
+    <h2 class="eyebrow">Por qué 3D</h2>
+    <p class="title">Una foto se mira. <em>Un espacio se explora.</em></p>
+  </div>
+  <div class="cols">
+    <div class="col slab">
+      <img src="../assets/renders/icon-cube.png" alt="">
+      <p class="lbl muted">Hoy</p>
+      <p class="before">Tu cliente lee una ficha técnica y se queda con dudas.</p>
+      <p class="arrow">↓ con 3D</p>
+      <p class="after">Gira el producto, lo abre y ve cada pieza.</p>
+    </div>
+    <div class="col slab">
+      <img src="../assets/renders/icon-chat.png" alt="">
+      <p class="lbl muted">Hoy</p>
+      <p class="before">Te pide más fotos por WhatsApp, una y otra vez.</p>
+      <p class="arrow">↓ con 3D</p>
+      <p class="after">Recorre el espacio a su ritmo, a cualquier hora.</p>
+    </div>
+    <div class="col slab">
+      <img src="../assets/renders/icon-spark.png" alt="">
+      <p class="lbl muted">Hoy</p>
+      <p class="before">Tu web se parece a la de tu competencia.</p>
+      <p class="arrow">↓ con 3D</p>
+      <p class="after">La experiencia se recuerda y se comparte.</p>
+    </div>
+  </div>
+  <p class="note"><b>El 3D no va de adorno.</b> Lo uso donde una imagen plana deja preguntas sin responder. Si tu caso no lo necesita, te lo digo.</p>
+</section>
+
+<!-- ============ 4 · SKILLS ============ -->
+<!-- SUPUESTO: skills y herramientas. Ajusta nombres y stack a lo que realmente dominas. -->
+<section class="slide" id="s4" data-tab="skills">
+  <div class="render" data-anchors="layers"><img src="../assets/renders/layers.png" alt="Seis placas apiladas en 3D, una por habilidad"></div>
+  <div class="head">
+    <h2 class="eyebrow">Skills</h2>
+    <p class="title">Seis capas en cada proyecto</p>
+    <p class="lede" style="font-size: 23px">Todo se apoya en la última: si no carga rápido, no sirve.</p>
+  </div>
+  <ol class="list">
+    <li class="item" data-leader="layers:skill-0"><span class="n">01</span><span class="t">Dirección de arte y modelado 3D</span><span class="d">Tu producto o tu espacio, modelado con tu identidad.</span><span class="tools">Blender · Spline · IA generativa</span></li>
+    <li class="item" data-leader="layers:skill-1"><span class="n">02</span><span class="t">Materiales, luz y render en tiempo real</span><span class="d">Se ve real en el navegador, sin esperar a que cargue un video.</span><span class="tools">PBR · HDRI · shaders</span></li>
+    <li class="item" data-leader="layers:skill-2"><span class="n">03</span><span class="t">Animación y motion</span><span class="d">El scroll cuenta tu historia, paso a paso.</span><span class="tools">GSAP · ScrollTrigger · cámaras</span></li>
+    <li class="item" data-leader="layers:skill-3"><span class="n">04</span><span class="t">Interacción WebGL</span><span class="d">Tu cliente gira, abre, elige y compara.</span><span class="tools">Three.js · React Three Fiber · configuradores</span></li>
+    <li class="item" data-leader="layers:skill-4"><span class="n">05</span><span class="t">UX inmersivo</span><span class="d">Efecto wow sin esconder el botón de comprar.</span><span class="tools">Arquitectura de información · accesibilidad · pruebas</span></li>
+    <li class="item" data-leader="layers:skill-5"><span class="n">06</span><span class="t">Rendimiento</span><span class="d">Carga rápido con datos móviles y tiene versión ligera.</span><span class="tools">glTF + Draco · KTX2 · carga progresiva</span></li>
+  </ol>
+</section>
+
+<!-- ============ 5 · MÉTODO ============ -->
+<section class="slide" id="s5" data-tab="dolores">
+  <div class="head">
+    <h2 class="eyebrow">Resolver dolores</h2>
+    <p class="title">Primero el dolor de tus clientes. <em>Después el 3D.</em></p>
+  </div>
+  <img class="target" src="../assets/renders/icon-target.png" alt="">
+  <ol class="steps">
+    <li class="step slab"><span class="n">01</span><span class="t">Escuchar</span><p>Reviso las preguntas que más te hacen, las objeciones de ventas y tus reseñas.</p></li>
+    <li class="step slab"><span class="n">02</span><span class="t">Ubicar</span><p>Marcamos dónde se cae la venta: cuando no entienden, cuando no confían o cuando no pueden comparar.</p></li>
+    <li class="step slab"><span class="n">03</span><span class="t">Diseñar y medir</span><p>Diseñamos la experiencia para ese momento y elegimos un número para saber si funcionó.</p></li>
+  </ol>
+  <div class="qs">
+    <span class="lbl">Te voy a preguntar</span>
+    <span class="chip">¿Qué pregunta te hacen diez veces por semana?</span>
+    <span class="chip">¿Qué necesita ver tu cliente para decidir?</span>
+    <span class="chip">¿En qué paso abandona hoy?</span>
+    <span class="chip">¿Qué número te diría que mejoró?</span>
+  </div>
+</section>
+
+<!-- ============ 6 · CASO INMOBILIARIA ============ -->
+<!-- SUPUESTO: casos ilustrativos (no son clientes reales). Si tienes casos propios, reemplázalos. -->
+<section class="slide case" id="s6" data-tab="dolores">
+  <div class="browser"><div class="bar"><span class="dot" style="background: var(--key)"></span><span class="dot" style="background: var(--rim)"></span><span class="dot" style="background: var(--paper)"></span><span class="url">torre-ejemplo · elige tu unidad</span></div></div>
+  <div class="render" data-anchors="building"><img src="../assets/renders/building.png" alt="Torre de apartamentos en 3D con la unidad del piso 5 resaltada"></div>
+  <div class="ui-mock" style="left: 770px; top: 215px; width: 280px">
+    <div class="row"><span class="lab">Piso</span><span class="c">4</span><span class="c on">5</span><span class="c">6</span><span class="c">7</span></div>
+    <div class="row"><span class="lab">Unidad</span><span class="c">A</span><span class="c">B</span><span class="c">C</span><span class="c on">D</span></div>
+    <p class="read">94 m² · vista <span class="k">atardecer</span><br>Disponible</p>
+  </div>
+  <svg class="pinline" data-pinline="building:unit" style="position:absolute; inset:0; width:1920px; height:1080px; z-index:3; pointer-events:none" viewBox="0 0 1920 1080"></svg>
+  <div class="text">
+    <h2 class="tag" style="justify-self: start">Caso ilustrativo · inmobiliaria en preventa</h2>
+    <p class="quote">«Vivo fuera del país. ¿Cómo separo un apartamento que todavía no existe?»</p>
+    <div class="kv"><b>La experiencia</b><ul class="bul"><li>Torre 3D: eliges piso y unidad.</li><li>Ves la orientación y la vista desde el balcón.</li><li>Disponibilidad y precio al momento.</li></ul></div>
+    <div class="kv"><b>Qué cambia</b><p class="muted">El comprador llega a la llamada con la unidad elegida. La venta a distancia deja de depender de mandar planos por WhatsApp.</p></div>
+    <div class="kv"><b>Cómo lo medimos</b><div class="metrics"><span class="metric">Unidades exploradas por visita</span><span class="metric">Reservas desde la web</span><span class="metric">Días hasta la separación</span></div></div>
+  </div>
+</section>
+
+<!-- ============ 7 · CASO PRODUCTO TÉCNICO ============ -->
+<section class="slide case" id="s7" data-tab="dolores">
+  <div class="browser"><div class="bar"><span class="dot" style="background: var(--key)"></span><span class="dot" style="background: var(--rim)"></span><span class="dot" style="background: var(--paper)"></span><span class="url">kit-solar-ejemplo · arma tu kit</span></div></div>
+  <div class="render" data-anchors="solar"><img src="../assets/renders/solar.png" alt="Kit solar en vista explosionada: panel, inversor y batería"></div>
+  <div class="callout card" data-at="880,215" data-for="solar:part-0" style="width: 290px"><b>Panel</b>Convierte la luz en electricidad.</div>
+  <div class="callout card" data-at="880,800" data-for="solar:part-2" style="width: 290px"><b>Batería</b>Guarda energía para la noche.</div>
+  <div class="callout card" data-at="1500,600" data-for="solar:part-1" style="width: 300px"><b>Inversor</b>Alimenta tus equipos y muestra el consumo.</div>
+  <div class="ui-mock" style="left: 1500px; top: 880px"><div class="row"><span class="lab">Abrir</span><span class="track"></span></div></div>
+  <div class="text">
+    <h2 class="tag" style="justify-self: start">Caso ilustrativo · producto técnico</h2>
+    <p class="quote">«No entiendo qué incluye el kit ni si me sirve para mi finca.»</p>
+    <div class="kv"><b>La experiencia</b><ul class="bul"><li>Vista explosionada: tocas cada pieza y ves para qué sirve.</li><li>Indicas qué equipos quieres alimentar y te sugiere el kit.</li><li>Sales con una ficha lista para cotizar.</li></ul></div>
+    <div class="kv"><b>Qué cambia</b><p class="muted">Menos preguntas repetidas al equipo de ventas. Las cotizaciones llegan con el kit ya elegido.</p></div>
+    <div class="kv"><b>Cómo lo medimos</b><div class="metrics"><span class="metric">Preguntas repetidas por WhatsApp</span><span class="metric">Cotizaciones con kit elegido</span><span class="metric">Horas hasta cotizar</span></div></div>
+  </div>
+</section>
+
+<!-- ============ 8 · CASO PAGOS ============ -->
+<section class="slide case" id="s8" data-tab="dolores">
+  <div class="top">
+    <div style="display: grid; gap: 18px">
+      <h2 class="tag" style="justify-self: start">Caso ilustrativo · pagos y transferencias</h2>
+      <p class="quote">«¿Y si mi dinero se queda en el camino?»</p>
+    </div>
+    <p class="lede" style="max-width: 560px; font-size: 23px">Lo que no se ve no genera confianza. Mostramos el camino del dinero, paso a paso.</p>
+  </div>
+  <div class="browser"><div class="bar"><span class="dot" style="background: var(--key)"></span><span class="dot" style="background: var(--rim)"></span><span class="dot" style="background: var(--paper)"></span><span class="url">pagos-ejemplo · así viaja tu dinero</span></div></div>
+  <div class="render" data-anchors="flow" style="clip-path: inset(0 0 154px 0)"><img src="../assets/renders/flow.png" alt="Recorrido del dinero en 3D con cuatro estaciones"></div>
+  <div class="callout pill" data-place="flow:node-0" data-dx="-70" data-dy="-118"><span class="metric" style="background:#0d0f26; color: var(--paper)">1 · Envías</span></div>
+  <div class="callout pill" data-place="flow:node-1" data-dx="-70" data-dy="-118"><span class="metric" style="background:#0d0f26; color: var(--paper)">2 · Cambio</span></div>
+  <div class="callout pill" data-place="flow:node-2" data-dx="-95" data-dy="-118"><span class="metric" style="background:#0d0f26; color: var(--paper)">3 · Verificación</span></div>
+  <div class="callout pill" data-place="flow:node-3" data-dx="-70" data-dy="-118"><span class="metric" style="background:#0d0f26; color: var(--paper)">4 · Recibe</span></div>
+  <div class="cols">
+    <div class="kv"><b>La experiencia</b><ul class="bul"><li>El recorrido del dinero en 3D, guiado con el scroll.</li><li>En cada paso: cuánto tarda, cuánto cuesta y qué lo protege.</li></ul></div>
+    <div class="kv"><b>Qué cambia</b><p class="muted">La confianza se construye antes del registro, no después del primer envío.</p></div>
+    <div class="kv"><b>Cómo lo medimos</b><div class="metrics"><span class="metric">Visitas a tarifas</span><span class="metric">Registros iniciados</span><span class="metric">«¿Dónde está mi dinero?» en soporte</span></div></div>
+  </div>
+</section>
+
+<!-- ============ 9 · MATRIZ POR SECTOR ============ -->
+<section class="slide" id="s9" data-tab="dolores">
+  <div class="head">
+    <h2 class="eyebrow">Resolver dolores · guía rápida</h2>
+    <p class="title" style="font-size: 54px">¿Tu negocio se parece a alguno de estos?</p>
+  </div>
+  <table>
+    <thead><tr><th>Negocio</th><th>Lo que dice su cliente</th><th>La experiencia 3D</th><th>Lo medimos con</th></tr></thead>
+    <tbody>
+      <tr><td><span><img src="../assets/renders/icon-steps.png" alt="">Gimnasio</span></td><td>«No sé si el lugar me va a gustar.»</td><td>Recorrido por las zonas con horarios y clases</td><td>Clases de prueba agendadas</td></tr>
+      <tr><td><span><img src="../assets/renders/icon-chat.png" alt="">Restaurante u hotel</span></td><td>«Las fotos no muestran el ambiente.»</td><td>Espacio navegable con reserva al final</td><td>Reservas desde la web</td></tr>
+      <tr><td><span><img src="../assets/renders/icon-cube.png" alt="">Industria</span></td><td>«¿Cabe en mi planta?»</td><td>Equipo en 3D con medidas reales</td><td>Solicitudes técnicas completas</td></tr>
+      <tr><td><span><img src="../assets/renders/icon-gauge.png" alt="">Agro</span></td><td>«¿Cómo se instala en mi terreno?»</td><td>El equipo montado en una finca tipo</td><td>Visitas técnicas agendadas</td></tr>
+      <tr><td><span><img src="../assets/renders/icon-layers.png" alt="">Educación</span></td><td>«No entiendo cómo funciona el programa.»</td><td>El programa explicado por capas</td><td>Solicitudes de admisión</td></tr>
+      <tr><td><span><img src="../assets/renders/icon-knot.png" alt="">Moda y producto</span></td><td>«¿Cómo se ve de cerca?»</td><td>Visor 360° con colores y materiales</td><td>Devoluciones por «no era lo que esperaba»</td></tr>
+    </tbody>
+  </table>
+  <p class="foot">¿No ves el tuyo? El método es el mismo: <span class="k">dolor → experiencia → número</span>.</p>
+</section>
+
+<!-- ============ 10 · HIGGSFIELD: GRATIS VS. PAGO ============ -->
+<section class="slide" id="s10" data-tab="higgsfield">
+  <div class="head">
+    <h2 class="eyebrow">Higgsfield · IA para imágenes y video</h2>
+    <p class="title">La API de Higgsfield no es gratis. <em>Esto sí lo es.</em></p>
+    <p class="lede">Higgsfield reúne varios modelos de IA para crear imágenes y video. Sirve para producir fondos, escenas de producto y clips para tu web sin organizar una sesión de fotos.</p>
+  </div>
+  <div class="two">
+    <div class="box slab free">
+      <p class="h"><img src="../assets/renders/icon-browser.png" alt="">Gratis: la web</p>
+      <ul class="bul">
+        <li>higgsfield.ai tiene un plan Free con un grupo limitado de modelos.</li>
+        <li>A veces ofrecen una prueba de 1 día para cuentas nuevas. Pide tarjeta y se renueva sola si no la cancelas a tiempo.</li>
+        <li>Antes de publicar lo que generes gratis, revisa en sus términos si el plan Free permite uso comercial.</li>
+      </ul>
+    </div>
+    <div class="box slab paid">
+      <p class="h"><img src="../assets/renders/icon-key.png" alt="">De pago: la API</p>
+      <ul class="bul">
+        <li>Saldo prepagado en dólares, sin suscripción.</li>
+        <li>Recarga mínima de 5 USD, según su blog oficial. Solo cobra las generaciones que salen bien.</li>
+        <li>Usa su propia llave y su propio saldo: el plan de la web no cubre la API.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="src">
+    <span class="lbl">Verificado el 6 oct 2026 en →</span>
+    <a class="linkchip" href="https://higgsfield.ai/blog/higgsfield-api">Blog: la API ↗</a>
+    <a class="linkchip" href="https://higgsfield.ai/creator-hub/help-center/plans/how-do-higgsfield-plans-work">Ayuda: planes ↗</a>
+    <a class="linkchip" href="https://docs.higgsfield.ai/docs/help/faq">FAQ de la API ↗</a>
+    <span class="lbl" style="margin-left: 10px">Precios y planes cambian. Si algo no coincide, manda la página oficial.</span>
+  </div>
+</section>
+
+<!-- ============ 11 · HIGGSFIELD: PASO A PASO ============ -->
+<section class="slide" id="s11" data-tab="higgsfield">
+  <div class="head">
+    <h2 class="eyebrow">Higgsfield · paso a paso</h2>
+    <p class="title" style="font-size: 58px">Empieza gratis. Pasa a la API cuando quieras automatizar.</p>
+  </div>
+  <div class="lane a">
+    <p class="lt r">Ruta A · gratis, sin código</p>
+    <ol>
+      <li class="slab"><img src="../assets/renders/icon-browser.png" alt=""><span class="n">01</span><p>Crea tu cuenta en <span class="r">higgsfield.ai</span>.</p></li>
+      <li class="slab"><img src="../assets/renders/icon-spark.png" alt=""><span class="n">02</span><p>Prueba los modelos del plan Free. <span class="muted">Ej.: «kit solar en una finca al atardecer, luz cálida».</span></p></li>
+      <li class="slab"><img src="../assets/renders/icon-chat.png" alt=""><span class="n">03</span><p>Descarga lo que te guste y envíamelo. <span class="muted">Lo integro en la escena 3D.</span></p></li>
+    </ol>
+  </div>
+  <div class="lane b">
+    <p class="lt k">Ruta B · API, desde 5 USD de saldo</p>
+    <ol>
+      <li class="slab"><img src="../assets/renders/icon-console.png" alt=""><span class="n">04</span><p>Regístrate en la consola de la API, <span class="muted">como persona o empresa.</span></p></li>
+      <li class="slab"><img src="../assets/renders/icon-coin.png" alt=""><span class="n">05</span><p>Agrega un método de pago y recarga saldo.</p></li>
+      <li class="slab"><img src="../assets/renders/icon-key.png" alt=""><span class="n">06</span><p>Crea una API key. <span class="muted">Se muestra una sola vez: guárdala como una contraseña.</span></p></li>
+      <li class="slab"><img src="../assets/renders/icon-play.png" alt=""><span class="n">07</span><p>La conectamos juntos a tu web. <span class="muted">Usa una key solo para este proyecto.</span></p></li>
+    </ol>
+  </div>
+  <div class="docs">
+    <a class="linkchip" href="https://docs.higgsfield.ai/docs/quickstart">Quickstart oficial ↗</a>
+    <a class="linkchip" href="https://docs.higgsfield.ai/docs">Documentación de la API ↗</a>
+    <a class="linkchip" href="https://higgsfield.ai/creator-hub/help-center/integrations/what-is-the-higgsfield-api">Qué es la API ↗</a>
+    <a class="linkchip" href="https://console.higgsfield.ai">Consola de la API ↗</a>
+  </div>
+</section>
+
+<!-- ============ 12 · HIGGSFIELD: EN TU PROYECTO ============ -->
+<section class="slide" id="s12" data-tab="higgsfield">
+  <div class="head">
+    <h2 class="eyebrow">Higgsfield · en tu web 3D</h2>
+    <p class="title" style="font-size: 58px">De una idea a una escena que se puede girar</p>
+  </div>
+  <div class="render" data-anchors="pipeline"><img src="../assets/renders/pipeline.png" alt="Una imagen, una tira de video y un objeto 3D unidos por flechas"></div>
+  <div class="callout card" data-place="pipeline:img" data-dx="-150" data-dy="14" style="width: 300px"><b>Imagen</b>Fondos, texturas y escenas de producto.</div>
+  <div class="callout card" data-place="pipeline:video" data-dx="-150" data-dy="14" style="width: 300px"><b>Video</b>Clips cortos para la portada y redes.</div>
+  <div class="callout card" data-place="pipeline:3d" data-dx="-150" data-dy="14" style="width: 300px"><b>3D</b>Imagen a modelo GLB. <span class="mono">Confirma si tu plan lo incluye.</span></div>
+  <div class="care slab">
+    <p class="lbl">Cuidados</p>
+    <ul class="bul">
+      <li>No subas fotos de personas sin su permiso.</li>
+      <li>Si una key se filtra, bórrala en la consola y crea otra.</li>
+      <li>Revisa los términos de uso comercial de tu plan.</li>
+      <li>La IA acelera bocetos. El modelo final lo ajusto a mano, con medidas reales.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 13 · PROCESO ============ -->
+<!-- SUPUESTO: tiempos de referencia para un proyecto mediano. Ajusta a tu capacidad real. -->
+<section class="slide" id="s13" data-tab="proceso">
+  <div class="head">
+    <h2 class="eyebrow">Proceso</h2>
+    <p class="title">Cómo trabajamos</p>
+  </div>
+  <div class="track"></div>
+  <div class="stages">
+    <div class="stage"><img src="../assets/renders/icon-target.png" alt=""><span class="when">Semana 1</span><span class="t">Diagnóstico</span><p>Entrevista y revisión de dónde se cae la venta.</p><p class="out slab"><span>Recibes</span>Mapa del dolor y métrica objetivo</p></div>
+    <div class="stage"><img src="../assets/renders/icon-knot.png" alt=""><span class="when">Semana 2</span><span class="t">Concepto 3D</span><p>Referencias visuales, guion y storyboard.</p><p class="out slab"><span>Recibes</span>Concepto para aprobar</p></div>
+    <div class="stage"><img src="../assets/renders/icon-cursor.png" alt=""><span class="when">Semanas 3–4</span><span class="t">Prototipo</span><p>Versión navegable que probamos con cinco clientes reales.</p><p class="out slab"><span>Recibes</span>Prototipo y ajustes</p></div>
+    <div class="stage"><img src="../assets/renders/icon-layers.png" alt=""><span class="when">Semanas 5–8</span><span class="t">Producción</span><p>Modelado final, animación y versión móvil ligera.</p><p class="out slab"><span>Recibes</span>Experiencia publicada</p></div>
+    <div class="stage"><img src="../assets/renders/icon-gauge.png" alt=""><span class="when">30 días</span><span class="t">Medición</span><p>Seguimos la métrica acordada y ajustamos.</p><p class="out slab"><span>Recibes</span>Reporte de resultados</p></div>
+  </div>
+  <div class="need">
+    <span class="lbl">Lo que necesito de ti</span>
+    <span class="chip">Dos horas para el diagnóstico</span>
+    <span class="chip">Las preguntas que más te hacen</span>
+    <span class="chip">Fotos, planos o el producto</span>
+    <span class="chip">Una persona que apruebe cada etapa</span>
+  </div>
+  <p class="foot">Tiempos de referencia para un proyecto mediano. El calendario real te lo doy después del diagnóstico.</p>
+</section>
+
+<!-- ============ 14 · VERSIÓN 3D + CONTACTO ============ -->
+<section class="slide" id="s14" data-tab="contacto">
+  <svg class="grid" data-grid viewBox="0 0 1920 400" aria-hidden="true"></svg>
+  <div class="render devices"><img src="../assets/renders/devices.png" alt="Portátil y teléfono mostrando la versión web interactiva"></div>
+  <div class="right">
+    <h2 class="eyebrow">Versión interactiva</h2>
+    <p class="title">Este PDF es la foto. <em>La experiencia está en la web.</em></p>
+    <div class="qrrow" data-if="webUrl">
+      <div id="qr" aria-label="Código QR de la versión interactiva"></div>
+      <div style="display: grid; gap: 16px">
+        <p>Escanéalo con el teléfono o toca el botón. Puedes girar el edificio, abrir el kit y seguir el dinero paso a paso.</p>
+        <a class="btn rim" data-cfg-href="webUrl" href="#" style="justify-self: start">Abrir versión 3D <span class="mono">↗</span></a>
+      </div>
+    </div>
+    <div class="contact slab">
+      <p class="t">Cuéntame qué pregunta te hacen una y otra vez.</p>
+      <p class="muted" style="font-size: 22px">En 30 minutos vemos si el 3D la resuelve. Si no, te lo digo y te recomiendo otra salida.</p>
+      <div class="row">
+        <a class="btn key" data-cfg-href="mailto" href="#">Escríbeme <span class="mono">↗</span></a>
+        <a class="btn" data-if="whatsapp" data-cfg-href="whatsapp" href="#">WhatsApp <span class="mono">↗</span></a>
+        <a class="btn" data-if="calendarUrl" data-cfg-href="calendarUrl" href="#">Agendar llamada <span class="mono">↗</span></a>
+      </div>
+      <p class="email" data-cfg="email"></p>
+    </div>
+  </div>
+</section>
+
+<script type="module">
+const TABS = [
+  ['inicio', 'Inicio', 's1'], ['skills', 'Skills', 's4'], ['dolores', 'Dolores', 's5'],
+  ['higgsfield', 'Higgsfield', 's10'], ['proceso', 'Proceso', 's13'], ['contacto', 'Contacto', 's14'],
+];
+const SITE = await fetch('../config.json').then((r) => r.json());
+const anchors = await fetch('../assets/renders/anchors.json').then((r) => r.json());
+const slides = [...document.querySelectorAll('.slide')];
+const N = slides.length;
+const pad = (n) => String(n).padStart(2, '0');
+
+// Barra superior + navegación inferior en cada diapositiva (todo son enlaces internos del PDF)
+slides.forEach((s, i) => {
+  const top = document.createElement('div');
+  top.className = 'chrome-top';
+  top.innerHTML = `<a class="brand" href="#s1">${SITE.studio}<small>${SITE.service}</small></a>
+    <nav class="tabs">${TABS.map(([k, label, id]) => `<a href="#${id}" class="${s.dataset.tab === k ? 'on' : ''}">${label}</a>`).join('')}</nav>`;
+  const bottom = document.createElement('div');
+  bottom.className = 'chrome-bottom';
+  const prev = i > 0 ? `<a class="navbtn" href="#${slides[i - 1].id}"><span class="ar">←</span>Anterior</a>` : '';
+  const next = i < N - 1 ? `<a class="navbtn" href="#${slides[i + 1].id}">Siguiente<span class="ar">→</span></a>` : `<a class="navbtn" href="#s1">Volver al inicio<span class="ar">↑</span></a>`;
+  bottom.innerHTML = `${i > 0 ? '<a class="navbtn" href="#s2"><span class="ham"></span>Índice</a>' : '<span class="count">Este PDF se navega: toca el índice, las pestañas o las flechas.</span>'}
+    <div class="pager"><span class="count"><b>${pad(i + 1)}</b> / ${pad(N)}</span>${prev}${next}</div>`;
+  s.prepend(top); s.append(bottom);
+});
+
+// Configuración
+document.querySelectorAll('[data-cfg]').forEach((el) => { el.textContent = SITE[el.dataset.cfg] ?? ''; });
+document.querySelectorAll('[data-if]').forEach((el) => { if (!SITE[el.dataset.if]) el.hidden = true; });
+document.querySelectorAll('[data-cfg-href]').forEach((el) => {
+  const k = el.dataset.cfgHref;
+  if (k === 'mailto') el.href = `mailto:${SITE.email}?subject=${encodeURIComponent('Proyecto web 3D')}`;
+  else if (k === 'whatsapp') el.href = `https://wa.me/${String(SITE.whatsapp).replace(/\D/g, '')}`;
+  else el.href = SITE[k];
+});
+
+// Rejilla en perspectiva (vectorial) para dar suelo a las escenas
+document.querySelectorAll('svg[data-grid]').forEach((svg) => {
+  const [, , w, h] = svg.getAttribute('viewBox').split(' ').map(Number);
+  const vx = w * 0.62, vy = -h * 0.9;
+  let out = '<defs><linearGradient id="gf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5be4ff" stop-opacity="0"/><stop offset="1" stop-color="#5be4ff" stop-opacity=".22"/></linearGradient></defs>';
+  for (let x = -w; x <= w * 2; x += 120) out += `<line x1="${vx + (x - vx) * 0.08}" y1="0" x2="${x}" y2="${h}" stroke="url(#gf)" stroke-width="1.2"/>`;
+  for (let k = 1; k <= 9; k++) { const y = h * Math.pow(k / 9, 2.2); out += `<line x1="0" y1="${y}" x2="${w}" y2="${y}" stroke="#5be4ff" stroke-opacity="${0.04 + 0.16 * (y / h)}" stroke-width="1.2"/>`; }
+  svg.innerHTML = out;
+});
+
+await document.fonts.ready;
+await Promise.all([...document.images].map((img) => img.decode().catch(() => {})));
+
+// Posición de cada anclaje (en px de la diapositiva) a partir de anchors.json
+const slideRect = (el) => el.closest('.slide').getBoundingClientRect();
+function anchorPoint(key) {
+  const [name, id] = key.split(':');
+  const box = document.querySelector(`.slide [data-anchors="${name}"]`);
+  const a = anchors[name]?.find((x) => x.id === id);
+  if (!box || !a) return null;
+  const r = box.getBoundingClientRect(), s = slideRect(box);
+  return { x: r.left - s.left + (a.x / 100) * r.width, y: r.top - s.top + (a.y / 100) * r.height, slide: box.closest('.slide') };
+}
+function leaders(slide) {
+  let s = slide.querySelector(':scope > svg.leaders');
+  if (!s) { s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', 'leaders'); s.setAttribute('viewBox', '0 0 1920 1080'); slide.appendChild(s); }
+  return s;
+}
+const dot = (x, y) => `<circle cx="${x}" cy="${y}" r="9" fill="#080912" stroke="#5be4ff" stroke-width="2.5"/><circle cx="${x}" cy="${y}" r="3.5" fill="#ffb088"/>`;
+
+// Callouts y mockups colocados respecto a su anclaje
+document.querySelectorAll('[data-place]').forEach((el) => {
+  const p = anchorPoint(el.dataset.place);
+  if (!p) return;
+  el.style.left = `${p.x + Number(el.dataset.dx || 0)}px`;
+  el.style.top = `${p.y + Number(el.dataset.dy || 0)}px`;
+  if (el.classList.contains('card') || el.classList.contains('ui-mock')) {
+    const r = el.getBoundingClientRect(), s = slideRect(el);
+    const box = { l: r.left - s.left, t: r.top - s.top, r: r.right - s.left, b: r.bottom - s.top };
+    const tx = Math.min(Math.max(p.x, box.l), box.r), ty = Math.min(Math.max(p.y, box.t), box.b);
+    leaders(p.slide).insertAdjacentHTML('beforeend', `<line x1="${p.x}" y1="${p.y}" x2="${tx}" y2="${ty}" stroke="#5be4ff" stroke-width="2" stroke-dasharray="6 6"/>${dot(p.x, p.y)}`);
+  }
+});
+
+// Callouts con posición fija y línea hasta su anclaje
+document.querySelectorAll('[data-at]').forEach((el) => {
+  const [x, y] = el.dataset.at.split(',').map(Number);
+  el.style.left = `${x}px`; el.style.top = `${y}px`;
+  const p = anchorPoint(el.dataset.for);
+  if (!p) return;
+  const r = el.getBoundingClientRect(), s = slideRect(el);
+  const box = { l: r.left - s.left, t: r.top - s.top, r: r.right - s.left, b: r.bottom - s.top };
+  const tx = Math.min(Math.max(p.x, box.l), box.r), ty = Math.min(Math.max(p.y, box.t), box.b);
+  leaders(p.slide).insertAdjacentHTML('beforeend', `<line x1="${p.x}" y1="${p.y}" x2="${tx}" y2="${ty}" stroke="#5be4ff" stroke-width="2" stroke-dasharray="6 6"/>${dot(p.x, p.y)}`);
+});
+// Línea del marcador del edificio hacia la tarjeta de selección
+document.querySelectorAll('[data-pinline]').forEach((svg) => {
+  const p = anchorPoint(svg.dataset.pinline);
+  const mock = svg.parentElement.querySelector('.ui-mock');
+  if (!p || !mock) return;
+  const r = mock.getBoundingClientRect(), s = slideRect(mock);
+  svg.innerHTML = `<polyline points="${p.x},${p.y} ${p.x + 40},${r.bottom - s.top + 30} ${r.left - s.left + 40},${r.bottom - s.top + 30} ${r.left - s.left + 40},${r.bottom - s.top}" fill="none" stroke="#5be4ff" stroke-width="2" stroke-dasharray="6 6"/>${dot(p.x, p.y)}`;
+});
+
+// Líneas en codo para la lista de skills
+document.querySelectorAll('[data-leader]').forEach((el) => {
+  const p = anchorPoint(el.dataset.leader);
+  if (!p) return;
+  const r = el.getBoundingClientRect(), s = slideRect(el);
+  const lx = r.left - s.left - 14, ly = r.top - s.top + 26;
+  const mx = Math.max(p.x + 24, lx - 40);
+  leaders(p.slide).insertAdjacentHTML('beforeend',
+    `<polyline points="${p.x},${p.y} ${mx},${p.y} ${lx - 12},${ly} ${lx},${ly}" fill="none" stroke="#5be4ff" stroke-opacity=".75" stroke-width="2"/>${dot(p.x, p.y)}`);
+});
+
+document.body.dataset.ready = '1';
+</script>
+</body>
+</html>

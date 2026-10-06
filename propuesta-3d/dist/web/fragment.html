@@ -1,0 +1,711 @@
+<title>Webs que se recorren</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400..800&family=Figtree:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400..600&display=swap">
+<style>
+/* Layout: secciones a ancho completo; en cada una, un lienzo 3D vivo junto a la explicación. Aspecto único y oscuro, a propósito: es un set de luz. */
+:root {
+  --void: #080912;
+  --deep: #10122a;
+  --panel: #161a3a;
+  --line: #2a2f5e;
+  --paper: #f2f0fa;
+  --mist: #a6aacb;
+  --rim: #5be4ff;      /* luz de contorno */
+  --key: #ffb088;      /* luz clave */
+  --cobalt: #7a74ff;
+  --ink-on-key: #1a0f0a;
+  --display: 'Unbounded', 'Arial Black', system-ui, sans-serif;
+  --body: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --gutter: clamp(16px, 4vw, 56px);
+  --max: 1240px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--void); color: var(--paper); font: 400 17px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
+a { color: var(--rim); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--key); outline-offset: 3px; border-radius: 6px; }
+img { max-width: 100%; display: block; }
+.wrap { max-width: var(--max); margin: 0 auto; padding-inline: var(--gutter); }
+.mono { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--mist); }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; letter-spacing: -.01em; text-wrap: balance; margin: 0; }
+h2 { font-size: clamp(28px, 4vw, 46px); line-height: 1.12; }
+h3 { font-size: 18px; line-height: 1.3; font-weight: 500; }
+p { margin: 0; text-wrap: pretty; }
+.lede { color: var(--mist); font-size: clamp(17px, 1.6vw, 20px); max-width: 60ch; }
+
+/* Barra superior */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--void) 82%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
+.brand { font-family: var(--display); font-weight: 700; font-size: 15px; letter-spacing: .04em; color: var(--paper); text-decoration: none; display: flex; align-items: baseline; gap: 10px; }
+.brand small { font-family: var(--mono); font-weight: 400; font-size: 11px; letter-spacing: .08em; color: var(--mist); text-transform: uppercase; }
+.top nav { display: flex; gap: 4px; flex-wrap: wrap; }
+.top nav a { color: var(--mist); text-decoration: none; font-size: 14px; padding: 6px 10px; border-radius: 999px; }
+.top nav a:hover { color: var(--paper); background: var(--panel); }
+@media (max-width: 760px) { .top nav { display: none; } }
+
+/* Botones */
+.btn { display: inline-flex; align-items: center; gap: 10px; font: 600 15px/1 var(--body); padding: 14px 22px; border-radius: 999px; text-decoration: none; border: 1px solid transparent; cursor: pointer; transition: transform .2s cubic-bezier(.2,.8,.2,1), background .2s; }
+.btn:active { transform: scale(.97); }
+.btn-key { background: var(--key); color: var(--ink-on-key); }
+.btn-key:hover { background: #ffc4a3; }
+.btn-ghost { background: transparent; color: var(--paper); border-color: var(--line); }
+.btn-ghost:hover { border-color: var(--rim); }
+
+/* Lienzos 3D: imagen estática visible desde el primer momento; el 3D aparece encima cuando carga */
+.stage { position: relative; min-width: 0; }
+.stage > img, .stage > canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.stage > canvas { opacity: 0; transition: opacity .6s ease; touch-action: pan-y; }
+.stage.live > canvas { opacity: 1; }
+.stage.live > img { opacity: 0; transition: opacity .6s ease .2s; }
+.stage.grab { cursor: grab; }
+.stage.grab:active { cursor: grabbing; }
+.hint { position: absolute; left: 12px; bottom: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--mist); pointer-events: none; }
+
+/* Hero */
+.hero { padding-block: clamp(32px, 6vw, 72px) clamp(24px, 4vw, 48px); background: radial-gradient(60% 70% at 72% 40%, #1a1f5c55, transparent 70%); }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(16px, 3vw, 40px); align-items: center; }
+.hero h1 { font-size: clamp(34px, 4.6vw, 62px); line-height: 1.04; font-weight: 700; }
+.hero h1 em { font-style: normal; color: var(--key); }
+.hero .lede { margin-top: 20px; }
+.hero .ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+.hero .stage { aspect-ratio: 16 / 10; }
+.hero .eyebrow { margin-bottom: 18px; }
+@media (max-width: 860px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); } }
+
+section.block { padding-block: clamp(56px, 8vw, 104px); border-top: 1px solid var(--line); }
+.head { display: grid; gap: 14px; margin-bottom: clamp(28px, 4vw, 44px); }
+
+/* Por qué 3D */
+.contrast { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.contrast article { background: var(--deep); border: 1px solid var(--line); border-radius: 18px; padding: 22px; display: grid; gap: 14px; align-content: start; }
+.contrast .before { color: var(--mist); }
+.contrast .before::before { content: 'Hoy'; display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; color: var(--mist); }
+.contrast .after { font-weight: 600; }
+.contrast .after::before { content: 'Con 3D'; display: block; font-family: var(--mono); font-weight: 400; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; color: var(--rim); }
+.contrast img { width: 72px; height: 72px; }
+.note { margin-top: 22px; color: var(--mist); max-width: 70ch; }
+.note strong { color: var(--paper); }
+@media (max-width: 860px) { .contrast { grid-template-columns: minmax(0, 1fr); } }
+
+/* Skills */
+.skills { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(16px, 3vw, 48px); align-items: center; }
+.skills .stage { aspect-ratio: 1000 / 1080; max-height: 760px; }
+.skill-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.skill-list button { width: 100%; text-align: left; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 4px 14px; padding: 14px 16px; background: transparent; color: inherit; border: 1px solid var(--line); border-radius: 14px; font: inherit; cursor: pointer; transition: border-color .2s, background .2s; }
+.skill-list button:hover, .skill-list button[aria-pressed="true"] { border-color: var(--rim); background: var(--deep); }
+.skill-list .n { grid-row: span 3; font-family: var(--mono); font-size: 13px; color: var(--rim); padding-top: 3px; }
+.skill-list .t { font-family: var(--display); font-size: 16px; font-weight: 500; }
+.skill-list .d { color: var(--mist); font-size: 15px; }
+.skill-list .tools { font-family: var(--mono); font-size: 11.5px; color: var(--key); letter-spacing: .02em; }
+@media (max-width: 860px) { .skills { grid-template-columns: minmax(0, 1fr); } .skills .stage { max-height: 520px; } }
+
+/* Método */
+.method { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: step; }
+.method li { list-style: none; background: var(--deep); border: 1px solid var(--line); border-radius: 18px; padding: 22px; display: grid; gap: 10px; align-content: start; }
+.method li::before { counter-increment: step; content: '0' counter(step); font-family: var(--mono); color: var(--rim); font-size: 13px; }
+.method { padding: 0; margin: 0; }
+.questions { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+.questions span { border: 1px dashed var(--line); border-radius: 999px; padding: 8px 14px; font-size: 15px; color: var(--mist); }
+@media (max-width: 860px) { .method { grid-template-columns: minmax(0, 1fr); } }
+
+/* Casos */
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.tabs button { font: 600 15px/1 var(--body); padding: 12px 18px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--mist); cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--paper); color: var(--void); border-color: var(--paper); }
+.case { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(16px, 3vw, 40px); align-items: start; }
+.case .stage { aspect-ratio: 1 / 1; background: radial-gradient(60% 60% at 50% 45%, #1a1f5c66, transparent 70%); border-radius: 24px; border: 1px solid var(--line); overflow: hidden; }
+.case .stage[data-case="flow"] { aspect-ratio: 16 / 9; }
+.case-text { display: grid; gap: 18px; }
+.tag { justify-self: start; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--key); border: 1px solid #ffb08855; border-radius: 999px; padding: 5px 10px; }
+.quote { font-family: var(--display); font-size: clamp(18px, 2vw, 22px); line-height: 1.35; font-weight: 500; }
+.kv { display: grid; gap: 6px; }
+.kv b { font-family: var(--mono); font-weight: 400; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--rim); }
+.kv ul { margin: 0; padding-left: 18px; color: var(--mist); display: grid; gap: 4px; }
+.kv p { color: var(--mist); }
+.controls { display: grid; gap: 10px; background: var(--deep); border: 1px solid var(--line); border-radius: 16px; padding: 14px; }
+.controls .row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.controls .row > span { font-family: var(--mono); font-size: 11px; color: var(--mist); text-transform: uppercase; letter-spacing: .06em; min-width: 54px; }
+.chip { font: 600 14px/1 var(--body); padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--paper); cursor: pointer; font-variant-numeric: tabular-nums; }
+.chip[aria-pressed="true"] { background: var(--key); color: var(--ink-on-key); border-color: var(--key); }
+.readout { font-family: var(--mono); font-size: 13px; color: var(--paper); }
+.readout em { font-style: normal; color: var(--key); }
+input[type="range"] { width: 100%; accent-color: var(--key); }
+@media (max-width: 960px) { .case { grid-template-columns: minmax(0, 1fr); } }
+
+/* Matriz */
+.matrix { overflow-x: auto; border: 1px solid var(--line); border-radius: 18px; }
+.matrix table { width: 100%; border-collapse: collapse; min-width: 760px; }
+.matrix th, .matrix td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 15px; }
+.matrix th { font-family: var(--mono); font-weight: 400; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--mist); background: var(--deep); }
+.matrix td:first-child { font-weight: 600; }
+.matrix td:nth-child(2) { color: var(--mist); font-style: italic; }
+.matrix td:last-child { color: var(--rim); font-family: var(--mono); font-size: 13px; }
+.matrix tr:last-child td { border-bottom: 0; }
+
+/* Higgsfield */
+.truth { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.truth article { border-radius: 18px; padding: 22px; display: grid; gap: 10px; align-content: start; border: 1px solid var(--line); background: var(--deep); }
+.truth .free { border-color: #5be4ff66; }
+.truth .paid { border-color: #ffb08866; }
+.truth h3 { display: flex; gap: 10px; align-items: center; }
+.truth ul { margin: 0; padding-left: 18px; color: var(--mist); display: grid; gap: 6px; }
+.verified { margin-top: 14px; font-family: var(--mono); font-size: 12px; color: var(--mist); }
+.pipe { margin-block: 28px; aspect-ratio: 1600 / 700; }
+.routes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.routes ol { margin: 0; padding-left: 22px; display: grid; gap: 8px; color: var(--mist); }
+.routes ol li::marker { color: var(--rim); font-family: var(--mono); }
+.routes article { border: 1px solid var(--line); border-radius: 18px; padding: 22px; display: grid; gap: 14px; align-content: start; }
+.links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.links a { font-family: var(--mono); font-size: 13px; border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; text-decoration: none; }
+.links a:hover { border-color: var(--rim); }
+.care { margin-top: 20px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px; color: var(--mist); padding: 0; list-style: none; }
+.care li { padding-left: 18px; position: relative; }
+.care li::before { content: ''; position: absolute; left: 0; top: .62em; width: 7px; height: 7px; border-radius: 50%; background: var(--key); }
+@media (max-width: 860px) { .truth, .routes, .care { grid-template-columns: minmax(0, 1fr); } }
+
+/* Proceso */
+.process { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; padding: 0; margin: 0; counter-reset: p; }
+.process li { list-style: none; border: 1px solid var(--line); border-radius: 18px; padding: 18px; display: grid; gap: 8px; align-content: start; background: var(--deep); }
+.process img { width: 64px; height: 64px; }
+.process .when { font-family: var(--mono); font-size: 12px; color: var(--key); }
+.process p { color: var(--mist); font-size: 15px; }
+.process .out { font-size: 14px; color: var(--paper); border-top: 1px solid var(--line); padding-top: 8px; }
+@media (max-width: 1060px) { .process { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .process { grid-template-columns: minmax(0, 1fr); } }
+
+/* Contacto */
+.contact { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px; align-items: center; }
+.contact-card { background: var(--deep); border: 1px solid var(--line); border-radius: 22px; padding: 24px; display: grid; gap: 14px; }
+.copyline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.copyline code { font-family: var(--mono); font-size: 15px; background: var(--panel); padding: 10px 12px; border-radius: 10px; user-select: all; overflow-wrap: anywhere; }
+@media (max-width: 860px) { .contact { grid-template-columns: minmax(0, 1fr); } }
+footer { border-top: 1px solid var(--line); padding-block: 28px; color: var(--mist); font-size: 14px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio"><span data-cfg="studio">OMNIA</span><small data-cfg="service">Experiencias web 3D</small></a>
+    <nav aria-label="Secciones">
+      <a href="#skills">Skills</a>
+      <a href="#dolores">Dolores</a>
+      <a href="#higgsfield">Higgsfield</a>
+      <a href="#proceso">Proceso</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="mono eyebrow">Diseño web 3D e inmersivo</p>
+        <h1>Webs que tus clientes pueden <em>recorrer</em>.</h1>
+        <p class="lede">Diseño experiencias 3D en el navegador para que tus clientes entiendan tu producto, lo exploren solos y te escriban con la decisión casi tomada.</p>
+        <div class="ctas">
+          <a class="btn btn-key" href="#dolores">Ver ejemplos</a>
+          <a class="btn btn-ghost" href="#contacto">Hablemos</a>
+        </div>
+      </div>
+      <div class="stage" id="stage-hero" aria-label="Ventana de navegador en 3D con objetos que salen de la pantalla">
+        <img src="renders/hero.png" alt="Ventana de navegador en 3D con una esfera, un cubo y un aro saliendo de la pantalla" width="1500" height="940">
+        <span class="hint">Mueve el cursor</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="por-que">
+    <div class="wrap">
+      <div class="head">
+        <p class="mono">Por qué 3D</p>
+        <h2>Una foto se mira. Un espacio se explora.</h2>
+      </div>
+      <div class="contrast">
+        <article>
+          <img src="renders/icon-cube.png" alt="" width="72" height="72">
+          <p class="before">Tu cliente lee una ficha técnica y se queda con dudas.</p>
+          <p class="after">Gira el producto, lo abre y ve cada pieza.</p>
+        </article>
+        <article>
+          <img src="renders/icon-chat.png" alt="" width="72" height="72">
+          <p class="before">Te pide más fotos por WhatsApp, una y otra vez.</p>
+          <p class="after">Recorre el espacio a su ritmo, a cualquier hora.</p>
+        </article>
+        <article>
+          <img src="renders/icon-spark.png" alt="" width="72" height="72">
+          <p class="before">Tu web se parece a la de tu competencia.</p>
+          <p class="after">La experiencia se recuerda y se comparte.</p>
+        </article>
+      </div>
+      <p class="note"><strong>El 3D no va de adorno.</strong> Lo uso donde una imagen plana deja preguntas sin responder. Si tu caso no lo necesita, te lo digo.</p>
+    </div>
+  </section>
+
+  <section class="block" id="skills">
+    <div class="wrap">
+      <div class="head">
+        <p class="mono">Skills</p>
+        <h2>Seis capas en cada proyecto</h2>
+        <p class="lede">Una experiencia 3D se construye por capas. Toca una para verla en el modelo.</p>
+      </div>
+      <div class="skills">
+        <div class="stage" id="stage-skills" aria-label="Pila de seis capas en 3D, una por habilidad">
+          <img src="renders/layers.png" alt="Seis placas apiladas en 3D, cada una con un objeto que representa una habilidad" width="1000" height="1080">
+        </div>
+        <ol class="skill-list" id="skill-list">
+          <li><button type="button" data-skill="0"><span class="n">01</span><span class="t">Dirección de arte y modelado 3D</span><span class="d">Tu producto o tu espacio, modelado con tu identidad.</span><span class="tools">Blender · Spline · IA generativa</span></button></li>
+          <li><button type="button" data-skill="1"><span class="n">02</span><span class="t">Materiales, luz y render en tiempo real</span><span class="d">Se ve real en el navegador, sin esperar a que cargue un video.</span><span class="tools">PBR · HDRI · shaders</span></button></li>
+          <li><button type="button" data-skill="2"><span class="n">03</span><span class="t">Animación y motion</span><span class="d">El scroll cuenta tu historia, paso a paso.</span><span class="tools">GSAP · ScrollTrigger · cámaras</span></button></li>
+          <li><button type="button" data-skill="3"><span class="n">04</span><span class="t">Interacción WebGL</span><span class="d">Tu cliente gira, abre, elige y compara.</span><span class="tools">Three.js · React Three Fiber · configuradores</span></button></li>
+          <li><button type="button" data-skill="4"><span class="n">05</span><span class="t">UX inmersivo</span><span class="d">Efecto wow sin esconder el botón de comprar.</span><span class="tools">Arquitectura de información · accesibilidad · pruebas con usuarios</span></button></li>
+          <li><button type="button" data-skill="5"><span class="n">06</span><span class="t">Rendimiento</span><span class="d">Carga rápido con datos móviles y tiene versión ligera para equipos modestos.</span><span class="tools">glTF + Draco · KTX2 · carga progresiva</span></button></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="dolores">
+    <div class="wrap">
+      <div class="head">
+        <p class="mono">Resolver dolores</p>
+        <h2>Primero el dolor de tus clientes. Después el 3D.</h2>
+      </div>
+      <ol class="method">
+        <li><h3>Escuchar</h3><p>Reviso las preguntas que más te hacen, las objeciones de ventas y tus reseñas.</p></li>
+        <li><h3>Ubicar</h3><p>Marcamos dónde se cae la venta: cuando no entienden, cuando no confían o cuando no pueden comparar.</p></li>
+        <li><h3>Diseñar y medir</h3><p>Diseñamos la experiencia para ese momento y elegimos un número para saber si funcionó.</p></li>
+      </ol>
+      <div class="questions" aria-label="Preguntas del diagnóstico">
+        <span>¿Qué pregunta te hacen diez veces por semana?</span>
+        <span>¿Qué necesita ver tu cliente para decidir?</span>
+        <span>¿En qué paso abandona hoy?</span>
+        <span>¿Qué número te diría que mejoró?</span>
+      </div>
+
+      <div style="height: clamp(40px, 6vw, 72px)"></div>
+      <div class="tabs" role="tablist" aria-label="Ejemplos por tipo de negocio">
+        <button role="tab" aria-selected="true" aria-controls="case-panel" id="tab-building" data-case="building">Inmobiliaria</button>
+        <button role="tab" aria-selected="false" aria-controls="case-panel" id="tab-solar" data-case="solar">Producto técnico</button>
+        <button role="tab" aria-selected="false" aria-controls="case-panel" id="tab-flow" data-case="flow">Pagos y transferencias</button>
+      </div>
+
+      <div class="case" id="case-panel" role="tabpanel" aria-labelledby="tab-building">
+        <div class="stage grab" id="stage-case" data-case="building">
+          <img src="renders/building.png" alt="Torre de apartamentos en 3D con una unidad resaltada" width="1000" height="1000">
+          <span class="hint">Arrastra para girar</span>
+        </div>
+        <div class="case-text">
+          <!-- Inmobiliaria -->
+          <div data-panel="building" class="case-text">
+            <span class="tag">Caso ilustrativo · preventa</span>
+            <p class="quote">«Vivo fuera del país. ¿Cómo separo un apartamento que todavía no existe?»</p>
+            <div class="kv"><b>La experiencia</b>
+              <ul><li>Torre 3D: eliges piso y unidad.</li><li>Ves la orientación y la vista desde el balcón.</li><li>Disponibilidad y precio al momento.</li></ul></div>
+            <div class="controls">
+              <div class="row"><span>Piso</span><span id="floor-chips" class="row"></span></div>
+              <div class="row"><span>Unidad</span><span id="unit-chips" class="row"></span></div>
+              <p class="readout" id="unit-readout"></p>
+            </div>
+            <div class="kv"><b>Qué cambia</b><p>El comprador llega a la llamada con la unidad elegida. La venta a distancia deja de depender de mandar planos por WhatsApp.</p></div>
+            <div class="kv"><b>Cómo lo medimos</b><p>Unidades exploradas por visita · solicitudes de reserva desde la web · días entre el primer contacto y la separación.</p></div>
+          </div>
+          <!-- Producto técnico -->
+          <div data-panel="solar" class="case-text" hidden>
+            <span class="tag">Caso ilustrativo · kit solar</span>
+            <p class="quote">«No entiendo qué incluye el kit ni si me sirve para mi finca.»</p>
+            <div class="kv"><b>La experiencia</b>
+              <ul><li>Vista explosionada: tocas cada pieza y ves para qué sirve.</li><li>Indicas qué equipos quieres alimentar y te sugiere el kit.</li><li>Sales con una ficha lista para cotizar.</li></ul></div>
+            <div class="controls">
+              <div class="row"><span>Abrir</span><input type="range" id="explode" min="0" max="100" value="60" aria-label="Separar las piezas del kit"></div>
+              <div class="row"><span>Pieza</span><span class="row" id="part-chips"></span></div>
+              <p class="readout" id="part-readout"></p>
+            </div>
+            <div class="kv"><b>Qué cambia</b><p>Menos preguntas repetidas al equipo de ventas. Las cotizaciones llegan con el kit ya elegido.</p></div>
+            <div class="kv"><b>Cómo lo medimos</b><p>Preguntas repetidas por WhatsApp · cotizaciones con configuración adjunta · horas hasta cotizar.</p></div>
+          </div>
+          <!-- Pagos -->
+          <div data-panel="flow" class="case-text" hidden>
+            <span class="tag">Caso ilustrativo · pagos</span>
+            <p class="quote">«¿Y si mi dinero se queda en el camino?»</p>
+            <div class="kv"><b>La experiencia</b>
+              <ul><li>El recorrido del dinero en 3D, guiado paso a paso.</li><li>En cada paso: cuánto tarda, cuánto cuesta y qué lo protege.</li></ul></div>
+            <div class="controls">
+              <div class="row" id="flow-chips"></div>
+              <p class="readout" id="flow-readout"></p>
+            </div>
+            <div class="kv"><b>Qué cambia</b><p>La confianza se construye antes del registro, no después del primer envío.</p></div>
+            <div class="kv"><b>Cómo lo medimos</b><p>Visitantes que llegan a tarifas · registros iniciados · consultas de «¿dónde está mi dinero?» en soporte.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height: clamp(40px, 6vw, 72px)"></div>
+      <div class="head"><h2 style="font-size: clamp(22px, 2.6vw, 30px)">¿Tu negocio se parece a alguno de estos?</h2></div>
+      <div class="matrix">
+        <table>
+          <thead><tr><th>Negocio</th><th>Lo que dice su cliente</th><th>La experiencia 3D</th><th>Lo medimos con</th></tr></thead>
+          <tbody>
+            <tr><td>Gimnasio</td><td>«No sé si el lugar me va a gustar.»</td><td>Recorrido por las zonas con horarios y clases</td><td>Clases de prueba agendadas</td></tr>
+            <tr><td>Restaurante u hotel</td><td>«Las fotos no muestran el ambiente.»</td><td>Espacio navegable con reserva al final</td><td>Reservas desde la web</td></tr>
+            <tr><td>Industria</td><td>«¿Cabe en mi planta?»</td><td>Equipo en 3D con medidas reales</td><td>Solicitudes técnicas completas</td></tr>
+            <tr><td>Agro</td><td>«¿Cómo se instala en mi terreno?»</td><td>El equipo montado en una finca tipo</td><td>Visitas técnicas agendadas</td></tr>
+            <tr><td>Educación</td><td>«No entiendo cómo funciona el programa.»</td><td>El programa explicado por capas</td><td>Solicitudes de admisión</td></tr>
+            <tr><td>Moda y producto</td><td>«¿Cómo se ve de cerca?»</td><td>Visor 360° con colores y materiales</td><td>Devoluciones por «no era lo que esperaba»</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="higgsfield">
+    <div class="wrap">
+      <div class="head">
+        <p class="mono">Higgsfield</p>
+        <h2>La API de Higgsfield no es gratis. Esto sí lo es.</h2>
+        <p class="lede">Higgsfield reúne varios modelos de IA para crear imágenes y video. Sirve para producir fondos, escenas de producto y clips para tu web sin organizar una sesión de fotos.</p>
+      </div>
+      <div class="truth">
+        <article class="free">
+          <h3><img src="renders/icon-browser.png" alt="" width="40" height="40">Gratis: la web</h3>
+          <ul>
+            <li>higgsfield.ai tiene un plan Free con un grupo limitado de modelos.</li>
+            <li>A veces ofrecen una prueba de 1 día para cuentas nuevas. Pide tarjeta y se renueva sola si no la cancelas a tiempo.</li>
+            <li>Antes de publicar lo que generes gratis, revisa en sus términos si el plan Free permite uso comercial.</li>
+          </ul>
+        </article>
+        <article class="paid">
+          <h3><img src="renders/icon-key.png" alt="" width="40" height="40">De pago: la API</h3>
+          <ul>
+            <li>Funciona con saldo prepagado en dólares, sin suscripción.</li>
+            <li>Recarga mínima de 5 USD, según su blog oficial. Solo cobra las generaciones que salen bien.</li>
+            <li>Usa su propia llave y su propio saldo: el plan de la web no cubre la API.</li>
+          </ul>
+        </article>
+      </div>
+      <p class="verified">Verificado en sus páginas oficiales el 6 de octubre de 2026. Precios y planes cambian: si algo no coincide, manda la documentación oficial.</p>
+
+      <div class="stage pipe" id="stage-pipe" aria-label="De imagen a video a objeto 3D">
+        <img src="renders/pipeline.png" alt="Una imagen, una tira de video y un objeto 3D unidos por flechas" width="1600" height="700">
+      </div>
+
+      <div class="routes">
+        <article>
+          <p class="mono" style="color: var(--rim)">Ruta A · gratis, sin código</p>
+          <ol>
+            <li>Crea tu cuenta en higgsfield.ai.</li>
+            <li>Prueba los modelos del plan Free. Describe lo que quieres ver: «kit solar en una finca al atardecer, luz cálida».</li>
+            <li>Descarga lo que te guste y envíamelo. Lo integro en la escena 3D.</li>
+          </ol>
+        </article>
+        <article>
+          <p class="mono" style="color: var(--key)">Ruta B · API, desde 5 USD</p>
+          <ol start="4">
+            <li>Regístrate en la consola de la API como persona o empresa.</li>
+            <li>Agrega un método de pago y recarga saldo.</li>
+            <li>Crea una API key. Se muestra una sola vez: guárdala como una contraseña.</li>
+            <li>La conectamos juntos a tu web en una llamada. Usa una key solo para este proyecto.</li>
+          </ol>
+        </article>
+      </div>
+      <div class="links">
+        <a href="https://docs.higgsfield.ai/docs" target="_blank" rel="noopener">Documentación de la API ↗</a>
+        <a href="https://docs.higgsfield.ai/docs/quickstart" target="_blank" rel="noopener">Quickstart ↗</a>
+        <a href="https://docs.higgsfield.ai/docs/help/faq" target="_blank" rel="noopener">FAQ de la API ↗</a>
+        <a href="https://higgsfield.ai/creator-hub/help-center/integrations/what-is-the-higgsfield-api" target="_blank" rel="noopener">Qué es la API ↗</a>
+        <a href="https://higgsfield.ai/creator-hub/help-center/plans/how-do-higgsfield-plans-work" target="_blank" rel="noopener">Cómo funcionan los planes ↗</a>
+      </div>
+      <ul class="care">
+        <li>No subas fotos de personas sin su permiso.</li>
+        <li>Si una key se filtra, bórrala en la consola y crea otra.</li>
+        <li>Higgsfield también convierte imágenes en modelos 3D (GLB). Confirma si tu plan o la API lo incluyen antes de contar con ello.</li>
+        <li>La IA acelera bocetos y fondos. El modelo final de tu producto lo ajusto a mano para que las medidas sean reales.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block" id="proceso">
+    <div class="wrap">
+      <div class="head">
+        <p class="mono">Proceso</p>
+        <h2>Cómo trabajamos</h2>
+        <p class="lede">Tiempos de referencia para un proyecto mediano. El calendario real te lo doy después del diagnóstico.</p>
+      </div>
+      <ol class="process">
+        <li><img src="renders/icon-target.png" alt="" width="64" height="64"><span class="when">Semana 1</span><h3>Diagnóstico</h3><p>Entrevista y revisión de dónde se cae la venta.</p><p class="out">Mapa del dolor y la métrica objetivo</p></li>
+        <li><img src="renders/icon-knot.png" alt="" width="64" height="64"><span class="when">Semana 2</span><h3>Concepto 3D</h3><p>Referencias visuales, guion y storyboard.</p><p class="out">Concepto aprobado</p></li>
+        <li><img src="renders/icon-cursor.png" alt="" width="64" height="64"><span class="when">Semanas 3–4</span><h3>Prototipo</h3><p>Versión navegable que probamos con cinco clientes reales.</p><p class="out">Prototipo y ajustes</p></li>
+        <li><img src="renders/icon-layers.png" alt="" width="64" height="64"><span class="when">Semanas 5–8</span><h3>Producción</h3><p>Modelado final, animación y versión móvil ligera.</p><p class="out">Experiencia publicada</p></li>
+        <li><img src="renders/icon-gauge.png" alt="" width="64" height="64"><span class="when">30 días</span><h3>Medición</h3><p>Seguimos la métrica acordada y ajustamos.</p><p class="out">Reporte de resultados</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="contacto">
+    <div class="wrap contact">
+      <div class="head" style="margin: 0">
+        <p class="mono">Contacto</p>
+        <h2>Cuéntame qué pregunta te hacen una y otra vez.</h2>
+        <p class="lede">En 30 minutos vemos si el 3D la resuelve. Si no, te lo digo y te recomiendo otra salida.</p>
+      </div>
+      <div class="contact-card">
+        <p class="mono">Escríbeme</p>
+        <div class="copyline"><code id="email" data-cfg="email">omniagroupve@gmail.com</code><button class="btn btn-ghost" type="button" id="copy-email">Copiar</button></div>
+        <div class="copyline">
+          <a class="btn btn-key" data-cfg-href="mailto" href="mailto:omniagroupve@gmail.com">Enviar correo</a>
+          <a class="btn btn-ghost" data-if="whatsapp" data-cfg-href="whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn btn-ghost" data-if="calendarUrl" data-cfg-href="calendarUrl" href="#" target="_blank" rel="noopener">Agendar llamada</a>
+        </div>
+        <p class="mono" data-cfg="region">Venezuela · Colombia · remoto para LatAm</p>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><span><span data-cfg="studio">OMNIA</span> · <span data-cfg="service">Experiencias web 3D</span></span><span data-cfg="edition">Octubre 2026</span></div></footer>
+
+<script>
+// Configuración (la sustituye scripts/build-web.mjs con config.json)
+window.SITE = /*SITE*/{"studio":"OMNIA","service":"Experiencias web 3D","email":"omniagroupve@gmail.com","whatsapp":"","calendarUrl":"","region":"Venezuela · Colombia · remoto para LatAm","edition":"Octubre 2026"}/*/SITE*/;
+(() => {
+  const c = window.SITE;
+  document.querySelectorAll('[data-cfg]').forEach((el) => { if (c[el.dataset.cfg]) el.textContent = c[el.dataset.cfg]; });
+  document.querySelectorAll('[data-if]').forEach((el) => { if (!c[el.dataset.if]) el.hidden = true; });
+  document.querySelectorAll('[data-cfg-href]').forEach((el) => {
+    const k = el.dataset.cfgHref;
+    if (k === 'mailto') el.href = `mailto:${c.email}`;
+    else if (k === 'whatsapp' && c.whatsapp) el.href = `https://wa.me/${c.whatsapp.replace(/\D/g, '')}`;
+    else if (c[k]) el.href = c[k];
+  });
+  const copy = document.getElementById('copy-email');
+  copy.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(c.email); copy.textContent = 'Copiado'; }
+    catch { const r = document.createRange(); r.selectNodeContents(document.getElementById('email')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); copy.textContent = 'Selecciónalo y copia'; }
+    setTimeout(() => { copy.textContent = 'Copiar'; }, 2200);
+  });
+})();
+</script>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import * as S from './scenes.js';
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine = matchMedia('(pointer: fine)').matches;
+const mounts = [];
+const clock = new THREE.Clock();
+
+// Monta un lienzo 3D sobre la imagen estática de un .stage
+function mount(stage, build) {
+  const canvas = document.createElement('canvas');
+  stage.prepend(canvas);
+  const rect = stage.getBoundingClientRect();
+  const renderer = S.createRenderer(canvas, { width: rect.width || 600, height: rect.height || 400, pixelRatio: Math.min(devicePixelRatio, 1.75) });
+  const m = { stage, canvas, renderer, built: null, visible: true, yaw: 0, pivot: null, dirty: true, onFrame: null };
+  m.setBuilt = (built) => {
+    m.built = built;
+    if (!built.pivot) {
+      const pivot = new THREE.Group();
+      built.scene.remove(built.root); pivot.add(built.root); built.scene.add(pivot);
+      built.pivot = pivot;
+    }
+    resize(); m.dirty = true;
+  };
+  const resize = () => {
+    const r = stage.getBoundingClientRect();
+    if (!r.width || !m.built) return;
+    renderer.setSize(r.width, r.height, false);
+    m.built.camera.aspect = r.width / r.height;
+    m.built.camera.updateProjectionMatrix();
+    m.dirty = true;
+  };
+  new ResizeObserver(resize).observe(stage);
+  new IntersectionObserver(([e]) => { m.visible = e.isIntersecting; m.dirty = true; }, { rootMargin: '120px' }).observe(stage);
+  m.setBuilt(build(renderer, { aspect: (rect.width || 600) / (rect.height || 400) }));
+  mounts.push(m);
+  return m;
+}
+
+function frame() {
+  const t = clock.getElapsedTime();
+  for (const m of mounts) {
+    if (!m.visible || !m.built) continue;
+    if (reduce && !m.dirty) continue;
+    m.onFrame?.(t);
+    if (!reduce) m.built.update?.(t, m.scrollP ?? 0);
+    m.built.pivot.rotation.y = m.yaw;
+    m.renderer.render(m.built.scene, m.built.camera);
+    if (!m.stage.classList.contains('live')) m.stage.classList.add('live');
+    m.dirty = false;
+  }
+  document.documentElement.dataset.ready = 'true';
+  requestAnimationFrame(frame);
+}
+
+function draggable(m) {
+  let down = null, moved = false;
+  m.canvas.addEventListener('pointerdown', (e) => { down = { x: e.clientX, yaw: m.yaw }; moved = false; m.canvas.setPointerCapture(e.pointerId); });
+  m.canvas.addEventListener('pointermove', (e) => {
+    if (!down) return;
+    const dx = e.clientX - down.x;
+    if (Math.abs(dx) > 3) moved = true;
+    m.yaw = Math.max(-1.2, Math.min(1.2, down.yaw + dx * 0.008));
+    m.dirty = true;
+  });
+  m.canvas.addEventListener('pointerup', () => { down = null; });
+  return () => moved;
+}
+
+try {
+  // Hero
+  const hero = mount(document.getElementById('stage-hero'), (r, o) => S.hero(r, o));
+  if (fine && !reduce) {
+    addEventListener('pointermove', (e) => { hero.built.setPointer(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight * 2 - 1)); });
+  } else {
+    hero.stage.querySelector('.hint').hidden = true;
+  }
+  addEventListener('scroll', () => { hero.scrollP = Math.min(1, scrollY / 700); }, { passive: true });
+
+  // Skills
+  const skills = mount(document.getElementById('stage-skills'), (r, o) => S.layers(r, o));
+  const skillButtons = [...document.querySelectorAll('[data-skill]')];
+  const setSkill = (i) => {
+    skills.built.highlight(i);
+    skillButtons.forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.skill === i)));
+    skills.dirty = true;
+  };
+  skillButtons.forEach((b) => {
+    const i = +b.dataset.skill;
+    b.addEventListener('mouseenter', () => setSkill(i));
+    b.addEventListener('focus', () => setSkill(i));
+    b.addEventListener('click', () => setSkill(i));
+  });
+  document.getElementById('skill-list').addEventListener('mouseleave', () => setSkill(-1));
+  const skillsSection = document.getElementById('skills');
+  addEventListener('scroll', () => {
+    const r = skillsSection.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, 1 - r.top / innerHeight));
+    skills.built.setSpread(0.8 + p * 0.25);
+    skills.dirty = true;
+  }, { passive: true });
+
+  // Casos
+  const caseStage = document.getElementById('stage-case');
+  const caseMount = mount(caseStage, (r, o) => S.building(r, o));
+  const wasDrag = draggable(caseMount);
+  const cache = { building: caseMount.built };
+  const fallbacks = { building: 'renders/building.png', solar: 'renders/solar.png', flow: 'renders/flow.png' };
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  const panels = [...document.querySelectorAll('[data-panel]')];
+  function showCase(name) {
+    tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.case === name)));
+    document.getElementById('case-panel').setAttribute('aria-labelledby', `tab-${name}`);
+    panels.forEach((p) => { p.hidden = p.dataset.panel !== name; });
+    caseStage.dataset.case = name;
+    caseStage.querySelector('img').src = fallbacks[name];
+    if (!cache[name]) cache[name] = S[name](caseMount.renderer, { aspect: caseStage.clientWidth / caseStage.clientHeight });
+    caseMount.yaw = 0;
+    caseMount.setBuilt(cache[name]);
+  }
+  tabs.forEach((t) => t.addEventListener('click', () => showCase(t.dataset.case)));
+  tabs.forEach((t, i) => t.addEventListener('keydown', (e) => {
+    const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (!d) return;
+    const n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); n.click();
+  }));
+
+  // Inmobiliaria: pisos y unidades (datos de ejemplo)
+  const UNITS = ['A', 'B', 'C', 'D'];
+  const VIEW = ['Montaña · noroeste', 'Ciudad · noreste', 'Parque · suroeste', 'Atardecer · sureste'];
+  const floorChips = document.getElementById('floor-chips');
+  const unitChips = document.getElementById('unit-chips');
+  let floor = 5, unit = 3;
+  for (let f = 1; f <= 7; f++) floorChips.insertAdjacentHTML('beforeend', `<button class="chip" type="button" data-floor="${f}">${f}</button>`);
+  UNITS.forEach((u, i) => unitChips.insertAdjacentHTML('beforeend', `<button class="chip" type="button" data-unit="${i}">${u}</button>`));
+  function selectUnit(f, u) {
+    floor = f; unit = u;
+    cache.building.select(f, u);
+    floorChips.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.floor === f)));
+    unitChips.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.unit === u)));
+    const m2 = [68, 72, 85, 94][u];
+    document.getElementById('unit-readout').innerHTML = `Piso ${f} · Unidad ${UNITS[u]} · ${m2} m² · Vista: <em>${VIEW[u]}</em> · Disponible`;
+    caseMount.dirty = true;
+  }
+  floorChips.addEventListener('click', (e) => { const b = e.target.closest('[data-floor]'); if (b) selectUnit(+b.dataset.floor, unit); });
+  unitChips.addEventListener('click', (e) => { const b = e.target.closest('[data-unit]'); if (b) selectUnit(floor, +b.dataset.unit); });
+  selectUnit(5, 3);
+  const ray = new THREE.Raycaster();
+  caseMount.canvas.addEventListener('click', (e) => {
+    if (wasDrag() || caseStage.dataset.case !== 'building') return;
+    const r = caseMount.canvas.getBoundingClientRect();
+    ray.setFromCamera(new THREE.Vector2((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), cache.building.camera);
+    const hit = ray.intersectObjects(cache.building.units, false)[0];
+    if (hit) selectUnit(hit.object.userData.floor, hit.object.userData.unit);
+  });
+
+  // Kit solar
+  const PARTS = [
+    ['Panel', 'Convierte la luz del sol en electricidad. El tamaño depende de cuánto consumes al día.'],
+    ['Inversor', 'Transforma esa energía en la corriente que usan tus equipos y te muestra el consumo.'],
+    ['Batería', 'Guarda energía para la noche o para cuando se va la luz.'],
+  ];
+  const partChips = document.getElementById('part-chips');
+  PARTS.forEach(([n], i) => partChips.insertAdjacentHTML('beforeend', `<button class="chip" type="button" data-part="${i}">${n}</button>`));
+  const setPart = (i) => {
+    partChips.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.part === i)));
+    document.getElementById('part-readout').innerHTML = `<em>${PARTS[i][0]}:</em> ${PARTS[i][1]}`;
+  };
+  partChips.addEventListener('click', (e) => { const b = e.target.closest('[data-part]'); if (b) setPart(+b.dataset.part); });
+  setPart(0);
+  document.getElementById('explode').addEventListener('input', (e) => {
+    if (!cache.solar) showCase('solar');
+    cache.solar.setExplode(e.target.value / 100 * 1.1);
+    caseMount.dirty = true;
+  });
+
+  // Pagos
+  const STEPS = [
+    ['Envías', 'Desde tu teléfono, con el monto y el costo visibles antes de confirmar.'],
+    ['Cambio', 'Se aplica la tasa que aceptaste. Sin sorpresas al llegar.'],
+    ['Verificación', 'Se valida la operación. Aquí explicas qué protege el dinero.'],
+    ['Recibe', 'Llega a la cuenta de destino y ambos reciben confirmación.'],
+  ];
+  const T = [0, 0.34, 0.67, 1];
+  const flowChips = document.getElementById('flow-chips');
+  STEPS.forEach(([n], i) => flowChips.insertAdjacentHTML('beforeend', `<button class="chip" type="button" data-step="${i}">${i + 1} · ${n}</button>`));
+  let flowTarget = 0, flowNow = 0;
+  const setStep = (i) => {
+    flowTarget = T[i];
+    flowChips.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.step === i)));
+    document.getElementById('flow-readout').innerHTML = `<em>${STEPS[i][0]}:</em> ${STEPS[i][1]}`;
+    caseMount.dirty = true;
+  };
+  flowChips.addEventListener('click', (e) => { const b = e.target.closest('[data-step]'); if (b) setStep(+b.dataset.step); });
+  setStep(0);
+  caseMount.onFrame = () => {
+    if (caseStage.dataset.case !== 'flow' || !cache.flow) return;
+    flowNow += (flowTarget - flowNow) * (reduce ? 1 : 0.06);
+    cache.flow.setProgress(flowNow);
+    if (Math.abs(flowTarget - flowNow) > 0.001) caseMount.dirty = true;
+  };
+
+  // Pipeline Higgsfield
+  mount(document.getElementById('stage-pipe'), (r, o) => S.pipeline(r, o));
+
+  requestAnimationFrame(frame);
+} catch (err) {
+  // Sin WebGL: quedan las imágenes estáticas, que muestran lo mismo
+  console.warn('3D no disponible:', err);
+  document.documentElement.dataset.ready = 'true';
+}
+</script>

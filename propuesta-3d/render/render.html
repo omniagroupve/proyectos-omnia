@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Render 3D</title>
+<script type="importmap">
+{ "imports": {
+  "three": "/node_modules/three/build/three.module.js",
+  "three/addons/": "/node_modules/three/examples/jsm/"
+} }
+</script>
+<style>body{margin:0;background:#080912}</style>
+</head>
+<body>
+<script type="module">
+import * as S from '/web/scenes.js';
+
+// Renderiza una escena a PNG (fondo transparente) y devuelve los anclajes en % del lienzo.
+window.shot = async (name, { width, height, pixelRatio = 1.5, t = 1.2, ...opts }) => {
+  const canvas = document.createElement('canvas');
+  document.body.append(canvas);
+  const renderer = S.createRenderer(canvas, { width, height, pixelRatio });
+  const built = await S.SCENES[name](renderer, { aspect: width / height, ...opts });
+  built.update?.(t, 0);
+  built.camera.updateMatrixWorld();
+  renderer.compile(built.scene, built.camera);
+  renderer.render(built.scene, built.camera);
+  const png = canvas.toDataURL('image/png');
+  const anchors = built.anchors
+    ? S.projectAnchors(built.anchors, built.camera, width, height).map((a) => ({ id: a.id, x: +(a.x / width * 100).toFixed(2), y: +(a.y / height * 100).toFixed(2) }))
+    : [];
+  renderer.dispose(); renderer.forceContextLoss(); canvas.remove();
+  return { png, anchors };
+};
+window.ready = true;
+</script>
+</body>
+</html>

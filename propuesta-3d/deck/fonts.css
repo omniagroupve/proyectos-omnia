@@ -1,0 +1,11 @@
+/* Fuentes Google (SIL OFL), instancias estáticas: el PDF las incrusta como TrueType */
+@font-face { font-family: 'Figtree'; font-style: italic; font-weight: 400; font-display: block; src: url('../assets/fonts/Figtree-400i.ttf') format('truetype'); }
+@font-face { font-family: 'Figtree'; font-style: normal; font-weight: 400; font-display: block; src: url('../assets/fonts/Figtree-400.ttf') format('truetype'); }
+@font-face { font-family: 'Figtree'; font-style: normal; font-weight: 500; font-display: block; src: url('../assets/fonts/Figtree-500.ttf') format('truetype'); }
+@font-face { font-family: 'Figtree'; font-style: normal; font-weight: 600; font-display: block; src: url('../assets/fonts/Figtree-600.ttf') format('truetype'); }
+@font-face { font-family: 'Figtree'; font-style: normal; font-weight: 700; font-display: block; src: url('../assets/fonts/Figtree-700.ttf') format('truetype'); }
+@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400; font-display: block; src: url('../assets/fonts/JetBrainsMono-400.ttf') format('truetype'); }
+@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 600; font-display: block; src: url('../assets/fonts/JetBrainsMono-600.ttf') format('truetype'); }
+@font-face { font-family: 'Unbounded'; font-style: normal; font-weight: 500; font-display: block; src: url('../assets/fonts/Unbounded-500.ttf') format('truetype'); }
+@font-face { font-family: 'Unbounded'; font-style: normal; font-weight: 600; font-display: block; src: url('../assets/fonts/Unbounded-600.ttf') format('truetype'); }
+@font-face { font-family: 'Unbounded'; font-style: normal; font-weight: 700; font-display: block; src: url('../assets/fonts/Unbounded-700.ttf') format('truetype'); }

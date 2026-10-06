@@ -1,0 +1,19 @@
+{
+  "name": "propuesta-3d",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Propuesta comercial de diseño web 3D e inmersivo: PDF interactivo + versión web.",
+  "scripts": {
+    "render": "node scripts/render-3d.mjs",
+    "pdf": "node scripts/build-pdf.mjs",
+    "web": "node scripts/build-web.mjs",
+    "build": "npm run render && npm run web && npm run pdf",
+    "preview": "node scripts/serve.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1",
+    "qrcode": "1.5.4",
+    "three": "0.160.0"
+  }
+}

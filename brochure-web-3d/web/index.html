@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OMNIA Web 3D</title>
+<meta name="description" content="Diseño web 3D e inmersivo: qué hago, qué problemas resuelve y cómo empezar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@500;600;700&display=swap">
+<style>
+/* Estudio oscuro iluminado como una escena 3D: luz clave cálida + contorno frío. Una sola apariencia, a propósito. */
+:root {
+  --ink: #0a0c12;
+  --ink-2: #10141d;
+  --ink-3: #171c28;
+  --line: #262c3c;
+  --text: #eceef4;
+  --soft: #c3c8d4;
+  --muted: #8e95a8;
+  --key: #ffb04a;
+  --rim: #6fe3f0;
+  --paper: #eef0f5;
+  --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --body: "Instrument Sans", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --gutter: clamp(16px, 4vw, 56px);
+  --max: 1200px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background:
+    radial-gradient(900px 600px at -10% -5%, rgba(255, 176, 74, 0.12), transparent 60%),
+    radial-gradient(900px 700px at 110% 30%, rgba(111, 227, 240, 0.08), transparent 60%),
+    var(--ink);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+p { margin: 0; }
+h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
+:focus-visible { outline: 2px solid var(--rim); outline-offset: 3px; border-radius: 6px; }
+.wrap { width: 100%; max-width: calc(var(--max) + var(--gutter) * 2); margin: 0 auto; padding-inline: var(--gutter); }
+
+/* Tipografía */
+.eyebrow { font-family: var(--mono); font-size: 12.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--key); }
+.eyebrow.cool { color: var(--rim); }
+.h1 { font-size: clamp(36px, 6.2vw, 68px); line-height: 1.03; font-weight: 700; letter-spacing: -0.025em; }
+.h2 { font-size: clamp(28px, 4vw, 44px); line-height: 1.08; font-weight: 600; letter-spacing: -0.02em; }
+.h3 { font-size: 19px; line-height: 1.25; font-weight: 600; letter-spacing: -0.01em; }
+.lead { font-size: clamp(17px, 1.6vw, 20px); color: var(--soft); max-width: 36em; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; color: var(--muted); }
+
+/* Navegación */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: rgba(10, 12, 18, 0.72); border-bottom: 1px solid rgba(38, 44, 60, 0.6); }
+.nav .wrap { display: flex; align-items: center; gap: 20px; height: 62px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--display); font-weight: 700; font-size: 15px; letter-spacing: 0.06em; }
+.brand small { font-family: var(--mono); font-weight: 500; font-size: 10.5px; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; }
+.nav ul { display: flex; gap: 4px; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.nav ul a { display: block; text-decoration: none; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 8px 12px; border-radius: 99px; border: 1px solid transparent; transition: color 0.2s, border-color 0.2s; }
+.nav ul a:hover { color: var(--text); border-color: var(--line); }
+.nav ul a.on { color: var(--ink); background: var(--rim); }
+@media (max-width: 860px) { .nav ul { display: none; } .brand small { display: none; } }
+
+/* Botones */
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 99px; font-family: var(--body); font-weight: 600; font-size: 16px; text-decoration: none; border: 0; cursor: pointer; transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.18s; }
+.btn:active { transform: scale(0.97); }
+.btn.primary { background: var(--key); color: var(--ink); box-shadow: 0 10px 30px rgba(255, 176, 74, 0.28), inset 0 -3px 0 rgba(0, 0, 0, 0.16); }
+.btn.primary:hover { box-shadow: 0 14px 38px rgba(255, 176, 74, 0.4), inset 0 -3px 0 rgba(0, 0, 0, 0.16); }
+.btn.ghost { background: transparent; border: 1.5px solid var(--rim); color: var(--rim); }
+.btn.quiet { background: var(--ink-2); border: 1px solid var(--line); color: var(--soft); }
+.btn.sm { min-height: 40px; font-size: 14px; padding: 0 16px; }
+.mono { font-family: var(--mono); }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.05em; color: var(--soft); border: 1px solid var(--line); border-radius: 99px; padding: 4px 10px; white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* Objeto con grosor */
+.slab { position: relative; background: linear-gradient(180deg, #161b27, #11151f); border: 1px solid #2a3142; border-radius: 20px; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 6px 8px 0 -1px #0d1018, 6px 8px 0 0 #2a3142, 0 30px 60px rgba(0, 0, 0, 0.4); }
+
+/* Visores 3D */
+.viewer { position: relative; }
+.viewer canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.viewer .fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.viewer.has3d .fallback { visibility: hidden; }
+.viewer.drag canvas { cursor: grab; }
+.viewer.dragging canvas { cursor: grabbing; }
+.hint { position: absolute; z-index: 2; left: 50%; bottom: 10px; transform: translateX(-50%); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rim); background: rgba(10, 12, 18, 0.8); border: 1px solid var(--line); padding: 6px 12px; border-radius: 99px; white-space: nowrap; pointer-events: none; }
+.viewer.no3d .hint { display: none; }
+
+main { overflow-x: clip; }
+section { padding-block: clamp(64px, 9vw, 120px); scroll-margin-top: 62px; }
+
+/* Hero */
+.hero { padding-block: clamp(32px, 5vw, 64px) clamp(48px, 7vw, 96px); }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(16px, 3vw, 40px); align-items: center; }
+.hero .copy { display: grid; gap: 24px; }
+.hero .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero .viewer { aspect-ratio: 1300 / 1060; width: 115%; margin-right: -15%; }
+.hero .meta { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+@media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; } .hero .viewer { width: 100%; margin: 0; order: -1; } }
+
+/* Por qué */
+.why .wrap { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+.why .points { display: grid; gap: 18px; margin-top: 26px; }
+.why .point { display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 14px; }
+.why .point i { width: 10px; height: 10px; margin-top: 8px; border-radius: 3px; background: var(--key); transform: rotate(45deg); }
+.why .point:nth-child(2) i { background: var(--rim); }
+.why .point:nth-child(3) i { background: var(--paper); }
+.why .point b { display: block; }
+.why .point span { color: var(--muted); }
+.why .viewer { aspect-ratio: 1160 / 860; }
+.ctrl { display: flex; align-items: center; gap: 12px; margin-top: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.stat { margin-top: 24px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px; align-items: center; padding: 18px 22px; }
+.stat .big { font-family: var(--display); font-weight: 700; font-size: clamp(38px, 5vw, 54px); color: var(--key); letter-spacing: -0.03em; line-height: 1; }
+.stat .src { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
+@media (max-width: 860px) { .why .wrap { grid-template-columns: 1fr; } }
+
+input[type="range"] { -webkit-appearance: none; appearance: none; width: min(260px, 100%); height: 4px; border-radius: 2px; background: var(--line); outline-offset: 6px; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--key); box-shadow: 0 0 0 5px rgba(255, 176, 74, 0.2); cursor: pointer; }
+input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border: 0; border-radius: 50%; background: var(--key); cursor: pointer; }
+
+/* Skills */
+.skills .grid { margin-top: 36px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.tile { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 14px; align-items: center; padding: 16px 18px 16px 10px; transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); transform-style: preserve-3d; }
+.tile img { width: 104px; height: 104px; transform: translateZ(30px); }
+.tile p { font-size: 15px; line-height: 1.45; color: var(--soft); margin: 6px 0 10px; }
+.standard { margin-top: 26px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 14px 20px; border: 1px dashed rgba(111, 227, 240, 0.4); border-radius: 14px; }
+.standard span:not(.eyebrow) { color: var(--soft); font-size: 15px; }
+@media (max-width: 980px) { .skills .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .skills .grid { grid-template-columns: 1fr; } }
+
+/* Dolores */
+.pain .steps { margin-top: 36px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.pain .step { padding: 22px 24px; display: grid; gap: 10px; align-content: start; }
+.pain .step .n { font-family: var(--display); font-weight: 700; font-size: 44px; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px var(--key); }
+.pain .step p { color: var(--soft); font-size: 15.5px; }
+.pain q { color: var(--text); font-style: italic; quotes: "«" "»"; }
+.formula { margin-top: 28px; display: grid; grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1fr) 32px minmax(0, 1fr); align-items: center; }
+.formula .cell { padding: 12px 18px; border-radius: 14px; border: 1px solid var(--line); background: rgba(16, 20, 29, 0.8); }
+.formula .cell.hot { border-color: rgba(255, 176, 74, 0.55); }
+.formula .cell.cold { border-color: rgba(111, 227, 240, 0.55); }
+.formula .to { text-align: center; color: var(--muted); font-family: var(--mono); }
+@media (max-width: 860px) { .pain .steps { grid-template-columns: 1fr; } .formula { grid-template-columns: 1fr; gap: 6px; } .formula .to { transform: rotate(90deg); } }
+
+/* Casos */
+.case { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); gap: clamp(20px, 4vw, 56px); align-items: center; padding-block: clamp(36px, 5vw, 64px); border-top: 1px solid var(--line); }
+.case:first-of-type { border-top: 0; }
+.case .copy { display: grid; gap: 16px; }
+.case .quote { font-family: var(--display); font-weight: 600; font-size: clamp(22px, 2.6vw, 30px); line-height: 1.18; letter-spacing: -0.015em; }
+.case .quote::before { content: "«"; color: var(--key); }
+.case .quote::after { content: "»"; color: var(--key); }
+.case ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 7px; }
+.case li { position: relative; padding-left: 22px; }
+.case li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 9px; height: 9px; border-radius: 2px; background: var(--rim); transform: rotate(45deg); }
+.case .measure .chip { color: var(--text); border-color: rgba(255, 176, 74, 0.45); }
+.case .stage { display: grid; gap: 14px; }
+.case .viewer { aspect-ratio: 1 / 0.9; }
+.case.reverse .copy { order: 2; }
+@media (max-width: 860px) { .case { grid-template-columns: 1fr; } .case.reverse .copy { order: 0; } }
+
+.unit { display: grid; grid-template-columns: repeat(4, minmax(0, auto)); gap: 4px 20px; padding: 14px 18px; align-items: baseline; }
+.unit .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.unit .v { font-weight: 600; }
+.status { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; }
+.status.Disponible { background: var(--rim); color: var(--ink); }
+.status.Reservado { background: var(--key); color: var(--ink); }
+.status.Vendido { background: var(--line); color: var(--soft); }
+.floors { display: flex; flex-wrap: wrap; gap: 6px; }
+.floors button, .swatches button { font: inherit; cursor: pointer; }
+.floors button { font-family: var(--mono); font-size: 12px; color: var(--soft); background: var(--ink-2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; min-width: 40px; transition: background 0.15s, color 0.15s; }
+.floors button[aria-pressed="true"] { background: var(--key); color: var(--ink); border-color: var(--key); }
+.floors button.Vendido { text-decoration: line-through; opacity: 0.55; }
+.swatches { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.swatches button { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; border-radius: 99px; border: 1px solid var(--line); background: var(--ink-2); color: var(--soft); font-family: var(--mono); font-size: 12px; transition: border-color 0.15s; }
+.swatches button i { width: 24px; height: 24px; border-radius: 50%; }
+.swatches button[aria-pressed="true"] { border-color: var(--text); color: var(--text); }
+.labels { position: absolute; z-index: 2; inset: 0; pointer-events: none; }
+.label { position: absolute; transform: translate(var(--sx, -50%), calc(-100% - 12px)); white-space: nowrap; font-family: var(--mono); font-size: 11.5px; line-height: 1.35; color: var(--text); background: rgba(16, 20, 29, 0.92); border: 1px solid rgba(255, 176, 74, 0.5); border-radius: 8px; padding: 6px 10px; transition: opacity 0.2s; }
+.label b { display: block; color: var(--key); font-weight: 500; }
+.label::after { content: ""; position: absolute; left: calc(var(--sx, -50%) * -1); top: 100%; width: 1px; height: 12px; background: var(--key); }
+.label.down { transform: translate(var(--sx, -50%), 12px); border-color: rgba(111, 227, 240, 0.5); }
+.label.down b { color: var(--rim); }
+.label.down::after { top: auto; bottom: 100%; background: var(--rim); }
+.viewer.no3d .labels { display: none; }
+.case .legend { display: none; gap: 6px; margin: 0; }
+@media (max-width: 620px) { .labels { display: none; } .case .legend { display: grid; } }
+
+/* Higgsfield */
+.hf .intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 56px); align-items: center; }
+.hf .uses { display: grid; gap: 10px; margin-top: 22px; }
+.hf .use { display: grid; grid-template-columns: minmax(0, 150px) 22px minmax(0, 1fr); gap: 8px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: rgba(16, 20, 29, 0.7); font-size: 15.5px; }
+.hf .use i { font-style: normal; color: var(--key); font-family: var(--mono); }
+.hf .use span { color: var(--soft); }
+.hf .analogy { margin-top: 36px; padding: 22px 26px; display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 24px; align-items: center; }
+.hf .analogy p { color: var(--soft); }
+.hf .analogy b { color: var(--text); }
+.hf .cols { margin-top: 28px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.hf .col { padding: 22px 26px; display: grid; gap: 12px; align-content: start; }
+.hf .col .top { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.badge { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 10px; border-radius: 99px; color: var(--ink); }
+.badge.yes { background: var(--rim); }
+.badge.no { background: var(--key); }
+.hf ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.hf ul li { position: relative; padding-left: 22px; color: var(--soft); }
+.hf ul li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 8px; height: 8px; border-radius: 2px; transform: rotate(45deg); background: var(--muted); }
+.hf ul li b { color: var(--text); }
+.stamp { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--key); border: 1px dashed rgba(255, 176, 74, 0.6); padding: 8px 12px; border-radius: 8px; }
+.verify { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 14px 20px; align-items: center; justify-content: space-between; padding: 16px 20px; border-radius: 16px; border: 1px solid rgba(111, 227, 240, 0.35); background: rgba(111, 227, 240, 0.05); }
+.verify .links { display: flex; flex-wrap: wrap; gap: 8px; }
+.lanes { margin-top: 28px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.lane { padding: 22px 24px; display: grid; gap: 14px; align-content: start; }
+.lane .top { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: baseline; }
+.lane ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: s; }
+.lane li { counter-increment: s; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; color: var(--soft); }
+.lane li::before { content: counter(s); font-family: var(--display); font-weight: 700; font-size: 14px; width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; color: var(--ink); background: var(--rim); }
+.lane.b li::before { background: var(--key); }
+.lane li b { color: var(--text); }
+.warn { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255, 176, 74, 0.45); background: rgba(255, 176, 74, 0.06); font-size: 14.5px; color: var(--soft); }
+.warn i { font-style: normal; font-family: var(--display); font-weight: 700; color: var(--key); }
+.hf .viewer { aspect-ratio: 1240 / 820; }
+@media (max-width: 860px) { .hf .intro, .hf .cols, .lanes, .hf .analogy { grid-template-columns: 1fr; } }
+
+/* Proceso */
+.process .viewer { aspect-ratio: 1800 / 640; margin-top: 18px; }
+.phases { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; margin-top: 8px; }
+.phase { display: grid; gap: 6px; align-content: start; padding-top: 12px; border-top: 1px solid var(--line); }
+.phase .when { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rim); }
+.phase.last .when { color: var(--key); }
+.phase p { color: var(--soft); font-size: 15px; }
+.includes { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.includes .chip { color: var(--text); }
+@media (max-width: 860px) { .phases { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .phases { grid-template-columns: 1fr; } }
+
+/* Contacto */
+.cta .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr); gap: clamp(20px, 4vw, 56px); align-items: center; }
+.cta .copy { display: grid; gap: 24px; }
+.cta .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.cta .viewer { aspect-ratio: 1; }
+.mail { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-family: var(--mono); font-size: 15px; }
+.mail output { user-select: all; color: var(--text); }
+.toast { font-family: var(--mono); font-size: 12px; color: var(--rim); min-height: 1em; }
+@media (max-width: 860px) { .cta .wrap { grid-template-columns: 1fr; } .cta .viewer { order: -1; max-width: 420px; width: 100%; margin: 0 auto; } }
+
+footer { border-top: 1px solid var(--line); padding-block: 28px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.06em; }
+
+.reveal { transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.reveal.pending { opacity: 0.001; transform: translateY(18px); }
+@media (prefers-reduced-motion: reduce) { .reveal.pending { opacity: 1; transform: none; } .tile { transition: none; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#inicio" aria-label="OMNIA, inicio">
+      <svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><path d="M11 1 21 6.5 11 12 1 6.5Z" fill="#FFB04A"/><path d="M1 6.5 11 12v11L1 17.5Z" fill="#1E2535" stroke="#6FE3F0" stroke-width=".8"/><path d="M21 6.5 11 12v11l10-5.5Z" fill="#6FE3F0"/></svg>
+      <span>OMNIA</span><small>Web 3D e inmersiva</small>
+    </a>
+    <ul>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#casos">Casos</a></li>
+      <li><a href="#higgsfield">Higgsfield</a></li>
+      <li><a href="#proceso">Proceso</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="wrap">
+      <div class="copy">
+        <div class="eyebrow">Diseño web 3D e inmersivo</div>
+        <h1 class="h1">Webs que tus clientes pueden recorrer.</h1>
+        <p class="lead">Diseño sitios en 3D que explican tu producto en segundos y hacen que tus clientes se queden a explorarlo. Aquí te cuento qué hago, qué problemas resuelve y cómo empezar.</p>
+        <div class="actions">
+          <a class="btn primary" href="#casos">Ver casos en 3D <span class="mono" aria-hidden="true">→</span></a>
+          <a class="btn ghost" href="#contacto">Hablemos</a>
+        </div>
+        <div class="meta">Todo lo que ves en 3D en esta página es interactivo</div>
+      </div>
+      <div class="viewer" data-scene="hero">
+        <img class="fallback" src="assets/renders/hero.png" alt="Ventana de navegador con un objeto 3D que sale de la pantalla">
+      </div>
+    </div>
+  </section>
+
+  <!-- POR QUÉ -->
+  <section class="why" id="por-que">
+    <div class="wrap">
+      <div class="reveal">
+        <div class="eyebrow">Antes de empezar</div>
+        <h2 class="h2" style="margin-top:12px">Una web plana se lee. Una web 3D se explora.</h2>
+        <div class="points">
+          <div class="point"><i></i><div><b>Se entiende sin explicarla</b><span>Tu cliente gira el producto, abre el plano o ve la pieza por dentro. Menos texto y menos dudas.</span></div></div>
+          <div class="point"><i></i><div><b>Se recuerda</b><span>Si todas las webs de tu sector usan la misma plantilla, la que se puede explorar es la que tu cliente recuerda al día siguiente.</span></div></div>
+          <div class="point"><i></i><div><b>Vende a distancia</b><span>Quien compra desde otra ciudad u otro país ve lo que va a pagar antes de pagarlo.</span></div></div>
+        </div>
+        <div class="stat slab">
+          <span class="big">+94%</span>
+          <p>de conversión en productos que muestran contenido 3D o de realidad aumentada, frente a los que no lo tienen.<span class="src">Fuente: Shopify (2020). Es un dato de la propia plataforma: úsalo como referencia, no como promesa.</span></p>
+        </div>
+      </div>
+      <div>
+        <div class="viewer" data-scene="layers" id="layersViewer">
+          <img class="fallback" src="assets/renders/layers-depth.png" alt="Una interfaz separada en capas 3D">
+        </div>
+        <label class="ctrl" for="layersRange">Plana <input id="layersRange" type="range" min="0" max="100" value="0" aria-label="Separar la interfaz en capas"> Con profundidad</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="skills" id="skills">
+    <div class="wrap">
+      <div class="eyebrow">01 · Lo que hago</div>
+      <h2 class="h2" style="margin-top:12px;max-width:22em">Seis habilidades para que tu cliente entienda tu producto y lo compre.</h2>
+      <div class="grid">
+        <div class="tile slab reveal"><img src="assets/renders/icon-modelado.png" alt=""><div><h3 class="h3">Modelado 3D</h3><p>Productos, espacios y piezas que se ven reales y pesan poco para cargar rápido.</p><div class="chips"><span class="chip">Blender</span><span class="chip">glTF</span></div></div></div>
+        <div class="tile slab reveal"><img src="assets/renders/icon-interaccion.png" alt=""><div><h3 class="h3">Interacción</h3><p>Girar, arrastrar, elegir colores, abrir por dentro. Tu cliente explora en vez de leer.</p><div class="chips"><span class="chip">Three.js</span><span class="chip">WebGL</span></div></div></div>
+        <div class="tile slab reveal"><img src="assets/renders/icon-animacion.png" alt=""><div><h3 class="h3">Animación</h3><p>Movimiento que guía la mirada y acompaña el scroll, sin marear a nadie.</p><div class="chips"><span class="chip">GSAP</span><span class="chip">Scroll</span></div></div></div>
+        <div class="tile slab reveal"><img src="assets/renders/icon-ux.png" alt=""><div><h3 class="h3">UX y conversión</h3><p>Cada efecto tiene un trabajo: llevar a la compra, a la cita o al WhatsApp.</p><div class="chips"><span class="chip">Figma</span><span class="chip">Analítica</span></div></div></div>
+        <div class="tile slab reveal"><img src="assets/renders/icon-rendimiento.png" alt=""><div><h3 class="h3">Rendimiento</h3><p>Rápida en el celular y con versión de respaldo si el equipo no soporta 3D.</p><div class="chips"><span class="chip">Draco</span><span class="chip">KTX2</span><span class="chip">Lighthouse</span></div></div></div>
+        <div class="tile slab reveal"><img src="assets/renders/icon-ia.png" alt=""><div><h3 class="h3">IA generativa</h3><p>Fotos, videos y modelos 3D producidos en días en lugar de semanas.</p><div class="chips"><span class="chip">Higgsfield</span></div></div></div>
+      </div>
+      <div class="standard"><span class="eyebrow cool">Estándar de entrega</span><span>Fluida en celulares de gama media</span><span>Modelos 3D comprimidos (meta: menos de 2 MB)</span><span>Versión de respaldo sin 3D</span></div>
+    </div>
+  </section>
+
+  <!-- DOLORES -->
+  <section class="pain" id="dolores">
+    <div class="wrap">
+      <div class="eyebrow">02 · Dolores que el 3D resuelve</div>
+      <h2 class="h2" style="margin-top:12px">Primero, encuentra dónde se cae la venta.</h2>
+      <p class="lead" style="margin-top:14px">Antes de diseñar en 3D busco el momento exacto en que tu cliente duda. Puedes encontrarlo en una tarde:</p>
+      <div class="steps">
+        <div class="step slab reveal"><span class="n">1</span><h3 class="h3">Escucha</h3><p>Lee tus últimos 30 chats de WhatsApp o mensajes directos. ¿Qué pregunta se repite? <q>¿De qué tamaño es?</q> <q>¿Cómo es por dentro?</q> <q>¿Ese color cómo se ve?</q></p></div>
+        <div class="step slab reveal"><span class="n">2</span><h3 class="h3">Mide</h3><p>En tu analítica, busca la página donde más gente se va sin escribirte ni comprar. Ese es el hueco que hay que tapar.</p></div>
+        <div class="step slab reveal"><span class="n">3</span><h3 class="h3">Observa</h3><p>Pregúntate qué necesita ver o tocar tu cliente antes de decidir y que hoy una foto no le muestra.</p></div>
+      </div>
+      <div class="formula">
+        <div class="cell hot"><span class="eyebrow">Dolor</span><p>«No sé si me cabe en la sala»</p></div>
+        <span class="to" aria-hidden="true">→</span>
+        <div class="cell cold"><span class="eyebrow cool">Experiencia 3D</span><p>El mueble en 3D con medidas reales</p></div>
+        <span class="to" aria-hidden="true">→</span>
+        <div class="cell"><span class="eyebrow" style="color:var(--paper)">Resultado medible</span><p>Menos devoluciones por tamaño</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASOS -->
+  <section id="casos" style="padding-top:0">
+    <div class="wrap">
+      <div class="eyebrow cool">Tres casos ilustrativos · todos se pueden tocar</div>
+
+      <article class="case" id="caso-inmobiliaria">
+        <div class="copy">
+          <div class="eyebrow">Caso 1 · Inmobiliaria en preventa</div>
+          <p class="quote">Me interesa, pero no puedo comprar algo que no he visto.</p>
+          <p class="muted">El edificio todavía no existe y muchos compradores viven en otra ciudad o fuera del país. El vendedor manda PDFs y renders sueltos por WhatsApp y la conversación se enfría.</p>
+          <div><b>La experiencia 3D:</b> una torre que se recorre desde el celular.
+            <ul><li>Tocas un piso y ves qué apartamentos quedan libres</li><li>Metraje, distribución y hacia dónde da la vista</li><li>El comprador llega a la llamada con su unidad elegida</li></ul></div>
+          <div class="chips measure"><span class="chip">Contactos con unidad elegida</span><span class="chip">Reservas por visita</span><span class="chip">Tiempo en la página</span></div>
+        </div>
+        <div class="stage">
+          <div class="viewer" data-scene="tower" id="towerViewer">
+            <img class="fallback" src="assets/renders/tower.png" alt="Torre residencial en 3D">
+            <span class="hint">Toca un piso</span>
+          </div>
+          <div class="unit slab" aria-live="polite">
+            <span class="k">Unidad</span><span class="k">Área</span><span class="k">Vista</span><span class="k">Estado</span>
+            <span class="v" id="uUnit">7B</span><span class="v" id="uArea">84 m²</span><span class="v" id="uView">Parque</span><span id="uStatus"><span class="status Disponible">Disponible</span></span>
+          </div>
+          <div class="floors" id="floors" role="group" aria-label="Elegir piso"></div>
+          <p class="small">Datos de ejemplo para la demostración.</p>
+        </div>
+      </article>
+
+      <article class="case reverse" id="caso-producto">
+        <div class="copy">
+          <div class="eyebrow">Caso 2 · Tienda online de producto</div>
+          <p class="quote">En la foto se veía distinto.</p>
+          <p class="muted">Fotos planas, las mismas preguntas por color y tamaño todos los días y devoluciones que se comen el margen.</p>
+          <div><b>La experiencia 3D:</b> un configurador en la ficha del producto.
+            <ul><li>El cliente gira el producto y revisa cada detalle</li><li>Cambia colores y acabados al instante</li><li>Lo compara con un objeto conocido para entender el tamaño</li></ul></div>
+          <div class="chips measure"><span class="chip">Tasa de devolución</span><span class="chip">Conversión de la ficha</span><span class="chip">Preguntas por color y tamaño</span></div>
+        </div>
+        <div class="stage">
+          <div class="viewer drag" data-scene="bottle" id="bottleViewer">
+            <img class="fallback" src="assets/renders/bottles.png" alt="Botella térmica en 3D">
+            <span class="hint">Arrastra para girar</span>
+          </div>
+          <div class="swatches" id="swatches" role="group" aria-label="Elegir color"></div>
+        </div>
+      </article>
+
+      <article class="case" id="caso-maquinaria">
+        <div class="copy">
+          <div class="eyebrow">Caso 3 · Equipos y maquinaria</div>
+          <p class="quote">No entiendo por qué este cuesta el doble que el otro.</p>
+          <p class="muted">El valor está por dentro y nadie lo ve. Cada venta depende de una llamada larga con un técnico que explica lo mismo una y otra vez.</p>
+          <div><b>La experiencia 3D:</b> una vista explosionada que se abre con el scroll.
+            <ul><li>El equipo se separa pieza por pieza</li><li>Cada pieza dice qué hace y por qué dura más</li><li>El vendedor manda un enlace y la explicación ya está hecha</li></ul></div>
+          <div class="chips measure"><span class="chip">Días hasta el cierre</span><span class="chip">Llamadas técnicas por venta</span><span class="chip">Cotizaciones desde la web</span></div>
+        </div>
+        <div class="stage">
+          <div class="viewer drag" data-scene="pump" id="pumpViewer" style="aspect-ratio:1500/820">
+            <img class="fallback" src="assets/renders/pump.png" alt="Bomba de agua en vista explosionada">
+            <div class="labels" id="pumpLabels"></div>
+          </div>
+          <label class="ctrl" for="pumpRange">Cerrado <input id="pumpRange" type="range" min="0" max="100" value="100" aria-label="Abrir o cerrar el equipo"> Abierto</label>
+          <ul class="legend small" id="pumpLegend"></ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- HIGGSFIELD -->
+  <section class="hf" id="higgsfield">
+    <div class="wrap">
+      <div class="intro">
+        <div>
+          <div class="eyebrow">03 · Higgsfield sin pagar (casi)</div>
+          <h2 class="h2" style="margin-top:12px">Higgsfield, en palabras simples</h2>
+          <p class="lead" style="margin-top:14px">Es una plataforma de inteligencia artificial que convierte una idea escrita o una foto en imágenes, videos cortos y modelos 3D. Para tu web significa contenido visual más rápido y más barato.</p>
+          <div class="uses">
+            <div class="use"><b>Foto de tu producto</b><i aria-hidden="true">→</i><span>un modelo 3D para que el cliente lo gire</span></div>
+            <div class="use"><b>Una descripción</b><i aria-hidden="true">→</i><span>un video corto para la portada de tu web</span></div>
+            <div class="use"><b>Un solo objeto</b><i aria-hidden="true">→</i><span>versiones en otros colores, fondos y ángulos</span></div>
+          </div>
+        </div>
+        <img src="assets/renders/higgs.png" alt="Una foto de producto que se convierte en un modelo 3D" style="width:100%">
+      </div>
+
+      <div class="analogy slab">
+        <span class="h3">¿Y qué es <span style="color:var(--rim)">la API</span>?</span>
+        <p>Piensa en Higgsfield como un restaurante. <b>La app web es el salón:</b> entras, pides y te sirven. <b>La API es la ventanilla de delivery:</b> tu página web hace el pedido sola, sin que nadie entre al salón. Útil cuando quieres generar contenido de forma automática.</p>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:end;margin-top:56px">
+        <h3 class="h2" style="font-size:clamp(24px,3vw,34px)">¿Es gratis? Una parte sí.</h3>
+        <span class="stamp">Revisado: 6 de octubre de 2026</span>
+      </div>
+      <div class="cols">
+        <div class="col slab">
+          <div class="top"><h3 class="h3">La app web</h3><span class="badge yes">Tiene plan gratis</span></div>
+          <span class="small mono">higgsfield.ai</span>
+          <ul>
+            <li><b>Creas tu cuenta sin pagar</b> y pruebas desde el navegador.</li>
+            <li>Sirve para probar ideas. El plan gratis trae <b>pocos modelos</b>, los resultados salen <b>con marca de agua</b> y <b>no permite uso comercial</b>.</li>
+            <li>Los créditos y pruebas gratis <b>cambian según la promoción</b> del momento. Algunas pruebas piden tarjeta y se cobran solas si no las cancelas a tiempo.</li>
+          </ul>
+        </div>
+        <div class="col slab">
+          <div class="top"><h3 class="h3">La API</h3><span class="badge no">Pago por uso</span></div>
+          <span class="small mono">cloud.higgsfield.ai</span>
+          <ul>
+            <li><b>No encontré un plan gratuito para la API.</b> Necesitas saldo prepagado o una tarjeta registrada.</li>
+            <li>Pagas por cada generación que sale bien. En pruebas publicadas por terceros, <b>un video costó entre US$0,20 y US$3,23</b> según el modelo elegido.</li>
+            <li>Para experimentar suele bastar un saldo pequeño, <b>de US$5 a US$10</b>.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="verify">
+        <p><b>Precios y promociones cambian seguido.</b> <span class="muted">Confírmalos en la fuente oficial antes de decidir.</span></p>
+        <div class="links">
+          <a class="btn ghost sm" href="https://higgsfield.ai/pricing" target="_blank" rel="noopener">Precios ↗</a>
+          <a class="btn ghost sm" href="https://docs.higgsfield.ai" target="_blank" rel="noopener">Documentación API ↗</a>
+          <a class="btn ghost sm" href="https://cloud.higgsfield.ai" target="_blank" rel="noopener">Consola de llaves ↗</a>
+        </div>
+      </div>
+
+      <div class="lanes">
+        <div class="lane slab">
+          <div class="top"><h3 class="h3">Ruta A · Probar gratis</h3><span class="chip" style="color:var(--rim)">Sin tarjeta</span></div>
+          <ol>
+            <li><span>Entra a <b>higgsfield.ai</b> y crea tu cuenta con tu correo o con Google.</span></li>
+            <li><span>Revisa en tu perfil cuántos <b>créditos o generaciones gratis</b> tienes hoy.</span></li>
+            <li><span>Sube una <b>foto de tu producto</b> y pide un video corto o un modelo 3D.</span></li>
+            <li><span><b>Descarga el resultado y mándamelo.</b> Vemos juntos si sirve para tu web antes de gastar un dólar.</span></li>
+          </ol>
+          <p class="small">Si una prueba gratis te pide tarjeta, anota la fecha en que se cobra y cancélala antes si no la vas a usar.</p>
+        </div>
+        <div class="lane b slab">
+          <div class="top"><h3 class="h3">Ruta B · Conectarlo a tu web</h3><span class="chip" style="color:var(--key)">Lo hago contigo</span></div>
+          <ol>
+            <li><span>Creas tu cuenta en <b>cloud.higgsfield.ai</b> y cargas un saldo pequeño.</span></li>
+            <li><span>Generas una <b>llave de acceso</b>: un ID y una clave secreta.</span></li>
+            <li><span>Yo la instalo <b>en el servidor de tu web</b>, nunca en el código que ve el visitante. Desde ahí tu web pide imágenes, videos o modelos 3D sola.</span></li>
+          </ol>
+          <div class="warn"><i>!</i><span>La clave secreta es como la llave de tu casa. No la mandes por WhatsApp ni por correo: compártela con un gestor de contraseñas (por ejemplo, Bitwarden o 1Password).</span></div>
+          <p class="small">Los nombres de menús y botones pueden cambiar. La guía oficial está en <a href="https://docs.higgsfield.ai" target="_blank" rel="noopener" style="color:var(--rim)">docs.higgsfield.ai</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESO -->
+  <section class="process" id="proceso">
+    <div class="wrap">
+      <div class="eyebrow">04 · Cómo trabajamos</div>
+      <h2 class="h2" style="margin-top:12px">Cuatro fases. Ves el 3D funcionando antes de producir todo.</h2>
+      <div class="viewer" data-scene="steps">
+        <img class="fallback" src="assets/renders/steps.png" alt="Cuatro bloques que suben">
+      </div>
+      <div class="phases">
+        <div class="phase"><span class="when">Semana 1</span><h3 class="h3">Diagnóstico</h3><p>Una llamada de 45 minutos. Revisamos tu web, tus chats y tus números para encontrar el dolor.</p></div>
+        <div class="phase"><span class="when">Semanas 2 y 3</span><h3 class="h3">Prototipo</h3><p>Te muestro la idea en 3D funcionando, en tu celular, antes de invertir en la producción completa.</p></div>
+        <div class="phase"><span class="when">Semanas 3 a 6</span><h3 class="h3">Producción</h3><p>Modelos 3D, interacción, textos, versión móvil y versión de respaldo.</p></div>
+        <div class="phase last"><span class="when">Semana 7 en adelante</span><h3 class="h3">Lanzamiento y medición</h3><p>Publicamos, medimos los números que acordamos y ajustamos con datos.</p></div>
+      </div>
+      <div class="includes"><span class="eyebrow">Siempre incluye</span><span class="chip">Modelos 3D optimizados</span><span class="chip">Versión móvil</span><span class="chip">Versión sin 3D de respaldo</span><span class="chip">Medición de resultados</span><span class="chip">30 días de ajustes</span></div>
+      <p class="small" style="margin-top:10px">Tiempos de referencia para un proyecto mediano.</p>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="cta" id="contacto">
+    <div class="wrap">
+      <div class="copy">
+        <div class="eyebrow">Siguiente paso</div>
+        <h2 class="h1" style="font-size:clamp(34px,5vw,56px)">¿Hablamos de tu proyecto?</h2>
+        <p class="lead">Cuéntame qué pregunta te hacen tus clientes una y otra vez, y en qué momento se van sin comprar. Te respondo en 48 horas con una idea concreta para tu negocio.</p>
+        <div class="mail"><span class="muted">Correo:</span><output id="mailText">omniagroupve@gmail.com</output><button class="btn quiet sm" id="copyMail" type="button">Copiar</button><span class="toast" id="toast" role="status"></span></div>
+        <div class="actions">
+          <a class="btn primary" id="mailLink" href="mailto:omniagroupve@gmail.com?subject=Quiero%20una%20web%203D">Escribirme ↗</a>
+          <a class="btn ghost" href="#inicio">Volver arriba</a>
+        </div>
+      </div>
+      <div class="viewer" data-scene="portal">
+        <img class="fallback" src="assets/renders/portal.png" alt="Portal 3D">
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>OMNIA · Experiencias web 3D e inmersivas</span><span>Hecho con Three.js · 2026</span></div>
+</footer>
+
+<script type="module">
+  import { mountViewer, TOWER_UNITS, BOTTLE_COLORS, PUMP_PARTS } from "./scenes.js";
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const $ = (s) => document.querySelector(s);
+
+  // Visores simples (sin estado)
+  ["hero", "steps", "portal"].forEach((name) => {
+    const el = document.querySelector(`.viewer[data-scene="${name}"]`);
+    if (el) mountViewer(el, name);
+  });
+
+  // ── Capas: se separan con el scroll o con el control ──
+  const layers = mountViewer($("#layersViewer"), "layers");
+  const range = $("#layersRange");
+  let manual = false;
+  if (layers) {
+    range.addEventListener("input", () => {
+      manual = true;
+      layers.api.setExplode(range.value / 100);
+    });
+    const onScroll = () => {
+      if (manual) return;
+      const r = $("#layersViewer").getBoundingClientRect();
+      const vh = window.innerHeight;
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.9)));
+      const e = reduce ? 1 : p * p * (3 - 2 * p);
+      layers.api.setExplode(e);
+      range.value = Math.round(e * 100);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+
+  // ── Torre: elegir piso ──
+  const floorsEl = $("#floors");
+  let tower = null;
+  function showUnit(floor) {
+    const u = TOWER_UNITS.find((x) => x.floor === floor);
+    if (!u) return;
+    $("#uUnit").textContent = u.unit;
+    $("#uArea").textContent = `${u.m2} m²`;
+    $("#uView").textContent = u.view;
+    $("#uStatus").innerHTML = `<span class="status ${u.status}">${u.status}</span>`;
+    floorsEl.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.floor === floor)));
+    if (tower) tower.api.select(floor);
+  }
+  [...TOWER_UNITS].reverse().forEach((u) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.dataset.floor = u.floor;
+    b.className = u.status;
+    b.textContent = u.floor === 11 ? "PH" : `P${u.floor}`;
+    b.title = `Piso ${u.floor} · ${u.status}`;
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", () => showUnit(u.floor));
+    floorsEl.appendChild(b);
+  });
+  tower = mountViewer($("#towerViewer"), "tower");
+  if (tower) {
+    tower.canvas.addEventListener("click", (ev) => {
+      const hit = tower.pick(ev);
+      if (hit) showUnit(hit.floor);
+    });
+    tower.canvas.addEventListener("pointermove", (ev) => {
+      const hit = tower.pick(ev);
+      tower.api.hover(hit ? hit.floor : null);
+      tower.canvas.style.cursor = hit ? "pointer" : "default";
+    });
+  }
+  showUnit(7);
+
+  // ── Botella: colores ──
+  const bottle = mountViewer($("#bottleViewer"), "bottle", { orbit: true });
+  const sw = $("#swatches");
+  Object.values(BOTTLE_COLORS).forEach((c, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.innerHTML = `<i style="background:${c.swatch}"></i>${c.name}`;
+    b.setAttribute("aria-pressed", String(i === 0));
+    b.addEventListener("click", () => {
+      sw.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", "false"));
+      b.setAttribute("aria-pressed", "true");
+      if (bottle) bottle.api.setColor(c.hex);
+    });
+    sw.appendChild(b);
+  });
+
+  // ── Bomba: abrir / cerrar + etiquetas que siguen a cada pieza ──
+  const labelsEl = $("#pumpLabels");
+  const legend = $("#pumpLegend");
+  const labelEls = {};
+  const PLACE = {
+    motor: { anchor: "motor", sx: "-50%" },
+    impulsor: { anchor: "impulsor", sx: "-30%" },
+    rodamiento: { anchor: "rodamiento_b", sx: "-80%", down: true },
+    carcasa: { anchor: "carcasa_b", sx: "-15%", down: true },
+  };
+  PUMP_PARTS.forEach((p) => {
+    const d = document.createElement("div");
+    d.className = "label" + (PLACE[p.id].down ? " down" : "");
+    d.style.setProperty("--sx", PLACE[p.id].sx);
+    d.innerHTML = `<b>${p.label}</b>${p.note}`;
+    labelsEl.appendChild(d);
+    labelEls[p.id] = d;
+    const li = document.createElement("li");
+    li.innerHTML = `<b style="color:var(--text)">${p.label}:</b> ${p.note}`;
+    legend.appendChild(li);
+  });
+  const pumpBox = $("#pumpViewer");
+  let explode = 1;
+  const pump = mountViewer(pumpBox, "pump", {
+    orbit: true,
+    onFrame(anchors) {
+      for (const id in labelEls) {
+        const a = anchors[PLACE[id].anchor];
+        if (!a) continue;
+        labelEls[id].style.left = `${a[0] * 100}%`;
+        labelEls[id].style.top = `${a[1] * 100}%`;
+        labelEls[id].style.opacity = explode > 0.6 ? 1 : 0;
+      }
+    },
+  });
+  const pr = $("#pumpRange");
+  if (pump) {
+    pr.addEventListener("input", () => {
+      explode = pr.value / 100;
+      pump.api.setExplode(explode);
+    });
+    // Se abre sola la primera vez que entra en pantalla
+    if (!reduce) {
+      explode = 0;
+      pump.api.setExplode(0);
+      pr.value = 0;
+      const io = new IntersectionObserver((entries) => {
+        if (!entries[0].isIntersecting) return;
+        io.disconnect();
+        const t0 = performance.now();
+        const step = (now) => {
+          const k = Math.min(1, (now - t0) / 1400);
+          const e = 1 - Math.pow(1 - k, 3);
+          explode = e;
+          pump.api.setExplode(e);
+          pr.value = Math.round(e * 100);
+          if (k < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }, { threshold: 0.5 });
+      io.observe(pumpBox);
+    }
+  }
+
+  // ── Tarjetas con inclinación 3D (solo con mouse) ──
+  if (window.matchMedia("(pointer: fine)").matches && !reduce) {
+    document.querySelectorAll(".tile").forEach((t) => {
+      t.addEventListener("pointermove", (ev) => {
+        const r = t.getBoundingClientRect();
+        const x = (ev.clientX - r.left) / r.width - 0.5;
+        const y = (ev.clientY - r.top) / r.height - 0.5;
+        t.style.transform = `perspective(900px) rotateX(${(-y * 8).toFixed(2)}deg) rotateY(${(x * 10).toFixed(2)}deg)`;
+      });
+      t.addEventListener("pointerleave", () => (t.style.transform = ""));
+    });
+  }
+
+  // ── Aparición suave (el contenido ya es visible si JS falla) ──
+  if (!reduce && "IntersectionObserver" in window) {
+    const els = [...document.querySelectorAll(".reveal")].filter((el) => el.getBoundingClientRect().top > window.innerHeight);
+    els.forEach((el) => el.classList.add("pending"));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.remove("pending");
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -10% 0px" });
+    els.forEach((el) => io.observe(el));
+  }
+
+  // ── Pestaña activa en la navegación ──
+  const links = [...document.querySelectorAll(".nav ul a")];
+  const io2 = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      links.forEach((l) => l.classList.toggle("on", l.getAttribute("href") === `#${e.target.id}`));
+    });
+  }, { rootMargin: "-45% 0px -50% 0px" });
+  ["skills", "casos", "higgsfield", "proceso", "contacto"].forEach((id) => io2.observe(document.getElementById(id)));
+
+  // ── Copiar correo ──
+  $("#copyMail").addEventListener("click", async () => {
+    const text = $("#mailText").textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      $("#toast").textContent = "Copiado";
+    } catch {
+      const sel = window.getSelection();
+      const rng = document.createRange();
+      rng.selectNodeContents($("#mailText"));
+      sel.removeAllRanges();
+      sel.addRange(rng);
+      $("#toast").textContent = "Selecciónalo y cópialo";
+    }
+    setTimeout(() => ($("#toast").textContent = ""), 2200);
+  });
+</script>
+</body>
+</html>

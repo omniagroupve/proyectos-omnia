@@ -1,0 +1,21 @@
+{
+  "name": "brochure-web-3d",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Propuesta comercial interactiva (PDF + web) para servicios de diseño web 3D e inmersivo.",
+  "scripts": {
+    "renders": "node scripts/render-assets.mjs",
+    "pdf": "node scripts/build-pdf.mjs",
+    "build": "node scripts/render-assets.mjs && node scripts/build-pdf.mjs",
+    "web": "npx serve web"
+  },
+  "dependencies": {
+    "pdf-lib": "1.17.1",
+    "qrcode": "1.5.4",
+    "three": "0.160.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.1"
+  }
+}

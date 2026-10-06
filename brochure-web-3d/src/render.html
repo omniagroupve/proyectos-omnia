@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>render</title>
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<script type="importmap">
+{ "imports": {
+  "three": "/node_modules/three/build/three.module.js",
+  "three/addons/": "/node_modules/three/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script type="module">
+  import { renderStill } from "/web/scenes.js";
+  const q = new URLSearchParams(location.search);
+  try {
+    const out = renderStill(document.getElementById("c"), q.get("scene"), +q.get("w"), +q.get("h"));
+    window.__anchors = out.anchors;
+    window.__ready = true;
+  } catch (e) {
+    window.__error = String(e && e.stack || e);
+  }
+</script>
+</body>
+</html>

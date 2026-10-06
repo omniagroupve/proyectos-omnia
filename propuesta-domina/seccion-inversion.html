@@ -1,0 +1,711 @@
+<title>Capacitación Panal AI</title>
+<!--
+  Sección "Inversión" de la propuesta: capacitación de 15 personas en el AI Back Office de Panal, en tres niveles.
+  Todo lo que va entre "SECCIÓN INVERSIÓN · inicio" y "SECCIÓN INVERSIÓN · fin" se pega tal cual en la propuesta.
+  Lo que está fuera (este <title>, la fuente y el bloque "solo vista previa") existe para verla sola.
+  Precios: atributo data-price de cada tarjeta. Las columnas 3D se calculan solas (1 celda = data-unit del section).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* solo vista previa */
+:root{color-scheme:dark}
+body{margin:0;background:#111113;color:#F5F5F7}
+</style>
+
+<!-- ===================== SECCIÓN INVERSIÓN · inicio ===================== -->
+<style>
+/* Layout: sección de noche a todo el ancho. Un piso de panal en 3D del que suben tres columnas de miel
+   (1 celda = US$50) detrás de tres tarjetas de vidrio; la altura de cada columna es el precio.
+   Un solo look oscuro: los "fondos de noche" del manual de Panal. */
+.pnl-inv{
+  --tinta:#111113;
+  --grafito:#1C1C1F;
+  --niebla:#F5F5F7;
+  --humo:#8E8E93;
+  --gris:#AEAEB2;
+  --miel:#FF9F0A;
+  --linea:rgba(245,245,247,.12);
+  --vidrio:rgba(28,28,31,.58);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter",system-ui,sans-serif;
+  --hex:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  position:relative;isolation:isolate;overflow:hidden;
+  background:var(--tinta);color:var(--niebla);font-family:var(--font);
+  -webkit-font-smoothing:antialiased;color-scheme:dark;
+  padding:clamp(72px,11vh,128px) 16px clamp(64px,9vh,112px);
+}
+.pnl-inv *,.pnl-inv *::before,.pnl-inv *::after{box-sizing:border-box}
+
+/* Capa 3D */
+.pnl-inv__gl{position:absolute;left:0;top:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none;opacity:0;transition:opacity .9s ease;
+  -webkit-mask-image:linear-gradient(#000 calc(100% - 240px),transparent);mask-image:linear-gradient(#000 calc(100% - 240px),transparent)}
+.pnl-inv.has3d .pnl-inv__gl{opacity:1}
+.pnl-inv__veil{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(180deg,var(--tinta) 0,rgba(17,17,19,.6) 12%,rgba(17,17,19,0) 32%),
+             radial-gradient(130% 80% at 50% 110%,rgba(17,17,19,0) 45%,rgba(17,17,19,.55) 100%)}
+.pnl-inv__labels{position:absolute;inset:0;z-index:1;pointer-events:none}
+.pnl-inv__lbl{position:absolute;left:0;top:0;display:flex;align-items:baseline;gap:8px;padding:7px 13px;border-radius:999px;white-space:nowrap;
+  background:rgba(17,17,19,.66);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px var(--linea);
+  opacity:0;will-change:transform,opacity;transition:box-shadow .3s ease,background-color .3s ease}
+.pnl-inv__lbl b{font-size:15px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.pnl-inv__lbl span{font-size:12px;color:var(--humo)}
+.pnl-inv__lbl.is-hot{background:rgba(48,32,8,.78);box-shadow:inset 0 0 0 1px rgba(255,159,10,.6)}
+
+/* Contenido */
+.pnl-inv__wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;display:flex;flex-direction:column}
+.pnl-inv__head{max-width:46rem;display:flex;flex-direction:column;gap:20px}
+.pnl-inv__eyebrow{margin:0;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--humo)}
+.pnl-inv__eyebrow i,.pnl-inv__key i{flex:none;width:10px;height:11px;background:var(--miel);clip-path:var(--hex)}
+.pnl-inv__title{margin:0;font-size:clamp(34px,5.4vw,66px);line-height:1.03;font-weight:600;letter-spacing:-.045em;text-wrap:balance}
+.pnl-inv__lede{margin:0;max-width:38rem;font-size:clamp(16px,1.45vw,19px);line-height:1.55;color:var(--gris);text-wrap:pretty}
+
+.pnl-inv__stage{position:relative;height:clamp(210px,31vh,300px);margin-top:clamp(20px,3vh,36px)}
+.pnl-inv__key{position:absolute;left:0;top:0;margin:0;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--humo);font-variant-numeric:tabular-nums}
+
+/* Respaldo sin WebGL: las mismas columnas, en plano */
+.pnl-inv__fallback{position:absolute;inset:28px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:100%;transition:opacity .6s ease,visibility .6s}
+.pnl-inv.has3d .pnl-inv__fallback{opacity:0;visibility:hidden}
+.pnl-fb{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:10px;height:100%;min-width:0}
+.pnl-fb b{font-size:15px;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(28,28,31,.8);box-shadow:inset 0 0 0 1px var(--linea);font-variant-numeric:tabular-nums}
+.pnl-fb__stack{display:flex;flex-direction:column;gap:4px;width:min(112px,58%);height:calc((100% - 48px) * var(--n) / 10)}
+.pnl-fb__stack i{flex:1;border-radius:5px;background:linear-gradient(180deg,#FFB340,#E07F00);box-shadow:0 0 22px rgba(255,159,10,.22)}
+
+/* Tarjetas */
+.pnl-inv__tiers{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:clamp(12px,1.6vw,20px);row-gap:16px}
+.pnl-tier{position:relative;grid-row:span 6;display:grid;grid-template-rows:subgrid;row-gap:0;align-content:start;min-width:0;
+  padding:clamp(24px,2.4vw,34px);border-radius:28px;background:var(--vidrio);
+  -webkit-backdrop-filter:blur(20px) saturate(1.35);backdrop-filter:blur(20px) saturate(1.35);
+  box-shadow:inset 0 0 0 1px var(--linea),0 40px 80px -40px rgba(0,0,0,.85);
+  outline:none;cursor:default;will-change:transform;
+  transition:translate .45s cubic-bezier(.2,.8,.2,1),box-shadow .3s ease,background-color .3s ease}
+.pnl-tier--featured{background:rgba(38,31,22,.6);box-shadow:inset 0 0 0 1px rgba(255,159,10,.3),0 40px 80px -40px rgba(0,0,0,.85)}
+.pnl-tier.is-hot{translate:0 -6px;box-shadow:inset 0 0 0 1px rgba(255,159,10,.55),0 50px 90px -40px rgba(0,0,0,.9),0 0 60px -20px rgba(255,159,10,.35)}
+.pnl-tier:focus-visible{box-shadow:inset 0 0 0 2px var(--miel),0 50px 90px -40px rgba(0,0,0,.9)}
+.pnl-tier__glare{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s ease;
+  background:radial-gradient(460px circle at var(--gx,50%) var(--gy,0%),rgba(255,255,255,.075),rgba(255,255,255,0) 45%)}
+.pnl-tier.is-hot .pnl-tier__glare{opacity:1}
+
+.pnl-tier__top{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:26px}
+.pnl-tier__lvl{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--humo)}
+.pnl-tier__lvl i{display:flex;gap:3px}
+.pnl-tier__lvl i::before,.pnl-tier__lvl i::after{content:"";width:8px;height:9px;clip-path:var(--hex);background:currentColor}
+.pnl-tier__badge{font-size:12px;font-weight:600;color:var(--miel);padding:5px 10px;border-radius:999px;background:rgba(255,159,10,.13);white-space:nowrap}
+.pnl-tier__name{margin:14px 0 0;font-size:clamp(24px,2.2vw,30px);line-height:1.1;font-weight:600;letter-spacing:-.03em}
+.pnl-tier__price{margin:18px 0 0;display:flex;align-items:flex-start;gap:6px;line-height:1}
+.pnl-tier__cur{font-size:17px;font-weight:500;color:var(--humo);padding-top:9px}
+.pnl-tier__num{display:inline-block;font-size:clamp(52px,5vw,68px);font-weight:600;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.pnl-tier__num.is-tick{animation:pnl-tick .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes pnl-tick{from{opacity:.35;translate:0 7px}to{opacity:1;translate:0 0}}
+.pnl-tier__per{margin:8px 0 0;font-size:14px;color:var(--humo);font-variant-numeric:tabular-nums}
+.pnl-tier__goal{margin:22px 0 0;padding-top:20px;border-top:1px solid var(--linea);font-size:15.5px;line-height:1.5;color:#D1D1D6;text-wrap:pretty}
+.pnl-tier__list{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column;gap:11px}
+.pnl-tier__list li{display:grid;grid-template-columns:9px minmax(0,1fr);gap:11px;font-size:14.5px;line-height:1.45;color:var(--gris)}
+.pnl-tier__list li::before{content:"";width:9px;height:10px;margin-top:.38em;clip-path:var(--hex);background:var(--miel);opacity:.9}
+.pnl-tier__list li.is-all{color:var(--niebla);font-weight:500}
+.pnl-tier__list li.is-all::before{background:var(--niebla)}
+
+/* Comparativa */
+.pnl-inv__compare{margin-top:clamp(24px,3.5vw,40px);border-radius:24px;background:rgba(28,28,31,.55);box-shadow:inset 0 0 0 1px var(--linea);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.pnl-inv__compare summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;font-size:16px;font-weight:600;border-radius:24px}
+.pnl-inv__compare summary::-webkit-details-marker{display:none}
+.pnl-inv__compare summary:focus-visible{outline:2px solid var(--miel);outline-offset:2px}
+.pnl-inv__compare summary i{position:relative;flex:none;width:26px;height:29px;clip-path:var(--hex);background:rgba(245,245,247,.08);transition:background-color .2s ease}
+.pnl-inv__compare summary i::before,.pnl-inv__compare summary i::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:2px;margin:-1px 0 0 -5px;background:var(--niebla);border-radius:1px;transition:rotate .25s ease}
+.pnl-inv__compare summary i::after{rotate:90deg}
+.pnl-inv__compare[open] summary i::after{rotate:0deg}
+.pnl-inv__compare summary:hover i{background:rgba(255,159,10,.25)}
+.pnl-inv__scroll{overflow-x:auto;padding:0 8px 14px}
+.pnl-inv__table{width:100%;min-width:540px;border-collapse:collapse;font-size:14.5px;font-variant-numeric:tabular-nums}
+.pnl-inv__table th,.pnl-inv__table td{padding:14px 16px;text-align:center;border-top:1px solid var(--linea);font-weight:400}
+.pnl-inv__table thead th{border-top:0;font-size:13px;font-weight:600;letter-spacing:.02em}
+.pnl-inv__table tbody th{text-align:left;color:var(--humo);font-weight:500}
+.pnl-inv__table .is-feat{background:rgba(255,159,10,.05)}
+.pnl-inv__table thead .is-feat{color:var(--miel)}
+.pnl-yes{display:inline-block;width:11px;height:12px;clip-path:var(--hex);background:var(--miel);vertical-align:middle}
+.pnl-no{color:#48484A}
+.pnl-inv__sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.pnl-inv__note{margin:20px 0 0;max-width:62ch;font-size:13px;line-height:1.55;color:var(--humo)}
+
+@media (max-width:860px){
+  .pnl-inv__tiers{grid-template-columns:minmax(0,1fr)}
+  .pnl-inv__stage{height:220px}
+}
+@media (max-width:560px){
+  .pnl-inv__lbl{padding:6px 10px}
+  .pnl-inv__lbl span{display:none}
+  .pnl-tier{border-radius:24px}
+}
+@media (prefers-reduced-motion:reduce){
+  .pnl-tier,.pnl-inv__gl,.pnl-inv__fallback{transition:none}
+  .pnl-tier.is-hot{translate:none}
+  .pnl-tier__num.is-tick{animation:none}
+}
+</style>
+
+<section class="pnl-inv" id="inversion" data-unit="50" aria-labelledby="pnl-inv-title">
+  <canvas class="pnl-inv__gl" aria-hidden="true"></canvas>
+  <div class="pnl-inv__veil" aria-hidden="true"></div>
+  <div class="pnl-inv__labels" aria-hidden="true"></div>
+
+  <div class="pnl-inv__wrap">
+    <header class="pnl-inv__head">
+      <p class="pnl-inv__eyebrow"><i></i>Inversión · Capacitación</p>
+      <h2 class="pnl-inv__title" id="pnl-inv-title">Capacita a tu equipo en el AI Back Office de Panal.</h2>
+      <p class="pnl-inv__lede">Formamos a 15 personas para que deleguen en la IA el trabajo administrativo repetitivo. Hay tres niveles de profundidad para el mismo grupo, y tú eliges hasta dónde llega tu equipo.</p>
+    </header>
+
+    <div class="pnl-inv__stage" aria-hidden="true">
+      <p class="pnl-inv__key"><i></i>1 celda = US$50</p>
+      <div class="pnl-inv__fallback">
+        <div class="pnl-fb"><b>US$200</b><span class="pnl-fb__stack" style="--n:4"><i></i><i></i><i></i><i></i></span></div>
+        <div class="pnl-fb"><b>US$300</b><span class="pnl-fb__stack" style="--n:6"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+        <div class="pnl-fb"><b>US$500</b><span class="pnl-fb__stack" style="--n:10"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+      </div>
+    </div>
+
+    <ol class="pnl-inv__tiers">
+      <li class="pnl-tier" data-price="200" tabindex="0" aria-labelledby="pnl-t1">
+        <span class="pnl-tier__glare" aria-hidden="true"></span>
+        <div class="pnl-tier__top"><span class="pnl-tier__lvl">Nivel 1</span></div>
+        <h3 class="pnl-tier__name" id="pnl-t1">Fundamentos</h3>
+        <p class="pnl-tier__price" aria-label="200 dólares"><span class="pnl-tier__cur" aria-hidden="true">US$</span><span class="pnl-tier__num" aria-hidden="true">200</span></p>
+        <p class="pnl-tier__per">≈ US$13 por persona · 15 personas</p>
+        <p class="pnl-tier__goal">Tu equipo entiende qué puede delegar en la IA y usa el back office de Panal en las tareas del día a día.</p>
+        <ul class="pnl-tier__list">
+          <li>1 sesión en vivo de 3 horas</li>
+          <li>Recorrido guiado por los módulos del AI Back Office</li>
+          <li>5 plantillas de instrucciones para tareas administrativas</li>
+          <li>Guía de consulta rápida en PDF</li>
+          <li>Soporte por chat durante 7 días</li>
+          <li>Constancia de participación</li>
+        </ul>
+      </li>
+
+      <li class="pnl-tier pnl-tier--featured" data-price="300" tabindex="0" aria-labelledby="pnl-t2">
+        <span class="pnl-tier__glare" aria-hidden="true"></span>
+        <div class="pnl-tier__top"><span class="pnl-tier__lvl">Nivel 2</span><span class="pnl-tier__badge">Recomendado</span></div>
+        <h3 class="pnl-tier__name" id="pnl-t2">Operación</h3>
+        <p class="pnl-tier__price" aria-label="300 dólares"><span class="pnl-tier__cur" aria-hidden="true">US$</span><span class="pnl-tier__num" aria-hidden="true">300</span></p>
+        <p class="pnl-tier__per">US$20 por persona · 15 personas</p>
+        <p class="pnl-tier__goal">Cada área lleva el back office de Panal a sus propios procesos y practica con casos reales de tu operación.</p>
+        <ul class="pnl-tier__list">
+          <li class="is-all">Todo lo del nivel Fundamentos</li>
+          <li>2 sesiones en vivo de 3 horas (6 h en total)</li>
+          <li>Talleres por área: administración, finanzas y atención al cliente</li>
+          <li>Práctica con documentos reales de tu operación</li>
+          <li>Biblioteca de 15 plantillas y flujos listos para usar</li>
+          <li>Soporte por chat durante 30 días</li>
+        </ul>
+      </li>
+
+      <li class="pnl-tier" data-price="500" tabindex="0" aria-labelledby="pnl-t3">
+        <span class="pnl-tier__glare" aria-hidden="true"></span>
+        <div class="pnl-tier__top"><span class="pnl-tier__lvl">Nivel 3</span></div>
+        <h3 class="pnl-tier__name" id="pnl-t3">Dominio</h3>
+        <p class="pnl-tier__price" aria-label="500 dólares"><span class="pnl-tier__cur" aria-hidden="true">US$</span><span class="pnl-tier__num" aria-hidden="true">500</span></p>
+        <p class="pnl-tier__per">≈ US$33 por persona · 15 personas</p>
+        <p class="pnl-tier__goal">Tu equipo deja procesos corriendo en automático, con dos personas internas preparadas para sostenerlos.</p>
+        <ul class="pnl-tier__list">
+          <li class="is-all">Todo lo del nivel Operación</li>
+          <li>3 sesiones en vivo de 3 horas y 1 sesión de implementación</li>
+          <li>Diagnóstico previo de tus procesos administrativos</li>
+          <li>1 flujo automatizado configurado a la medida</li>
+          <li>Formación de 2 líderes internos que sostienen el cambio</li>
+          <li>Soporte durante 60 días y revisión a los 30 días</li>
+          <li>Reporte de adopción con horas ahorradas</li>
+        </ul>
+      </li>
+    </ol>
+
+    <details class="pnl-inv__compare">
+      <summary><span>Comparar los tres niveles</span><i aria-hidden="true"></i></summary>
+      <div class="pnl-inv__scroll">
+        <table class="pnl-inv__table">
+          <thead>
+            <tr><th scope="col"><span class="pnl-inv__sr">Concepto</span></th><th scope="col">Fundamentos</th><th scope="col" class="is-feat">Operación</th><th scope="col">Dominio</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Inversión</th><td>US$200</td><td class="is-feat">US$300</td><td>US$500</td></tr>
+            <tr><th scope="row">Por persona</th><td>≈ US$13</td><td class="is-feat">US$20</td><td>≈ US$33</td></tr>
+            <tr><th scope="row">Participantes</th><td>15</td><td class="is-feat">15</td><td>15</td></tr>
+            <tr><th scope="row">Horas en vivo</th><td>3 h</td><td class="is-feat">6 h</td><td>9 h + implementación</td></tr>
+            <tr><th scope="row">Plantillas y flujos</th><td>5</td><td class="is-feat">15</td><td>15 + 1 a la medida</td></tr>
+            <tr><th scope="row">Casos reales de tu operación</th><td><span class="pnl-no" role="img" aria-label="No incluido">—</span></td><td class="is-feat"><span class="pnl-yes" role="img" aria-label="Incluido"></span></td><td><span class="pnl-yes" role="img" aria-label="Incluido"></span></td></tr>
+            <tr><th scope="row">Diagnóstico de procesos</th><td><span class="pnl-no" role="img" aria-label="No incluido">—</span></td><td class="is-feat"><span class="pnl-no" role="img" aria-label="No incluido">—</span></td><td><span class="pnl-yes" role="img" aria-label="Incluido"></span></td></tr>
+            <tr><th scope="row">Líderes internos formados</th><td><span class="pnl-no" role="img" aria-label="No incluido">—</span></td><td class="is-feat"><span class="pnl-no" role="img" aria-label="No incluido">—</span></td><td>2</td></tr>
+            <tr><th scope="row">Soporte posterior</th><td>7 días</td><td class="is-feat">30 días</td><td>60 días</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <p class="pnl-inv__note">Precios en dólares estadounidenses por el grupo completo de 15 personas. Modalidad presencial o remota, a convenir.</p>
+  </div>
+</section>
+
+<script>
+/* Tarjetas: estado activo (hover, foco o columna 3D señalada) e inclinación. Funciona aunque el 3D no cargue. */
+(function () {
+  var root = document.querySelector('.pnl-inv');
+  if (!root) return;
+  var cards = Array.prototype.slice.call(root.querySelectorAll('.pnl-tier'));
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var hoverI = -1, focusI = -1, pillarI = -1, hot = -2;
+
+  function sync() {
+    var h = focusI >= 0 ? focusI : hoverI >= 0 ? hoverI : pillarI;
+    if (h === hot) return;
+    hot = h;
+    cards.forEach(function (c, i) { c.classList.toggle('is-hot', i === h); });
+    root.dispatchEvent(new CustomEvent('pnl:hot', { detail: h }));
+  }
+  root.pnlHot = function () { return hot < 0 ? -1 : hot; };
+  root.addEventListener('pnl:pillar', function (e) { pillarI = e.detail; sync(); });
+
+  var tilt = cards.map(function () { return { rx: 0, ry: 0, tx: 0, ty: 0 }; });
+  var raf = 0;
+  function step() {
+    raf = 0;
+    var moving = false;
+    cards.forEach(function (c, i) {
+      var s = tilt[i];
+      s.rx += (s.tx - s.rx) * 0.14;
+      s.ry += (s.ty - s.ry) * 0.14;
+      if (Math.abs(s.tx - s.rx) > 0.01 || Math.abs(s.ty - s.ry) > 0.01) moving = true;
+      else { s.rx = s.tx; s.ry = s.ty; }
+      c.style.transform = (s.rx || s.ry) ? 'perspective(1100px) rotateX(' + s.rx.toFixed(2) + 'deg) rotateY(' + s.ry.toFixed(2) + 'deg)' : '';
+    });
+    if (moving) raf = requestAnimationFrame(step);
+  }
+  function tiltTo(i, x, y) { tilt[i].tx = x; tilt[i].ty = y; if (!raf) raf = requestAnimationFrame(step); }
+
+  cards.forEach(function (c, i) {
+    c.addEventListener('pointerenter', function (e) { if (e.pointerType !== 'touch') { hoverI = i; sync(); } });
+    c.addEventListener('pointerleave', function () { if (hoverI === i) { hoverI = -1; sync(); } if (fine && !reduce) tiltTo(i, 0, 0); });
+    c.addEventListener('focus', function () { focusI = i; sync(); });
+    c.addEventListener('blur', function () { if (focusI === i) { focusI = -1; sync(); } });
+    if (fine && !reduce) {
+      c.addEventListener('pointermove', function (e) {
+        var r = c.getBoundingClientRect();
+        var u = (e.clientX - r.left) / r.width, v = (e.clientY - r.top) / r.height;
+        c.style.setProperty('--gx', (u * 100).toFixed(1) + '%');
+        c.style.setProperty('--gy', (v * 100).toFixed(1) + '%');
+        tiltTo(i, (0.5 - v) * 5, (u - 0.5) * 6);
+      });
+    }
+  });
+})();
+</script>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
+</script>
+<script type="module">
+/* Escena 3D: piso de panal + tres columnas de miel. Cada celda apilada vale data-unit (US$50),
+   así que la altura de cada columna es literalmente su precio. Las columnas se alinean con las tarjetas. */
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const root = document.querySelector('.pnl-inv');
+const canvas = root && root.querySelector('.pnl-inv__gl');
+if (root && canvas) start();
+
+function start() {
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
+  } catch (err) {
+    root.classList.add('no3d');
+    return;
+  }
+
+  const stage = root.querySelector('.pnl-inv__stage');
+  const lblRoot = root.querySelector('.pnl-inv__labels');
+  const cards = [...root.querySelectorAll('.pnl-tier')];
+  const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FINE = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const UNIT = Number(root.dataset.unit) || 50;
+
+  const SQ3 = Math.sqrt(3), TAU = Math.PI * 2;
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const outCubic = u => 1 - (1 - u) ** 3;
+  const outBack = u => { const c1 = 1.5, c3 = c1 + 1; return 1 + c3 * (u - 1) ** 3 + c1 * (u - 1) ** 2; };
+  function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+  /* Medidas en unidades de mundo. La celda del logo: radio del anillo, grosor y profundidad del manual. */
+  const RC = 0.9214, RW = 0.2632, RH = RW / 2, DEPTH = 0.26, BEV = 0.014;
+  const SLAB_R = 0.8, SLAB_H = 0.3, SLAB_BV = 0.028, GAP0 = 0.075, GAP_HOT = 0.05, CAP_LIFT = 0.62, CAP_S = 0.72, CAP_TILT = 0.95;
+  const CELL = 1.1, GR = 20;
+
+  const tiers = cards.map(c => {
+    const price = Number(c.dataset.price) || 0;
+    return { price, n: Math.max(1, Math.round(price / UNIT)), num: c.querySelector('.pnl-tier__num') };
+  });
+  const NMAX = Math.max(...tiers.map(t => t.n));
+  const TALLEST = (NMAX - 1) * (SLAB_H + GAP0 + GAP_HOT) + SLAB_H + CAP_LIFT + RC * CAP_S;
+
+  /* Renderer, escena, cámara */
+  renderer.setClearColor(0x111113, 1);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 0.98;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x111113, 30, 60);
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  scene.environmentIntensity = 0.38;
+
+  const camera = new THREE.PerspectiveCamera(28, 1, 0.5, 260);
+  const LOOK = new THREE.Vector3(0, 1.4, 0);
+  const DIR = new THREE.Vector3(0, 0.34, 1).normalize();
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.14));
+  const key = new THREE.DirectionalLight(0xfff0dc, 1.7);
+  key.position.set(-7, 13, 9);
+  key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024);
+  Object.assign(key.shadow.camera, { left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 50 });
+  key.shadow.bias = -0.0004;
+  key.shadow.normalBias = 0.02;
+  scene.add(key, key.target);
+  const rim = new THREE.PointLight(0xff9f0a, 70, 0, 2);
+  rim.position.set(0, 4.5, -6);
+  scene.add(rim);
+  const glint = new THREE.PointLight(0xffffff, 26, 0, 2);
+  glint.position.set(0, 3.2, 7);
+  scene.add(glint);
+
+  /* Geometría */
+  function ringShape() {
+    const s = new THREE.Shape();
+    for (let i = 0; i < 6; i++) {
+      const a = Math.PI / 2 + i * Math.PI / 3, vx = RC * Math.cos(a), vy = RC * Math.sin(a);
+      const a0 = a - Math.PI / 6, a1 = a + Math.PI / 6;
+      if (i === 0) s.moveTo(vx + RH * Math.cos(a0), vy + RH * Math.sin(a0));
+      s.absarc(vx, vy, RH, a0, a1, false);
+    }
+    s.closePath();
+    const ri = RC - RH / Math.cos(Math.PI / 6), hole = new THREE.Path();
+    for (let i = 0; i < 6; i++) { const a = Math.PI / 2 + i * Math.PI / 3; i ? hole.lineTo(ri * Math.cos(a), ri * Math.sin(a)) : hole.moveTo(ri * Math.cos(a), ri * Math.sin(a)); }
+    hole.closePath();
+    s.holes.push(hole);
+    return s;
+  }
+  function hexShape(r) {
+    const s = new THREE.Shape();
+    for (let i = 0; i < 6; i++) { const a = Math.PI / 2 + i * Math.PI / 3; i ? s.lineTo(r * Math.cos(a), r * Math.sin(a)) : s.moveTo(r * Math.cos(a), r * Math.sin(a)); }
+    s.closePath();
+    return s;
+  }
+  const flat = (g, lift) => { g.rotateX(-Math.PI / 2); g.translate(0, lift, 0); return g; };
+  const ringGeo = flat(new THREE.ExtrudeGeometry(ringShape(), { depth: DEPTH, bevelEnabled: true, bevelThickness: BEV, bevelSize: BEV, bevelSegments: 2, curveSegments: 5 }), BEV);
+  const slabGeo = flat(new THREE.ExtrudeGeometry(hexShape(SLAB_R), { depth: SLAB_H - 2 * SLAB_BV, bevelEnabled: true, bevelThickness: SLAB_BV, bevelSize: SLAB_BV, bevelSegments: 3 }), SLAB_BV);
+  const fillGeo = flat(new THREE.ExtrudeGeometry(hexShape(0.74), { depth: 0.14, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 1 }), 0.012);
+
+  const glowTex = (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 128;
+    const g = c.getContext('2d'), gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.35, 'rgba(255,255,255,.35)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+  })();
+
+  /* Materiales */
+  const honey = new THREE.MeshPhysicalMaterial({ color: 0xFF9F0A, emissive: 0xFF7A00, emissiveIntensity: 0.2, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.12 });
+  const ringDark = new THREE.MeshPhysicalMaterial({ color: 0x2A2A30, roughness: 0.55, clearcoat: 0.1, clearcoatRoughness: 0.5 });
+  const honeyDim = new THREE.MeshPhysicalMaterial({ color: 0xB86E05, emissive: 0xFF8A00, emissiveIntensity: 0.07, roughness: 0.5, clearcoat: 0.4 });
+  const capMat = new THREE.MeshPhysicalMaterial({ color: 0xFFFFFF, roughness: 0.36, clearcoat: 0.4, clearcoatRoughness: 0.3 });
+
+  const rig = new THREE.Group();
+  scene.add(rig);
+
+  /* Piso de panal */
+  const rnd = mulberry32(20261006);
+  const cells = [];
+  for (let q = -GR; q <= GR; q++) for (let r = -GR; r <= GR; r++) {
+    const d = (Math.abs(q) + Math.abs(r) + Math.abs(q + r)) / 2;
+    if (d > GR) continue;
+    const x = SQ3 * (q + r / 2) * CELL, z = 1.5 * r * CELL;
+    if (z > 7.5) continue;
+    cells.push({ x, z, dist: Math.hypot(x, z), yo: (((q - r) % 3 + 3) % 3) * 0.002, ph: rnd() * TAU, fill: rnd() < 0.075, fi: -1, tone: 0.82 + rnd() * 0.36 });
+  }
+  const NC = cells.length;
+  let NF = 0;
+  cells.forEach(c => { if (c.fill) c.fi = NF++; });
+  const floorIM = new THREE.InstancedMesh(ringGeo, ringDark, NC);
+  const fillIM = new THREE.InstancedMesh(fillGeo, honeyDim, NF);
+  const tone = new THREE.Color();
+  cells.forEach((c, i) => floorIM.setColorAt(i, tone.setScalar(c.tone)));
+  [floorIM, fillIM].forEach(m => { m.instanceMatrix.setUsage(THREE.DynamicDrawUsage); m.receiveShadow = true; m.frustumCulled = false; rig.add(m); });
+
+  /* Columnas de precio */
+  const pillars = tiers.map((t, i) => {
+    const mat = honey.clone();
+    const im = new THREE.InstancedMesh(slabGeo, mat, t.n);
+    im.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    im.castShadow = true; im.receiveShadow = true; im.frustumCulled = false;
+    im.userData.tier = i;
+    const cap = new THREE.Mesh(ringGeo, capMat);
+    cap.castShadow = true; cap.userData.tier = i;
+    cap.rotation.x = CAP_TILT;
+    const glow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2),
+      new THREE.MeshBasicMaterial({ map: glowTex, color: 0xFF9F0A, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+    glow.scale.setScalar(5.2); glow.position.y = DEPTH + 2 * BEV + 0.01;
+    const g = new THREE.Group();
+    g.add(im, cap, glow);
+    rig.add(g);
+    const lbl = document.createElement('div');
+    lbl.className = 'pnl-inv__lbl';
+    lbl.innerHTML = '<b></b><span></span>';
+    lbl.firstChild.textContent = 'US$' + t.price.toLocaleString('es');
+    lbl.lastChild.textContent = t.n + (t.n === 1 ? ' celda' : ' celdas');
+    lblRoot.appendChild(lbl);
+    return { ...t, im, mat, cap, glow, g, lbl, x: 0, hv: 0, dv: 0, landed: -1, lblHot: false };
+  });
+  const pickables = pillars.flatMap(p => [p.im, p.cap]);
+
+  /* Polvo de miel */
+  const DUST = innerWidth < 760 ? 34 : 64;
+  const dustPos = new Float32Array(DUST * 3), dustSpd = new Float32Array(DUST);
+  for (let i = 0; i < DUST; i++) {
+    dustPos[i * 3] = (rnd() * 2 - 1) * 15; dustPos[i * 3 + 1] = 0.4 + rnd() * 7; dustPos[i * 3 + 2] = -18 + rnd() * 23;
+    dustSpd[i] = 0.08 + rnd() * 0.16;
+  }
+  const dustGeo = new THREE.BufferGeometry();
+  dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ map: glowTex, color: 0xFFC266, size: 0.09, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false }));
+  dust.frustumCulled = false;
+  rig.add(dust);
+
+  /* Postproceso: bloom suave solo para la miel */
+  const rt = new THREE.WebGLRenderTarget(2, 2, { type: THREE.HalfFloatType, samples: 4 });
+  const composer = new EffectComposer(renderer, rt);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(2, 2), 0.55, 0.5, 0.8);
+  composer.addPass(bloom);
+  composer.addPass(new OutputPass());
+
+  /* Encaje: la base de las columnas queda justo detrás del borde superior de las tarjetas,
+     cada columna centrada en su tercio y la más alta ocupando el escenario. */
+  const tmp = new THREE.Vector3();
+  let W = 1, Hc = 1, ready = false;
+  function layout() {
+    const rr = root.getBoundingClientRect(), st = stage.getBoundingClientRect();
+    W = Math.round(rr.width);
+    const Hs = Math.round(rr.height);
+    if (W < 2 || Hs < 2 || st.height < 2) return;
+    const mobile = W < 760;
+    const sx = st.left - rr.left, sy = st.top - rr.top, sw = st.width, sh = st.height;
+    const baseY = sy + sh + (mobile ? 14 : 28);
+    Hc = Math.min(Hs, Math.round(baseY + (mobile ? 320 : 440)));
+    canvas.style.height = Hc + 'px';
+    const pr = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 1.6);
+    renderer.setPixelRatio(pr);
+    renderer.setSize(W, Hc, false);
+    composer.setPixelRatio(pr);
+    composer.setSize(W, Hc);
+    camera.aspect = W / Hc;
+    const f = (Hc / 2) / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    const maxPx = Math.max(80, baseY - sy - (mobile ? 44 : 56));
+    const xs = [sx + sw / 6, sx + sw / 2, sx + sw * 5 / 6];
+    let D = TALLEST * f / maxPx, depth = D;
+    const place = () => {
+      camera.position.copy(LOOK).addScaledVector(DIR, D);
+      camera.lookAt(LOOK);
+      camera.updateMatrixWorld();
+      camera.clearViewOffset();
+      const o = tmp.set(0, 0, 0).applyMatrix4(camera.matrixWorldInverse);
+      depth = -o.z;
+      const yo = Hc / 2 - (o.y / depth) * f;
+      camera.setViewOffset(W, Hc, 0, yo - baseY, W, Hc);
+    };
+    for (let pass = 0; pass < 3; pass++) {
+      place();
+      const top = tmp.set(0, TALLEST, 0).project(camera);
+      const measured = baseY - (1 - top.y) / 2 * Hc;
+      D *= measured / maxPx;
+    }
+    D = Math.max(D, SLAB_R * 2.4 * f / Math.max(40, sw / 3 - 14));
+    place();
+    pillars.forEach((p, i) => { p.x = (xs[i] - W / 2) * depth / f; });
+    scene.fog.near = D * 0.92;
+    scene.fog.far = D + 15;
+    ready = true;
+    dirty = true;
+  }
+
+  /* Estado */
+  let hot = typeof root.pnlHot === 'function' ? root.pnlHot() : -1;
+  let introT0 = -1, rippleT0 = -10, rippleX = 0, visible = false, dirty = true, rafId = 0, last = performance.now(), firstFrame = true;
+  let pillarHover = -1, ptrEvt = null;
+  const ptr = { x: 0, y: 0 };
+  const DROP0 = 0.3, STEP_P = 0.24, STEP_K = 0.08, FALL = 0.62;
+  const slabT0 = (i, k) => DROP0 + i * STEP_P + k * STEP_K;
+  const dummy = new THREE.Object3D();
+
+  root.addEventListener('pnl:hot', e => {
+    hot = e.detail;
+    if (hot >= 0 && !REDUCE) { rippleT0 = performance.now() / 1000; rippleX = pillars[hot].x; }
+    dirty = true; kick();
+  });
+
+  function update(t, dt, it) {
+    const k9 = REDUCE ? 1 : 1 - Math.exp(-dt * 9);
+    const k3 = REDUCE ? 1 : 1 - Math.exp(-dt * 3);
+
+    const rr = root.getBoundingClientRect();
+    const scrollP = clamp((innerHeight - rr.top) / (innerHeight + rr.height));
+    const ry = REDUCE ? 0 : (FINE ? ptr.x * 0.07 : 0);
+    const rx = REDUCE ? 0 : (FINE ? ptr.y * 0.025 : 0) + (scrollP - 0.5) * 0.05;
+    rig.rotation.y += (ry - rig.rotation.y) * k3;
+    rig.rotation.x += (rx - rig.rotation.x) * k3;
+    glint.position.set(ptr.x * 8, 3.2 - ptr.y * 2.2, 7);
+
+    pillars.forEach((p, i) => {
+      p.hv += ((hot === i ? 1 : 0) - p.hv) * k9;
+      p.dv += ((hot >= 0 && hot !== i ? 1 : 0) - p.dv) * k9;
+      const pitch = SLAB_H + GAP0 + GAP_HOT * p.hv;
+      p.g.position.x = p.x;
+      let landed = 0;
+      for (let k = 0; k < p.n; k++) {
+        const t0 = slabT0(i, k), u = clamp((it - t0) / FALL), e = outCubic(u);
+        if (it >= t0 + FALL * 0.72) landed++;
+        dummy.position.set(0, k * pitch + (1 - e) * 6, 0);
+        dummy.rotation.set(0, (1 - e) * 1.1, 0);
+        dummy.scale.setScalar(u > 0 ? 1 : 0.0001);
+        dummy.updateMatrix();
+        p.im.setMatrixAt(k, dummy.matrix);
+      }
+      p.im.instanceMatrix.needsUpdate = true;
+
+      const topY = (p.n - 1) * pitch + SLAB_H;
+      const capU = clamp((it - (slabT0(i, p.n - 1) + FALL * 0.7)) / 0.5);
+      const capE = capU > 0 ? outBack(capU) : 0;
+      p.cap.position.y = topY + CAP_LIFT + (1 - Math.min(1, capE)) * 0.7 + (REDUCE ? 0 : Math.sin(t * 1.3 + i * 1.7) * 0.05);
+      p.cap.scale.setScalar(Math.max(0.0001, capE * CAP_S));
+      if (!REDUCE) p.cap.rotation.y += dt * (0.2 + 1.5 * p.hv);
+      p.mat.emissiveIntensity = 0.28 + 0.5 * p.hv - 0.12 * p.dv;
+      p.glow.material.opacity = 0.26 * (landed / p.n) + 0.34 * p.hv;
+
+      if (landed !== p.landed && (introT0 >= 0 || REDUCE)) {
+        p.landed = landed;
+        if (p.num) {
+          p.num.textContent = landed >= p.n ? p.price : landed * UNIT;
+          if (!REDUCE && landed > 0) { p.num.classList.remove('is-tick'); void p.num.offsetWidth; p.num.classList.add('is-tick'); }
+        }
+      }
+
+      rig.updateMatrixWorld();
+      tmp.set(0, topY + CAP_LIFT + RC * CAP_S + 0.3, 0);
+      p.g.localToWorld(tmp).project(camera);
+      const lx = (tmp.x + 1) / 2 * W, ly = (1 - tmp.y) / 2 * Hc;
+      p.lbl.style.transform = `translate(${lx.toFixed(1)}px,${ly.toFixed(1)}px) translate(-50%,-100%)`;
+      p.lbl.style.opacity = Math.min(1, capU * 1.4).toFixed(3);
+      if (p.lblHot !== (hot === i)) { p.lblHot = hot === i; p.lbl.classList.toggle('is-hot', p.lblHot); }
+    });
+
+    const rAge = t - rippleT0, rAmp = rAge < 3 ? 0.2 * Math.exp(-rAge * 1.2) : 0;
+    for (let j = 0; j < NC; j++) {
+      const c = cells[j];
+      const rise = REDUCE ? 1 : outCubic(clamp((it - c.dist * 0.028) / 0.9));
+      let y = c.yo - (1 - rise) * 1.4;
+      if (!REDUCE) y += Math.sin(c.dist * 0.45 - t * 0.8 + c.ph * 0.15) * 0.05;
+      if (rAmp > 0) { const dr = Math.hypot(c.x - rippleX, c.z) - rAge * 6; y += rAmp * Math.exp(-dr * dr * 0.6); }
+      let s = rise > 0.001 ? 1 : 0.0001;
+      for (const p of pillars) if (Math.abs(c.z) < 1.3 && Math.hypot(c.x - p.x, c.z) < 1.25) s = 0.0001;
+      dummy.position.set(c.x, y, c.z);
+      dummy.rotation.set(0, 0, 0);
+      dummy.scale.setScalar(s);
+      dummy.updateMatrix();
+      floorIM.setMatrixAt(j, dummy.matrix);
+      if (c.fi >= 0) { dummy.position.y = y + 0.05; dummy.updateMatrix(); fillIM.setMatrixAt(c.fi, dummy.matrix); }
+    }
+    floorIM.instanceMatrix.needsUpdate = true;
+    fillIM.instanceMatrix.needsUpdate = true;
+
+    if (!REDUCE) {
+      for (let i = 0; i < DUST; i++) {
+        let y = dustPos[i * 3 + 1] + dustSpd[i] * dt;
+        if (y > 7.4) y = 0.4;
+        dustPos[i * 3 + 1] = y;
+      }
+      dustGeo.attributes.position.needsUpdate = true;
+    }
+  }
+
+  /* Señalar una columna con el puntero resalta su tarjeta */
+  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  function pick(e) {
+    const r = canvas.getBoundingClientRect();
+    ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    if (Math.abs(ndc.x) > 1 || Math.abs(ndc.y) > 1) return -1;
+    ray.setFromCamera(ndc, camera);
+    const hit = ray.intersectObjects(pickables, false)[0];
+    return hit ? hit.object.userData.tier : -1;
+  }
+  const inUI = e => e.target.closest && e.target.closest('.pnl-tier, .pnl-inv__compare, a, button');
+  root.addEventListener('pointermove', e => {
+    const r = canvas.getBoundingClientRect();
+    ptr.x = clamp(((e.clientX - r.left) / r.width) * 2 - 1, -1, 1);
+    ptr.y = clamp(((e.clientY - r.top) / r.height) * 2 - 1, -1, 1);
+    ptrEvt = e;
+    kick();
+  });
+  root.addEventListener('pointerleave', () => { ptr.x = 0; ptr.y = 0; ptrEvt = null; setPillarHover(-1); });
+  root.addEventListener('click', e => {
+    if (inUI(e) || !ready) return;
+    const i = pick(e);
+    if (i >= 0) {
+      cards[i].focus({ preventScroll: true });
+      cards[i].scrollIntoView({ behavior: REDUCE ? 'auto' : 'smooth', block: 'nearest' });
+    }
+  });
+  function setPillarHover(i) {
+    if (i === pillarHover) return;
+    pillarHover = i;
+    root.style.cursor = i >= 0 ? 'pointer' : '';
+    root.dispatchEvent(new CustomEvent('pnl:pillar', { detail: i }));
+  }
+
+  /* Bucle: solo corre con la sección a la vista */
+  function kick() { if (!rafId && visible && ready) rafId = requestAnimationFrame(loop); }
+  function loop(now) {
+    rafId = 0;
+    if (!visible || document.hidden) return;
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    if (ptrEvt && FINE) { setPillarHover(inUI(ptrEvt) ? -1 : pick(ptrEvt)); ptrEvt = null; }
+    const it = REDUCE ? 99 : (introT0 < 0 ? 0 : (now - introT0) / 1000);
+    if (!REDUCE || dirty) {
+      update(now / 1000, dt, it);
+      composer.render(dt);
+      dirty = false;
+      if (firstFrame) { firstFrame = false; root.classList.add('has3d'); }
+    }
+    if (!REDUCE) rafId = requestAnimationFrame(loop);
+  }
+
+  new IntersectionObserver(([e]) => {
+    visible = e.isIntersecting;
+    if (visible) { last = performance.now(); kick(); }
+  }, { rootMargin: '160px 0px' }).observe(root);
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting && introT0 < 0) { introT0 = performance.now(); kick(); }
+  }, { threshold: 0.35 }).observe(stage);
+  new ResizeObserver(() => { layout(); kick(); }).observe(root);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { last = performance.now(); kick(); } });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { layout(); kick(); });
+  layout();
+}
+</script>
+<!-- ===================== SECCIÓN INVERSIÓN · fin ===================== -->

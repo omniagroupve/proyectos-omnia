@@ -405,7 +405,7 @@ export function layers(renderer, { aspect = 1, spread = 1 } = {}) {
 // ---------------------------------------------------------------------------
 // 3 · Iconos 3D (un objeto, encuadre cuadrado)
 // ---------------------------------------------------------------------------
-export const ICON_KINDS = ['layers', 'target', 'spark', 'steps', 'chat', 'browser', 'console', 'coin', 'key', 'play', 'knot', 'cursor', 'gauge', 'cube'];
+export const ICON_KINDS = ['layers', 'target', 'spark', 'steps', 'chat', 'browser', 'console', 'coin', 'key', 'play', 'knot', 'cursor', 'gauge', 'cube', 'person', 'orb', 'shield'];
 
 function iconObject(kind, M) {
   const g = new THREE.Group();
@@ -506,6 +506,16 @@ function iconObject(kind, M) {
       const needle = new THREE.Mesh(rbox(0.1, 0.72, 0.1, 0.04), M.peach); needle.position.set(0.2, 0.3, 0.05); needle.rotation.z = -0.6;
       const hub = new THREE.Mesh(new THREE.SphereGeometry(0.15, 32, 20), M.pearl);
       g.add(arc, fillArc, needle, hub); g.position.y = -0.25; g.rotation.set(0.25, -0.35, 0); break;
+    }
+    case 'person': {
+      const p = personObject(M); p.scale.setScalar(1.15); p.position.y = -0.1; g.add(p);
+      g.rotation.set(0.1, -0.4, 0); break;
+    }
+    case 'orb': {
+      const o = orbObject(M, 0.62); g.add(o); g.rotation.set(0.1, 0.2, 0); break;
+    }
+    case 'shield': {
+      const sh = shieldObject(M); sh.scale.setScalar(2.6); sh.position.y = -1.3; g.add(sh); g.rotation.set(0.1, -0.35, 0); break;
     }
     default:
       g.add(new THREE.Mesh(rbox(1.2, 1.2, 1.2, 0.22), M.cobalt)); g.rotation.set(0.5, 0.7, 0.2);
@@ -942,4 +952,346 @@ export async function devices(renderer, { aspect = 16 / 10, desktopShot, mobileS
   return { scene, camera: cam, root, update() {} };
 }
 
-export const SCENES = { hero, layers, icon, building, solar, flow, pipeline, devices };
+// ---------------------------------------------------------------------------
+// Guía de negocio con IA: piezas reutilizables
+// ---------------------------------------------------------------------------
+function orbObject(M, r = 0.5) {
+  // Agente: núcleo + órbita con un satélite (el bucle de trabajo)
+  const g = new THREE.Group();
+  const core = new THREE.Mesh(new THREE.SphereGeometry(r, 64, 48), M.pearl);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 1.55, r * 0.07, 16, 120), M.cobalt);
+  ring.rotation.set(1.2, 0.3, 0);
+  const sat = new THREE.Mesh(new THREE.SphereGeometry(r * 0.17, 24, 16), M.keyGlow);
+  sat.position.set(r * 1.55, 0, 0);
+  ring.add(sat);
+  g.add(core, ring);
+  g.userData = { ring };
+  return g;
+}
+
+function personObject(M) {
+  const g = new THREE.Group();
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.3, 48, 32), M.pearl);
+  head.position.y = 0.72;
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.34, 0.42, 12, 32), M.peach);
+  body.position.y = -0.05;
+  g.add(head, body);
+  return g;
+}
+
+function shieldObject(M) {
+  const g = new THREE.Group();
+  const sh = new THREE.Shape();
+  sh.moveTo(0, 0.32); sh.quadraticCurveTo(0.22, 0.28, 0.26, 0.22); sh.lineTo(0.24, -0.04);
+  sh.quadraticCurveTo(0.18, -0.24, 0, -0.34); sh.quadraticCurveTo(-0.18, -0.24, -0.24, -0.04);
+  sh.lineTo(-0.26, 0.22); sh.quadraticCurveTo(-0.22, 0.28, 0, 0.32);
+  const shield = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: 0.08, bevelEnabled: true, bevelSize: 0.03, bevelThickness: 0.03, bevelSegments: 4 }), M.cobalt);
+  shield.position.y = 0.5;
+  const check = new THREE.Shape();
+  check.moveTo(-0.12, 0.0); check.lineTo(-0.03, -0.09); check.lineTo(0.13, 0.09); check.lineTo(0.1, 0.12); check.lineTo(-0.03, -0.03); check.lineTo(-0.09, 0.03); check.closePath();
+  const ck = new THREE.Mesh(new THREE.ExtrudeGeometry(check, { depth: 0.03, bevelEnabled: false }), M.pearl);
+  ck.position.set(0, 0.5, 0.12);
+  g.add(shield, ck);
+  return g;
+}
+
+function chatObject(M, mat) {
+  const g = new THREE.Group();
+  const b = new THREE.Mesh(rbox(1.0, 0.68, 0.22, 0.17), mat ?? M.pearl);
+  const tail = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.26, 4), mat ?? M.pearl);
+  tail.position.set(-0.28, -0.42, 0); tail.rotation.z = Math.PI + 0.5;
+  g.add(b, tail);
+  [-0.26, 0, 0.26].forEach((x, k) => {
+    const d = new THREE.Mesh(new THREE.SphereGeometry(0.075, 24, 16), k === 1 ? M.peach : M.cobalt);
+    d.position.set(x, 0, 0.12); g.add(d);
+  });
+  return g;
+}
+
+function cardsObject(M, n = 3) {
+  // Documento / instrucciones: tarjetas de pie con líneas de texto
+  const g = new THREE.Group();
+  for (let k = 0; k < n; k++) {
+    const c = new THREE.Group();
+    c.add(new THREE.Mesh(rbox(0.72, 0.92, 0.04, 0.05), k === n - 1 ? M.pearl : M.glass));
+    if (k === n - 1) {
+      [0.26, 0.12, -0.02, -0.16].forEach((y, j) => {
+        const line = new THREE.Mesh(rbox(j === 0 ? 0.42 : 0.5 - j * 0.06, 0.05, 0.02, 0.02), j === 0 ? M.cobalt : M.graphite);
+        line.position.set(-0.04 - (j === 0 ? 0.04 : 0), y, 0.03); c.add(line);
+      });
+    }
+    c.position.set(-0.16 + k * 0.16, 0, -0.18 + k * 0.18);
+    g.add(c);
+  }
+  return g;
+}
+
+function coinStack(M) {
+  const g = new THREE.Group();
+  [0, 1, 2].forEach((k) => {
+    const c = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.1, 64), M.peach);
+    c.position.set(k * 0.03, 0.05 + k * 0.11, 0); g.add(c);
+  });
+  const up = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.1, 64), M.peach);
+  up.position.set(0.32, 0.62, 0.12); up.rotation.set(1.15, 0, 0.3); g.add(up);
+  return g;
+}
+
+function platform(M, r = 0.6) {
+  const g = new THREE.Group();
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 1.1, 0.14, 64), M.graphite);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 1.03, 0.018, 10, 96), M.rimGlow);
+  ring.rotation.x = Math.PI / 2; ring.position.y = 0.075;
+  g.add(base, ring);
+  return g;
+}
+
+function bob(objs, t, amp = 0.05) {
+  objs.forEach((o, k) => { o.position.y = o.userData.baseY + Math.sin(t * 1.3 + k) * amp; });
+}
+const remember = (o) => { o.userData.baseY = o.position.y; return o; };
+
+// ---------------------------------------------------------------------------
+// 9 · Portada de la guía: escalones que suben hacia un sistema (agente)
+// ---------------------------------------------------------------------------
+export function system(renderer, { aspect = 16 / 10 } = {}) {
+  const { scene, lights } = createStage(renderer);
+  lights.glint.position.set(1.5, 2.2, 4.5);
+  const M = materials();
+  const root = new THREE.Group();
+  scene.add(root);
+  const floor = -1.5;
+  const steps = [[-2.1, 0.7, M.graphite], [-0.65, 1.35, M.graphite], [0.85, 2.0, M.cobalt]];
+  steps.forEach(([x, h, mat]) => {
+    const st = new THREE.Mesh(rbox(1.35, h, 1.5, 0.1), mat);
+    st.position.set(x, floor + h / 2, 0);
+    const edge = roundedRectLine(1.3, 1.45, 0.08, PALETTE.rim, 0.6);
+    edge.position.set(x, floor + h + 0.005, 0);
+    root.add(st, edge);
+  });
+  const chat = remember(Object.assign(chatObject(M), {}));
+  chat.scale.setScalar(0.62); chat.position.set(-2.1, floor + 0.7 + 0.42, 0.1); chat.rotation.y = 0.35; remember(chat);
+  const coins = coinStack(M); coins.scale.setScalar(0.85); coins.position.set(-0.65, floor + 1.35 + 0.02, 0.1); remember(coins);
+  const orb = orbObject(M, 0.62); orb.position.set(0.85, floor + 2.0 + 0.9, 0); remember(orb);
+  root.add(chat, coins, orb);
+  // Piezas sueltas alrededor: lo que el sistema ordena
+  const loose = [
+    [new THREE.Mesh(rbox(0.42, 0.42, 0.42, 0.09), M.cobalt), [2.55, 1.55, -0.4], [0.5, 0.7, 0.2]],
+    [new THREE.Mesh(new THREE.IcosahedronGeometry(0.24, 0), M.peach), [-1.35, 1.2, -0.6], [0.3, 0.4, 0]],
+    [new THREE.Mesh(new THREE.CapsuleGeometry(0.12, 0.38, 10, 24), M.pearl), [2.45, -0.35, 0.6], [0.2, 0, -0.9]],
+    [new THREE.Mesh(new THREE.SphereGeometry(0.08, 20, 14), M.rimGlow), [-2.7, 0.8, 0.9], [0, 0, 0]],
+    [new THREE.Mesh(new THREE.SphereGeometry(0.06, 20, 14), M.keyGlow), [1.95, 2.05, 0.8], [0, 0, 0]],
+  ].map(([m, p, r]) => { m.position.set(...p); m.rotation.set(...r); root.add(m); return remember(m); });
+  root.add(dust(70, [9, 6, 5], PALETTE.rim, 0.035, 0.45));
+  castAll(root);
+  root.rotation.y = -0.38;
+  const cam = camera(30, aspect, [1.2, 1.4, 10.4], [0, 0.05, 0]);
+  return {
+    scene, camera: cam, root,
+    update(t) {
+      bob([chat, coins, orb, ...loose], t, 0.05);
+      orb.userData.ring.rotation.z = t * 0.6;
+    },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// 10 · Enfoque: una diana, un dardo y las distracciones fuera
+// ---------------------------------------------------------------------------
+export function focus(renderer, { aspect = 1 } = {}) {
+  const { scene, lights } = createStage(renderer);
+  lights.glint.position.set(2, 2, 5);
+  const M = materials();
+  const root = new THREE.Group();
+  scene.add(root);
+  const target = new THREE.Group();
+  [[1.45, M.pearl], [1.0, M.cobalt], [0.56, M.pearl]].forEach(([r, m]) => target.add(new THREE.Mesh(new THREE.TorusGeometry(r, 0.13, 32, 128), m)));
+  const bull = new THREE.Mesh(new THREE.SphereGeometry(0.26, 48, 32), M.peach);
+  target.add(bull);
+  target.rotation.set(-0.08, -0.42, 0);
+  root.add(target);
+  // Dardo clavado en el centro
+  const start = new THREE.Vector3(2.4, 1.5, 2.6), end = new THREE.Vector3(0.05, 0.03, 0.18);
+  const dir = start.clone().sub(end).normalize();
+  const dart = new THREE.Group();
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.0, 16), M.graphite);
+  shaft.position.y = 1.0;
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.3, 24), M.peach);
+  tip.rotation.x = Math.PI; tip.position.y = -0.1;
+  dart.add(shaft, tip);
+  [0, 1, 2].forEach((k) => {
+    const fin = new THREE.Mesh(rbox(0.02, 0.3, 0.16, 0.008), M.peach);
+    fin.position.set(Math.cos(k * 2.09) * 0.07, 1.86, Math.sin(k * 2.09) * 0.07);
+    fin.rotation.y = -k * 2.09;
+    dart.add(fin);
+  });
+  dart.position.copy(end);
+  dart.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+  root.add(dart);
+  // Distracciones: piezas apagadas y dispersas fuera de la diana
+  const dim = new THREE.MeshPhysicalMaterial({ color: 0x3a3f72, roughness: 0.5, clearcoat: 0.3, transparent: true, opacity: 0.75 });
+  const geos = [new THREE.IcosahedronGeometry(0.2, 0), rbox(0.3, 0.3, 0.3, 0.06), new THREE.CapsuleGeometry(0.09, 0.28, 8, 16), new THREE.TorusGeometry(0.16, 0.06, 12, 40), new THREE.OctahedronGeometry(0.2, 0)];
+  const loose = [];
+  for (let k = 0; k < 10; k++) {
+    const a = k * 0.63 + 0.4, r = 2.25 + (k % 3) * 0.35;
+    const m = new THREE.Mesh(geos[k % geos.length], dim);
+    m.position.set(Math.cos(a) * r, Math.sin(a) * r * 0.8, -0.6 + (k % 4) * 0.3);
+    m.rotation.set(k, k * 0.7, 0);
+    root.add(m); loose.push(remember(m));
+  }
+  root.add(dust(40, [7, 6, 3], PALETTE.rim, 0.03, 0.35));
+  castAll(root);
+  const cam = camera(30, aspect, [1.0, 0.5, 10.4], [0.1, 0, 0]);
+  return {
+    scene, camera: cam, root,
+    anchors: [{ id: 'bull', object: bull, offset: [0, 0, 0] }],
+    update(t) { bob(loose, t, 0.06); },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// 11 · Escalera Service-as-a-Software: a mano → escrito → agente → resultado
+// ---------------------------------------------------------------------------
+export function stairs(renderer, { aspect = 16 / 9 } = {}) {
+  const { scene, lights } = createStage(renderer);
+  lights.glint.position.set(0, 3, 5);
+  const M = materials();
+  const root = new THREE.Group();
+  scene.add(root, shadowCatcher(40, -1.3, 0.25));
+  const floor = -1.3;
+  const xs = [-2.85, -0.95, 0.95, 2.85], hs = [0.45, 0.95, 1.45, 1.95];
+  const glyphs = [];
+  xs.forEach((x, i) => {
+    const st = new THREE.Mesh(rbox(1.75, hs[i], 1.7, 0.1), i === 3 ? M.cobalt : M.graphite);
+    st.position.set(x, floor + hs[i] / 2, 0);
+    const edge = roundedRectLine(1.7, 1.65, 0.08, PALETTE.rim, 0.55);
+    edge.position.set(x, floor + hs[i] + 0.005, 0);
+    root.add(st, edge);
+    let g;
+    if (i === 0) { g = chatObject(M); g.scale.setScalar(0.7); g.position.y = 0.5; }
+    else if (i === 1) { g = cardsObject(M); g.position.y = 0.48; g.rotation.y = 0.3; }
+    else if (i === 2) { g = orbObject(M, 0.36); g.position.y = 0.62; }
+    else { g = coinStack(M); g.position.y = 0.02; }
+    g.position.x = x; g.position.y += floor + hs[i];
+    remember(g); root.add(g); glyphs.push(g);
+  });
+  // Línea que sube por los peldaños
+  const pts = glyphs.map((g, i) => new THREE.Vector3(xs[i], floor + hs[i] + 1.35, 0.2));
+  const curve = new THREE.CatmullRomCurve3(pts);
+  const tubeMat = new THREE.MeshBasicMaterial({ color: PALETTE.rim, transparent: true, opacity: 0.45, toneMapped: false });
+  root.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 120, 0.02, 8, false), tubeMat));
+  const head = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.24, 24), M.rimGlow);
+  head.position.copy(pts[3]).add(new THREE.Vector3(0.15, 0.05, 0)); head.rotation.z = -Math.PI / 2 + 0.25;
+  root.add(head);
+  root.add(dust(50, [10, 5, 3], PALETTE.rim, 0.03, 0.4));
+  castAll(root);
+  root.rotation.y = -0.18;
+  const cam = camera(26, aspect, [0.8, 2.8, 13.2], [0, 0.1, 0]);
+  return {
+    scene, camera: cam, root,
+    anchors: glyphs.map((g, i) => ({ id: `step-${i}`, object: root, offset: [xs[i], floor + hs[i] + 1.05, 0] })),
+    update(t) { bob(glyphs, t, 0.04); glyphs[2].userData.ring.rotation.z = t * 0.8; },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// 12 · Anatomía de un agente
+// ---------------------------------------------------------------------------
+export function agent(renderer, { aspect = 16 / 10 } = {}) {
+  const { scene, lights } = createStage(renderer);
+  lights.glint.position.set(0, 2, 5);
+  const M = materials();
+  const root = new THREE.Group();
+  scene.add(root);
+  const ped = platform(M, 1.0); ped.position.y = -1.35; root.add(ped);
+  const core = new THREE.Mesh(new THREE.SphereGeometry(0.78, 96, 64), M.pearl);
+  const brain = new THREE.Mesh(new THREE.IcosahedronGeometry(1.0, 1), M.wire);
+  root.add(core, brain);
+  // Bucle: anillo con flechas
+  const loop = new THREE.Group();
+  loop.add(new THREE.Mesh(new THREE.TorusGeometry(1.75, 0.025, 12, 200), M.rimGlow));
+  [0.3, 2.4, 4.5].forEach((a) => {
+    const c = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.26, 24), M.keyGlow);
+    c.position.set(Math.cos(a) * 1.75, Math.sin(a) * 1.75, 0);
+    c.rotation.z = a; // tangente
+    loop.add(c);
+  });
+  loop.rotation.set(Math.PI / 2 - 0.32, 0, 0);
+  root.add(loop);
+  // Satélites
+  const cards = cardsObject(M); cards.scale.setScalar(0.85); cards.position.set(-2.75, 0.95, 0.2); cards.rotation.y = 0.45;
+  const key = iconObject('key', M); key.scale.setScalar(0.55); key.position.set(2.75, 1.0, 0.2);
+  const mem = new THREE.Group();
+  [[0, 0, M.cobalt], [0.36, 0, M.pearl], [0.18, 0.34, M.peach]].forEach(([x, y, m]) => {
+    const c = new THREE.Mesh(rbox(0.32, 0.32, 0.32, 0.07), m); c.position.set(x, y, 0); mem.add(c);
+  });
+  mem.position.set(-2.85, -0.85, 0.4); mem.rotation.y = 0.4;
+  const shield = shieldObject(M); shield.scale.setScalar(1.5); shield.position.set(2.75, -1.55, 0.4);
+  [cards, key, mem, shield].forEach((o) => { remember(o); root.add(o); });
+  root.add(dust(50, [9, 5, 4], PALETTE.rim, 0.03, 0.4));
+  castAll(root);
+  const cam = camera(28, aspect, [0, 1.25, 10.6], [0, -0.05, 0]);
+  return {
+    scene, camera: cam, root,
+    anchors: [
+      { id: 'core', object: core, offset: [0, 0.8, 0] },
+      { id: 'cards', object: cards, offset: [0, 0.5, 0] },
+      { id: 'key', object: key, offset: [0, 0.4, 0] },
+      { id: 'memory', object: mem, offset: [0.18, 0.55, 0] },
+      { id: 'shield', object: shield, offset: [0, 0.86, 0] },
+      { id: 'loop', object: loop, offset: [0, -1.75, 0] },
+    ],
+    update(t) { bob([cards, key, mem, shield], t, 0.05); brain.rotation.y = t * 0.3; loop.rotation.z = -t * 0.3; },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// 13 · Bucle de calidad: hacedor → auditor → humano → cliente
+// ---------------------------------------------------------------------------
+export function audit(renderer, { aspect = 16 / 9 } = {}) {
+  const { scene, lights } = createStage(renderer);
+  lights.key.position.set(-4, 9, 7);
+  const M = materials();
+  const root = new THREE.Group();
+  scene.add(root, shadowCatcher(40, -0.08, 0.26));
+  const xs = [-3.9, -1.3, 1.3, 3.9];
+  const tops = [];
+  xs.forEach((x, i) => {
+    const p = platform(M, 0.66); p.position.set(x, 0, 0); root.add(p);
+    let g;
+    if (i === 0) { g = orbObject(M, 0.38); g.position.y = 0.8; }
+    else if (i === 1) { g = shieldObject(M); g.scale.setScalar(1.6); g.position.y = -0.2; }
+    else if (i === 2) { g = personObject(M); g.scale.setScalar(0.75); g.position.y = 0.42; }
+    else { g = chatObject(M); g.scale.setScalar(0.75); g.position.y = 0.75; }
+    g.position.x = x; remember(g); root.add(g); tops.push(g);
+  });
+  // Camino hacia adelante
+  const fwd = new THREE.CatmullRomCurve3(xs.map((x) => new THREE.Vector3(x, 0.12, 0.7)));
+  root.add(new THREE.Mesh(new THREE.TubeGeometry(fwd, 200, 0.03, 8, false),
+    new THREE.MeshBasicMaterial({ color: PALETTE.rim, transparent: true, opacity: 0.6, toneMapped: false })));
+  [-2.6, 0, 2.6].forEach((x) => {
+    const c = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.22, 24), M.rimGlow);
+    c.position.set(x, 0.12, 0.7); c.rotation.z = -Math.PI / 2; root.add(c);
+  });
+  // Vuelta de corrección: del auditor al hacedor
+  const back = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(-1.3, 1.75, -0.2), new THREE.Vector3(-2.6, 2.45, -0.3), new THREE.Vector3(-3.9, 1.75, -0.2),
+  ]);
+  root.add(new THREE.Mesh(new THREE.TubeGeometry(back, 80, 0.03, 8, false),
+    new THREE.MeshBasicMaterial({ color: PALETTE.key, transparent: true, opacity: 0.85, toneMapped: false })));
+  const bh = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.26, 24), M.keyGlow);
+  bh.position.set(-3.88, 1.66, -0.2); bh.rotation.z = Math.PI + 0.35; root.add(bh);
+  root.add(dust(40, [11, 3, 3], PALETTE.rim, 0.03, 0.4));
+  castAll(root);
+  const cam = camera(25, aspect, [0, 4.3, 12.2], [0, 0.75, 0]);
+  return {
+    scene, camera: cam, root,
+    anchors: [
+      ...xs.map((x, i) => ({ id: `st-${i}`, object: root, offset: [x, -0.15, 0.9] })),
+      { id: 'back', object: root, offset: [-2.6, 2.45, -0.3] },
+    ],
+    update(t) { bob(tops, t, 0.04); tops[0].userData.ring.rotation.z = t * 0.8; },
+  };
+}
+
+export const SCENES = { hero, layers, icon, building, solar, flow, pipeline, devices, system, focus, stairs, agent, audit };

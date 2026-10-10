@@ -1,0 +1,399 @@
+<title>Cuaderno de tu modelo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500..700&family=Figtree:ital,wght@0,400..700;1,400&family=JetBrains+Mono:wght@400..600&display=swap">
+<style>
+/* Layout: una columna de trabajo con secciones numeradas; cada bloque produce algo (frase, cuentas, SKILL.md) que se copia al final. Aspecto oscuro único, igual que la guía. */
+:root {
+  --void: #080912;
+  --deep: #10122a;
+  --panel: #161a3a;
+  --line: #2a2f5e;
+  --paper: #f2f0fa;
+  --mist: #a6aacb;
+  --rim: #5be4ff;
+  --key: #ffb088;
+  --ink-on-key: #1a0f0a;
+  --ok: #6ee7b7;
+  --warn: #ffd27a;
+  --bad: #ff8f8f;
+  --display: 'Unbounded', 'Arial Black', system-ui, sans-serif;
+  --body: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--void); color: var(--paper); font: 400 17px/1.55 var(--body); -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 980px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 40px); }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+p { margin: 0; }
+.mono { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--mist); }
+a { color: var(--rim); }
+:focus-visible { outline: 2px solid var(--key); outline-offset: 2px; border-radius: 6px; }
+
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: color-mix(in srgb, var(--void) 86%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+header.top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 12px; }
+.brand { font: 700 14px/1 var(--display); letter-spacing: .04em; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.brand small { font: 400 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mist); }
+.progress { display: flex; align-items: center; gap: 10px; font: 400 12px/1 var(--mono); color: var(--mist); }
+.progress .bar { width: 120px; height: 6px; border-radius: 3px; background: var(--panel); overflow: hidden; }
+.progress .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--rim), var(--key)); transition: width .3s ease; }
+
+.intro { padding-block: clamp(32px, 6vw, 64px) 8px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center; }
+.intro h1 { font-size: clamp(30px, 5vw, 48px); line-height: 1.08; }
+.intro h1 em { font-style: normal; color: var(--key); }
+.intro p { color: var(--mist); margin-top: 14px; max-width: 58ch; }
+.intro img { width: clamp(90px, 16vw, 150px); height: auto; }
+.example-btn { margin-top: 18px; }
+
+section.step { margin-block: 28px; padding: clamp(18px, 3vw, 28px); border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(160deg, #161a3f 0%, #10122a 70%); }
+.step-h { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; }
+.step-h img { width: 56px; height: 56px; flex: none; }
+.step-h .n { font: 400 12px/1 var(--mono); letter-spacing: .1em; color: var(--rim); text-transform: uppercase; }
+.step-h h2 { font-size: clamp(20px, 3vw, 26px); margin-top: 4px; }
+.step-h .done { margin-left: auto; font: 400 12px/1 var(--mono); color: var(--ok); }
+.hint { color: var(--mist); font-size: 15px; margin-bottom: 14px; }
+
+.grid { display: grid; gap: 14px; }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 720px) { .g2, .g3 { grid-template-columns: minmax(0, 1fr); } .intro { grid-template-columns: minmax(0, 1fr); } .intro img { display: none; } }
+label { display: grid; gap: 6px; font-size: 14px; color: var(--mist); min-width: 0; }
+label b { color: var(--paper); font-weight: 600; font-size: 15px; }
+input, textarea, select { width: 100%; font: inherit; font-size: 16px; color: var(--paper); background: var(--void); border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; }
+textarea { resize: vertical; min-height: 84px; line-height: 1.45; }
+input::placeholder, textarea::placeholder { color: #6c7099; }
+input:focus, textarea:focus { border-color: var(--rim); outline: none; }
+
+.frase { margin-top: 18px; padding: 18px 20px; border-radius: 16px; border: 1px dashed #ffb08888; background: #ffb0880a; font: 600 clamp(18px, 2.6vw, 23px)/1.4 var(--display); }
+.frase .slot { color: var(--key); }
+.frase .slot.empty { color: #8a7a92; }
+.counter { font: 400 13px/1 var(--mono); color: var(--mist); }
+.counter.ok { color: var(--ok); }
+
+table.calc { width: 100%; border-collapse: collapse; margin-top: 16px; font-variant-numeric: tabular-nums; }
+.calc-wrap { overflow-x: auto; }
+table.calc th { text-align: left; font: 400 12px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mist); padding: 8px 10px; }
+table.calc td { padding: 10px; border-top: 1px solid var(--line); }
+table.calc td:first-child { color: var(--mist); }
+table.calc td.v { font-weight: 600; }
+.verdict { margin-top: 14px; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--line); display: grid; gap: 6px; }
+.verdict p { font-size: 16px; }
+.verdict .ok { color: var(--ok); } .verdict .warn { color: var(--warn); } .verdict .bad { color: var(--bad); }
+.tag-ex { display: inline-block; font: 400 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--key); border: 1px solid #ffb08866; border-radius: 999px; padding: 5px 8px; margin-left: 8px; vertical-align: middle; }
+
+.ladder { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 720px) { .ladder { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ladder label { cursor: pointer; border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: var(--void); color: var(--paper); align-content: start; }
+.ladder input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.ladder label:has(input:checked) { border-color: var(--key); background: #ffb08812; }
+.ladder label:has(input:focus-visible) { outline: 2px solid var(--key); outline-offset: 2px; }
+.ladder .k { font: 700 18px/1 var(--display); color: var(--key); }
+.ladder small { color: var(--mist); font-size: 13.5px; line-height: 1.35; }
+
+pre.out { margin: 14px 0 0; padding: 16px 18px; border-radius: 14px; background: #0b0d22; border: 1px solid var(--line); font: 400 14px/1.55 var(--mono); color: var(--paper); white-space: pre-wrap; overflow-wrap: anywhere; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; font: 600 15px/1 var(--body); padding: 12px 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--paper); cursor: pointer; text-decoration: none; transition: transform .15s ease, border-color .2s; }
+.btn:hover { border-color: var(--rim); }
+.btn:active { transform: scale(.97); }
+.btn.key { background: var(--key); border-color: var(--key); color: var(--ink-on-key); }
+.status { font: 400 13px/1.3 var(--mono); color: var(--ok); min-height: 1em; }
+
+.send { text-align: left; }
+.send code { font: 400 15px/1 var(--mono); background: var(--panel); padding: 9px 11px; border-radius: 10px; user-select: all; overflow-wrap: anywhere; }
+footer { padding-block: 28px 48px; color: var(--mist); font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <span class="brand"><span data-cfg="studio">OMNIA</span><small data-cfg="guideService">Asesoría · Negocios con IA</small></span>
+    <span class="progress" aria-live="polite"><span class="bar"><i id="pbar"></i></span><span id="ptext">0 de 6</span></span>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="intro">
+    <div>
+      <p class="mono">Cuaderno de trabajo</p>
+      <h1>Tu modelo en una página, <em>listo para la próxima sesión.</em></h1>
+      <p>Seis bloques, en el mismo orden de la guía. Lo que escribes se guarda en este navegador. Al final, copia tu resumen y envíamelo antes de la sesión.</p>
+      <button class="btn example-btn" type="button" id="load-example">Ver un ejemplo lleno (clínica)</button>
+    </div>
+    <img src="renders/icon-orb.png" alt="" width="150" height="150">
+  </div>
+
+  <!-- 1 · Enfoque -->
+  <section class="step" id="b1" data-block="1">
+    <div class="step-h"><img src="renders/icon-target.png" alt=""><div><p class="n">Bloque 1 · Enfoque</p><h2>Tu frase</h2></div><span class="done" hidden>Listo</span></div>
+    <div class="grid g3">
+      <label><b>Cliente concreto</b><input id="f-cliente" placeholder="clínicas odontológicas de 2 a 5 sillones"></label>
+      <label><b>Resultado medible</b><input id="f-resultado" placeholder="llenar los huecos de su agenda"></label>
+      <label><b>Lo que hoy le duele</b><input id="f-dolor" placeholder="que recepción llame paciente por paciente"></label>
+    </div>
+    <p class="frase" id="frase"></p>
+    <label style="margin-top: 16px"><b>Tres ideas que pausas 90 días</b><textarea id="f-pausa" placeholder="Una por línea"></textarea></label>
+  </section>
+
+  <!-- 2 · Cliente -->
+  <section class="step" id="b2" data-block="2">
+    <div class="step-h"><img src="renders/icon-person.png" alt=""><div><p class="n">Bloque 2 · Tu cliente</p><h2>Ficha del cliente ideal</h2></div><span class="done" hidden>Listo</span></div>
+    <div class="grid g2">
+      <label><b>Quién es</b><textarea id="c-quien" placeholder="Cargo y tamaño de su negocio"></textarea></label>
+      <label><b>Qué hace hoy</b><textarea id="c-hoy" placeholder="Cómo resuelve el problema sin ti"></textarea></label>
+      <label><b>Cuánto le cuesta</b><textarea id="c-costo" placeholder="Cuánto pierde al mes por el problema"></textarea></label>
+      <label><b>Dónde está</b><textarea id="c-donde" placeholder="Dónde lo encuentras sin pagar anuncios"></textarea></label>
+      <label><b>Quién decide y paga</b><textarea id="c-decide" placeholder="Quién dice que sí y quién paga"></textarea></label>
+      <label><b>Qué ya probó</b><textarea id="c-probo" placeholder="Qué intentó antes y por qué lo dejó"></textarea></label>
+    </div>
+    <label style="margin-top: 14px"><b>Tus 10 nombres reales</b><textarea id="c-nombres" placeholder="Uno por línea: nombre y negocio" style="min-height: 140px"></textarea></label>
+    <p class="counter" id="nombres-count">0 de 10</p>
+  </section>
+
+  <!-- 3 · Cuentas -->
+  <section class="step" id="b3" data-block="3">
+    <div class="step-h"><img src="renders/icon-coin.png" alt=""><div><p class="n">Bloque 3 · Las cuentas</p><h2>¿Escala o solo te llena la agenda?</h2></div><span class="done" hidden>Listo</span></div>
+    <p class="hint">Vienen con números de ejemplo. Cámbialos por los tuyos.</p>
+    <div class="grid g3">
+      <label><b>Meta mensual (USD)</b><input id="n-meta" type="number" min="0" step="100" value="3000" inputmode="decimal"></label>
+      <label><b>Precio por cliente al mes (USD)</b><input id="n-precio" type="number" min="0" step="10" value="300" inputmode="decimal"></label>
+      <label><b>Herramientas por cliente al mes (USD)</b><input id="n-costo" type="number" min="0" step="5" value="30" inputmode="decimal"></label>
+      <label><b>Horas por cliente, a mano</b><input id="n-hmano" type="number" min="0" step="0.5" value="12" inputmode="decimal"></label>
+      <label><b>Horas por cliente, con agentes</b><input id="n-hagente" type="number" min="0" step="0.5" value="2" inputmode="decimal"></label>
+      <label><b>Clientes a los que quieres llegar</b><input id="n-futuro" type="number" min="1" step="1" value="40" inputmode="numeric"></label>
+    </div>
+    <div class="calc-wrap">
+      <table class="calc">
+        <thead><tr><th></th><th>A mano</th><th>Con agentes</th></tr></thead>
+        <tbody id="calc-body"></tbody>
+      </table>
+    </div>
+    <div class="verdict" id="verdict"></div>
+  </section>
+
+  <!-- 4 · Escalera -->
+  <section class="step" id="b4" data-block="4">
+    <div class="step-h"><img src="renders/icon-steps.png" alt=""><div><p class="n">Bloque 4 · Service-as-a-Software</p><h2>¿En qué peldaño estás?</h2></div><span class="done" hidden>Listo</span></div>
+    <div class="ladder" role="radiogroup" aria-label="Peldaño actual">
+      <label><input type="radio" name="peldano" value="1"><span class="k">1</span><b>Hazlo a mano</b><small>Entregas tú, con 3 a 5 clientes.</small></label>
+      <label><input type="radio" name="peldano" value="2"><span class="k">2</span><b>Escríbelo</b><small>Tu proceso está documentado.</small></label>
+      <label><input type="radio" name="peldano" value="3"><span class="k">3</span><b>Automatiza</b><small>Un agente hace lo repetible.</small></label>
+      <label><input type="radio" name="peldano" value="4"><span class="k">4</span><b>Vende el resultado</b><small>Cobras por resultado.</small></label>
+    </div>
+    <label style="margin-top: 14px"><b>¿Qué te falta para subir al siguiente?</b><textarea id="e-falta" placeholder="Lo concreto que te frena hoy"></textarea></label>
+  </section>
+
+  <!-- 5 · Skill -->
+  <section class="step" id="b5" data-block="5">
+    <div class="step-h"><img src="renders/icon-layers.png" alt=""><div><p class="n">Bloque 5 · Skills</p><h2>Tu primera skill de proceso</h2></div><span class="done" hidden>Listo</span></div>
+    <div class="grid g2">
+      <label><b>Nombre de la tarea</b><input id="s-nombre" placeholder="Confirmar citas"></label>
+      <label><b>Cuándo usarla</b><input id="s-cuando" placeholder="Cuando haya citas de mañana sin confirmar"></label>
+      <label><b>Qué hace, en una frase</b><input id="s-que" placeholder="Confirma y reagenda citas de clínicas por WhatsApp"></label>
+      <label><b>Pasos, uno por línea</b><textarea id="s-pasos" placeholder="Lee la agenda de mañana&#10;Escribe a cada paciente con la plantilla&#10;Si pide cambio, ofrece dos horarios libres"></textarea></label>
+    </div>
+    <label style="margin-top: 14px"><b>Lo que nunca debe hacer, uno por línea</b><textarea id="s-nunca" placeholder="Dar indicaciones médicas&#10;Prometer horarios que no están libres"></textarea></label>
+    <pre class="out" id="skill-out" aria-label="Vista previa de SKILL.md"></pre>
+    <div class="row"><button class="btn" type="button" data-copy="skill-out">Copiar SKILL.md</button><span class="status" data-status="skill-out"></span></div>
+  </section>
+
+  <!-- 6 · Auditor -->
+  <section class="step" id="b6" data-block="6">
+    <div class="step-h"><img src="renders/icon-shield.png" alt=""><div><p class="n">Bloque 6 · Agente auditor</p><h2>Tu rúbrica de calidad</h2></div><span class="done" hidden>Listo</span></div>
+    <label><b>Criterios, uno por línea</b><textarea id="a-criterios" placeholder="Nombre, fecha y hora correctos&#10;Suena como la clínica, no como un robot&#10;Cero indicaciones médicas"></textarea></label>
+    <pre class="out" id="audit-out" aria-label="Instrucciones del auditor"></pre>
+    <div class="row"><button class="btn" type="button" data-copy="audit-out">Copiar instrucciones del auditor</button><span class="status" data-status="audit-out"></span></div>
+  </section>
+
+  <!-- Envío -->
+  <section class="step send" id="enviar">
+    <div class="step-h"><img src="renders/icon-chat.png" alt=""><div><p class="n">Antes de la próxima sesión</p><h2>Envíame tu resumen</h2></div></div>
+    <p class="hint">Copia el resumen y pégalo en un correo o en WhatsApp. Con esto, la sesión arranca construyendo.</p>
+    <div class="row"><button class="btn key" type="button" id="copy-all">Copiar mi resumen</button><span class="status" id="copy-all-status"></span></div>
+    <div class="row"><span class="mono" style="letter-spacing: .06em">Mi correo</span><code data-cfg="email">omniagroupve@gmail.com</code><a class="btn" id="mailto" href="mailto:omniagroupve@gmail.com">Abrir correo</a><a class="btn" id="wa" href="#" target="_blank" rel="noopener" hidden>WhatsApp</a></div>
+    <pre class="out" id="all-out" hidden></pre>
+    <div class="row"><button class="btn" type="button" id="reset">Borrar mis respuestas</button><span class="status" id="reset-status"></span></div>
+  </section>
+</main>
+<footer><div class="wrap"><span data-cfg="studio">OMNIA</span> · <span data-cfg="guideService">Asesoría · Negocios con IA</span></div></footer>
+
+<script>
+// Configuración (la sustituye scripts/build-web.mjs con config.json)
+window.SITE = /*SITE*/{"studio":"OMNIA","guideService":"Asesoría · Negocios con IA","email":"omniagroupve@gmail.com","whatsapp":""}/*/SITE*/;
+(() => {
+  const C = window.SITE;
+  const $ = (id) => document.getElementById(id);
+  document.querySelectorAll('[data-cfg]').forEach((el) => { if (C[el.dataset.cfg]) el.textContent = C[el.dataset.cfg]; });
+
+  const KEY = 'cuaderno-modelo-v1';
+  const fields = [...document.querySelectorAll('main input:not([type="radio"]), main textarea')];
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { return {}; } };
+  const save = () => {
+    const data = Object.fromEntries(fields.map((f) => [f.id, f.value]));
+    data.peldano = document.querySelector('input[name="peldano"]:checked')?.value ?? '';
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch {}
+  };
+  const restore = (data) => {
+    fields.forEach((f) => { if (data[f.id] !== undefined) f.value = data[f.id]; });
+    document.querySelectorAll('input[name="peldano"]').forEach((r) => { r.checked = r.value === data.peldano; });
+  };
+  restore(load());
+
+  const v = (id) => $(id).value.trim();
+  const lines = (id) => v(id).split('\n').map((s) => s.trim()).filter(Boolean);
+  const num = (id) => Math.max(0, parseFloat($(id).value) || 0);
+  const fmt = (n) => new Intl.NumberFormat('es', { maximumFractionDigits: 1 }).format(n);
+  const slug = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 64);
+  const orPh = (id) => v(id) || $(id).placeholder;
+  const linesOrPh = (id) => (lines(id).length ? lines(id) : $(id).placeholder.split('\n'));
+
+  function frase() {
+    const slot = (id) => `<span class="slot${v(id) ? '' : ' empty'}">${(v(id) || $(id).placeholder).replace(/</g, '&lt;')}</span>`;
+    $('frase').innerHTML = `Ayudo a ${slot('f-cliente')} a ${slot('f-resultado')} sin ${slot('f-dolor')}.`;
+    const n = lines('c-nombres').length;
+    $('nombres-count').textContent = `${n} de 10${n >= 10 ? ' · listo' : ''}`;
+    $('nombres-count').classList.toggle('ok', n >= 10);
+  }
+
+  function cuentas() {
+    const meta = num('n-meta'), precio = num('n-precio'), costo = num('n-costo');
+    const hm = num('n-hmano'), ha = num('n-hagente'), fut = Math.max(1, Math.round(num('n-futuro')));
+    const clientes = precio > 0 ? Math.ceil(meta / precio) : 0;
+    const margen = precio > 0 ? (precio - costo) / precio : 0;
+    const rows = [
+      ['Clientes para tu meta', fmt(clientes), fmt(clientes)],
+      ['Horas al mes para tu meta', `${fmt(clientes * hm)} h`, `${fmt(clientes * ha)} h`],
+      [`Horas al mes con ${fmt(fut)} clientes`, `${fmt(fut * hm)} h`, `${fmt(fut * ha)} h`],
+      ['Margen por cliente, sin contar tus horas', `${fmt(margen * 100)} %`, `${fmt(margen * 100)} %`],
+    ];
+    $('calc-body').innerHTML = rows.map(([a, b, c]) => `<tr><td>${a}</td><td class="v">${b}</td><td class="v">${c}</td></tr>`).join('');
+    const msgs = [];
+    if (precio <= costo) msgs.push(['bad', 'Cada cliente te cuesta más de lo que paga. Sube el precio o baja el costo antes de crecer.']);
+    if (ha >= hm && hm > 0) msgs.push(['warn', 'Con agentes no ahorras horas. Revisa qué parte del proceso estás automatizando.']);
+    if (fut * hm > 160) msgs.push(['warn', `A mano no llegas a ${fmt(fut)} clientes: serían ${fmt(fut * hm)} horas al mes. Necesitas el peldaño 3.`]);
+    if (fut * ha <= 160 && precio > costo && ha < hm) msgs.push(['ok', `Con agentes, ${fmt(fut)} clientes caben en ${fmt(fut * ha)} horas al mes. Este modelo puede escalar.`]);
+    if (!msgs.length) msgs.push(['ok', 'Completa los números para ver el veredicto.']);
+    $('verdict').innerHTML = msgs.map(([k, t]) => `<p class="${k}">${t}</p>`).join('');
+    return { meta, precio, costo, hm, ha, fut, clientes, margen, msgs };
+  }
+
+  function skill() {
+    const nombre = orPh('s-nombre');
+    const desc = `${orPh('s-que').replace(/\.$/, '')}. Úsala ${orPh('s-cuando').replace(/^cuando/i, 'cuando').replace(/\.$/, '')}.`;
+    const pasos = linesOrPh('s-pasos').map((p, i) => `${i + 1}. ${p.replace(/\.$/, '')}.`).join('\n');
+    const nunca = linesOrPh('s-nunca').map((p) => `- ${p.replace(/\.$/, '')}.`).join('\n');
+    const ex = v('s-nombre') ? '' : '# (ejemplo: llena los campos para generar la tuya)\n';
+    $('skill-out').textContent = `${ex}---\nname: ${slug(nombre) || 'mi-proceso'}\ndescription: ${desc}\n---\n\n# ${nombre}\n\n## Pasos\n${pasos}\n\n## Nunca\n${nunca}\n\n## Si no estás seguro\nDetente y pide revisión humana. No inventes datos.`;
+  }
+
+  function auditor() {
+    const crit = linesOrPh('a-criterios');
+    const ex = lines('a-criterios').length ? '' : '# (ejemplo: escribe tus criterios para generar el tuyo)\n';
+    $('audit-out').textContent = `${ex}Eres el auditor de calidad. No reescribes el trabajo: lo revisas y lo devuelves.\n\nPara cada entrega, puntúa de 1 a 5:\n${crit.map((c, i) => `${i + 1}. ${c.replace(/\.$/, '')}.`).join('\n')}\n\nPor cada criterio con menos de 4, cita la parte exacta que falla y propone la corrección.\n\nTermina con un veredicto:\n- APROBADO: todo en 4 o 5.\n- CORREGIR: vuelve al agente con tus observaciones (máximo 2 vueltas).\n- PASAR A HUMANO: si hay dudas sobre datos, salud, dinero o algo que no puedes verificar.`;
+  }
+
+  function progress() {
+    const blocks = {
+      1: v('f-cliente') && v('f-resultado') && v('f-dolor'),
+      2: ['c-quien', 'c-hoy', 'c-costo', 'c-donde', 'c-decide', 'c-probo'].filter(v).length >= 4,
+      3: true,
+      4: !!document.querySelector('input[name="peldano"]:checked'),
+      5: v('s-nombre') && lines('s-pasos').length >= 2,
+      6: lines('a-criterios').length >= 2,
+    };
+    const touched = ['n-meta', 'n-precio', 'n-costo', 'n-hmano', 'n-hagente', 'n-futuro'].some((id) => $(id).value !== $(id).defaultValue);
+    blocks[3] = touched;
+    let done = 0;
+    Object.entries(blocks).forEach(([n, ok]) => { if (ok) done++; document.querySelector(`[data-block="${n}"] .done`).hidden = !ok; });
+    $('pbar').style.width = `${(done / 6) * 100}%`;
+    $('ptext').textContent = `${done} de 6`;
+  }
+
+  function summary() {
+    const c = cuentas();
+    const p = document.querySelector('input[name="peldano"]:checked')?.value || '—';
+    const L = (t) => t || '—';
+    return [
+      `MI MODELO · ${new Date().toLocaleDateString('es')}`,
+      '',
+      '1. FRASE',
+      `Ayudo a ${L(v('f-cliente'))} a ${L(v('f-resultado'))} sin ${L(v('f-dolor'))}.`,
+      `Pauso 90 días: ${lines('f-pausa').join('; ') || '—'}`,
+      '',
+      '2. CLIENTE',
+      `Quién es: ${L(v('c-quien'))}`, `Qué hace hoy: ${L(v('c-hoy'))}`, `Cuánto le cuesta: ${L(v('c-costo'))}`,
+      `Dónde está: ${L(v('c-donde'))}`, `Quién decide y paga: ${L(v('c-decide'))}`, `Qué ya probó: ${L(v('c-probo'))}`,
+      `Nombres reales: ${lines('c-nombres').length} de 10`,
+      '',
+      '3. CUENTAS',
+      `Meta ${fmt(c.meta)} USD/mes · precio ${fmt(c.precio)} · herramientas ${fmt(c.costo)} por cliente`,
+      `Horas por cliente: ${fmt(c.hm)} a mano, ${fmt(c.ha)} con agentes · meta en ${fmt(c.clientes)} clientes`,
+      ...c.msgs.map(([, t]) => `→ ${t}`),
+      '',
+      `4. PELDAÑO ACTUAL: ${p}`,
+      `Me falta: ${L(v('e-falta'))}`,
+      '',
+      '5. SKILL', $('skill-out').textContent,
+      '',
+      '6. AUDITOR', $('audit-out').textContent,
+    ].join('\n');
+  }
+
+  function render() { frase(); cuentas(); skill(); auditor(); progress(); }
+  const main = document.querySelector('main');
+  main.addEventListener('input', () => { save(); render(); });
+  main.addEventListener('change', () => { save(); render(); });
+  render();
+
+  async function copyText(text, statusEl, preEl) {
+    try { await navigator.clipboard.writeText(text); statusEl.textContent = 'Copiado'; }
+    catch {
+      if (preEl) { preEl.hidden = false; const r = document.createRange(); r.selectNodeContents(preEl); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+      statusEl.textContent = 'Texto seleccionado: cópialo con Ctrl+C';
+    }
+    setTimeout(() => { statusEl.textContent = ''; }, 3000);
+  }
+  document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', () => {
+    const id = b.dataset.copy;
+    copyText($(id).textContent, document.querySelector(`[data-status="${id}"]`), $(id));
+  }));
+  $('copy-all').addEventListener('click', () => {
+    const text = summary();
+    $('all-out').textContent = text;
+    copyText(text, $('copy-all-status'), $('all-out'));
+  });
+  const mail = $('mailto');
+  mail.href = `mailto:${C.email}?subject=${encodeURIComponent('Mi modelo para la próxima sesión')}`;
+  mail.addEventListener('click', () => { mail.href = `mailto:${C.email}?subject=${encodeURIComponent('Mi modelo para la próxima sesión')}&body=${encodeURIComponent(summary())}`; });
+  if (C.whatsapp) {
+    const wa = $('wa'); wa.hidden = false;
+    wa.addEventListener('click', () => { wa.href = `https://wa.me/${String(C.whatsapp).replace(/\D/g, '')}?text=${encodeURIComponent(summary())}`; });
+  }
+
+  // Ejemplo lleno (clínica) para ver cómo queda; se puede borrar
+  const EXAMPLE = {
+    'f-cliente': 'clínicas odontológicas de 2 a 5 sillones', 'f-resultado': 'llenar los huecos de su agenda', 'f-dolor': 'que recepción llame paciente por paciente',
+    'f-pausa': 'App de nutrición\nCurso online\nAgencia de redes',
+    'c-quien': 'Quien administra una clínica de 2 a 5 sillones', 'c-hoy': 'Recepción llama uno por uno el día anterior',
+    'c-costo': 'Cada inasistencia es una hora de sillón vacío', 'c-donde': 'Gremios, proveedores de insumos, grupos de odontólogos',
+    'c-decide': 'Decide la dirección; paga la clínica', 'c-probo': 'Recordatorios automáticos que nadie responde',
+    'c-nombres': 'Clínica A\nClínica B\nClínica C\nClínica D\nClínica E\nClínica F\nClínica G\nClínica H\nClínica I\nClínica J',
+    'e-falta': 'Documentar cómo reagenda recepción cuando un paciente cancela',
+    's-nombre': 'Confirmar citas', 's-cuando': 'cuando haya citas de mañana sin confirmar', 's-que': 'Confirma y reagenda citas de clínicas odontológicas por WhatsApp',
+    's-pasos': 'Lee la agenda de mañana\nEscribe a cada paciente con la plantilla\nSi pide cambio, ofrece dos horarios libres\nSi menciona dolor o urgencia, pásalo a recepción',
+    's-nunca': 'Dar indicaciones médicas\nPrometer horarios que no están libres',
+    'a-criterios': 'Nombre, fecha y hora correctos\nSuena como la clínica, no como un robot\nCero indicaciones médicas\nUna sola pregunta por mensaje',
+    peldano: '2',
+  };
+  $('load-example').addEventListener('click', () => { restore(EXAMPLE); save(); render(); });
+  let armed = false;
+  $('reset').addEventListener('click', () => {
+    if (!armed) { armed = true; $('reset-status').textContent = 'Toca otra vez para confirmar'; setTimeout(() => { armed = false; $('reset-status').textContent = ''; }, 3000); return; }
+    fields.forEach((f) => { f.value = f.defaultValue; });
+    document.querySelectorAll('input[name="peldano"]').forEach((r) => { r.checked = false; });
+    try { localStorage.removeItem(KEY); } catch {}
+    armed = false; $('reset-status').textContent = 'Borrado'; render();
+  });
+})();
+</script>

@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Guía · Un negocio de IA que escala</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="base.css">
+<style>
+/* ---------- Piezas propias de la guía ---------- */
+.ex { font-size: 20.5px; color: var(--mist); font-style: italic; }
+.ex b { font-style: normal; font-weight: 600; color: var(--key); font-family: var(--mono); font-size: 14px; letter-spacing: .08em; text-transform: uppercase; margin-right: 6px; }
+.lbl { font: 400 16px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.pin { position: absolute; z-index: 4; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font: 700 22px/1 var(--display); color: var(--ink-on-key); background: var(--key); box-shadow: 0 0 0 6px #ffb08833, 0 14px 30px -10px #000c; }
+.num { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; font: 700 18px/1 var(--display); color: var(--ink-on-key); background: var(--key); flex: none; }
+.blank { color: var(--key); border-bottom: 3px dashed #ffb08899; padding: 0 4px; }
+.note-bar { position: absolute; left: 120px; width: 1680px; display: flex; gap: 18px; align-items: center; padding: 20px 26px; border-radius: 20px; border: 1px solid #ffb08866; background: #ffb0880d; font-size: 23px; }
+.note-bar .lbl { color: var(--key); flex: none; }
+.check { display: inline-block; width: 22px; height: 22px; border: 2px solid var(--rim); border-radius: 6px; flex: none; margin-top: 4px; }
+.code { font: 400 18px/1.5 var(--mono); color: var(--paper); white-space: pre; }
+.code .c { color: var(--mist); }
+.code .k { color: var(--rim); }
+.code .v { color: var(--key); }
+
+/* 1 · Portada */
+#s1 .copy { position: absolute; left: 120px; top: 190px; width: 860px; display: grid; gap: 30px; z-index: 3; }
+#s1 .title { font-size: 86px; line-height: 1.02; font-weight: 700; }
+#s1 .hero { position: absolute; right: -90px; top: 140px; width: 1180px; height: 740px; z-index: 2; }
+#s1 .grid { position: absolute; left: 0; bottom: 0; width: 1920px; height: 430px; z-index: 1; }
+#s1 .ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+#s1 .for { font: 400 19px/1.4 var(--mono); color: var(--mist); }
+#s1 .for span { color: var(--paper); }
+
+/* 2 · Mapa */
+#s2 .head { position: absolute; left: 120px; top: 140px; width: 1680px; display: flex; justify-content: space-between; align-items: end; }
+#s2 .cards { position: absolute; left: 120px; top: 375px; width: 1680px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px 30px; }
+#s2 .card { display: grid; grid-template-columns: 140px 1fr; gap: 6px 22px; align-items: center; padding: 22px 28px 26px; min-height: 236px; }
+#s2 .card img { grid-row: span 3; width: 140px; height: 140px; }
+#s2 .card .n { font: 400 17px/1 var(--mono); color: var(--rim); letter-spacing: .1em; }
+#s2 .card .t { font: 600 29px/1.15 var(--display); }
+#s2 .card .d { font-size: 21px; color: var(--mist); line-height: 1.35; }
+#s2 .card .go { position: absolute; right: 24px; top: 22px; font: 400 18px/1 var(--mono); color: var(--key); }
+#s2 .card .step { position: absolute; left: 22px; top: 18px; font: 700 15px/1 var(--display); color: var(--key); }
+
+/* 3 · Enfoque */
+#s3 .left { position: absolute; left: 120px; top: 140px; width: 960px; display: grid; gap: 26px; }
+#s3 .frase { padding: 30px 34px 34px; display: grid; gap: 16px; }
+#s3 .frase .tpl { font: 600 34px/1.35 var(--display); }
+#s3 .render { left: 1090px; top: 160px; width: 760px; height: 760px; }
+#s3 .pause { position: absolute; left: 120px; top: 860px; width: 960px; font-size: 22px; color: var(--mist); }
+#s3 .pause b { color: var(--paper); }
+
+/* 4 · Cliente ideal */
+#s4 .head { position: absolute; left: 120px; top: 140px; width: 1350px; display: grid; gap: 14px; }
+#s4 .person { position: absolute; right: 110px; top: 95px; width: 250px; height: 250px; }
+#s4 .ficha { position: absolute; left: 120px; top: 410px; width: 1680px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+#s4 .f { padding: 22px 26px 26px; display: grid; gap: 8px; align-content: start; min-height: 190px; }
+#s4 .f .lbl { color: var(--rim); }
+#s4 .f .q { font: 600 24px/1.25 var(--display); }
+#s4 .note-bar { top: 885px; }
+
+/* 5 · Dolores */
+#s5 .head { position: absolute; left: 120px; top: 140px; width: 1300px; display: grid; gap: 14px; }
+#s5 .chat { position: absolute; right: 120px; top: 100px; width: 230px; height: 230px; }
+#s5 .steps { position: absolute; left: 120px; top: 360px; width: 1680px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+#s5 .step { padding: 22px 26px 26px; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-items: start; }
+#s5 .step .t { font: 600 26px/1.2 var(--display); align-self: center; }
+#s5 .step p { grid-column: 2; color: var(--mist); font-size: 21px; line-height: 1.38; }
+#s5 .qs { position: absolute; left: 120px; top: 610px; width: 1680px; display: grid; grid-template-columns: 1.25fr 1fr; gap: 26px; }
+#s5 .qbox { padding: 22px 26px; display: grid; gap: 12px; align-content: start; }
+#s5 .qbox .lbl { margin-bottom: 4px; }
+#s5 .qbox .row { display: flex; flex-wrap: wrap; gap: 10px; }
+#s5 .qbox .chip { color: var(--paper); border-style: solid; }
+#s5 .qbox.no .chip { color: var(--mist); text-decoration: line-through; text-decoration-color: #ffb088aa; }
+#s5 .src { position: absolute; left: 120px; top: 905px; font: 400 17px/1.3 var(--mono); color: var(--mist); }
+
+/* 6 · Modelo en una página */
+#s6 .head { position: absolute; left: 120px; top: 140px; width: 1680px; display: flex; justify-content: space-between; align-items: end; }
+#s6 .canvas { position: absolute; left: 120px; top: 330px; width: 1680px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+#s6 .b { padding: 20px 22px 22px; display: grid; gap: 10px; align-content: start; min-height: 250px; }
+#s6 .b .top { display: flex; align-items: center; gap: 12px; }
+#s6 .b .top .lbl { color: var(--rim); }
+#s6 .b .q { font: 600 24px/1.25 var(--display); }
+#s6 .b.hi { border-color: #ffb08899; }
+#s6 .foot { position: absolute; left: 120px; top: 900px; font-size: 22px; color: var(--mist); }
+#s6 .foot b { color: var(--paper); }
+
+/* 7 · Cuentas */
+#s7 .head { position: absolute; left: 120px; top: 140px; width: 1680px; display: grid; gap: 14px; }
+#s7 .formulas { position: absolute; left: 120px; top: 330px; width: 640px; display: grid; gap: 16px; }
+#s7 .fm { padding: 18px 22px; display: grid; gap: 6px; }
+#s7 .fm .lbl { color: var(--rim); }
+#s7 .fm .eq { font: 600 24px/1.3 var(--display); }
+#s7 table { position: absolute; left: 820px; top: 330px; width: 980px; border-collapse: separate; border-spacing: 0; font-size: 22px; }
+#s7 th { text-align: left; font: 400 15px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mist); padding: 0 18px 14px; }
+#s7 th.hi { color: var(--rim); }
+#s7 td { padding: 15px 18px; border-top: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+#s7 td:first-child { color: var(--mist); width: 380px; }
+#s7 td.bad { color: var(--key); font-weight: 600; }
+#s7 td.good { color: var(--rim); font-weight: 600; }
+#s7 .cap { position: absolute; left: 820px; top: 290px; font: 400 15px/1 var(--mono); letter-spacing: .08em; color: var(--key); text-transform: uppercase; }
+#s7 .note-bar { top: 840px; }
+
+/* 8 · Service-as-a-Software */
+#s8 .head { position: absolute; left: 120px; top: 135px; width: 1680px; display: grid; gap: 16px; }
+#s8 .cmp { position: absolute; left: 120px; top: 470px; width: 1680px; display: grid; grid-template-columns: 300px repeat(3, 1fr); gap: 0 22px; }
+#s8 .colh { padding: 18px 22px; font: 600 25px/1.2 var(--display); display: flex; align-items: center; gap: 14px; }
+#s8 .colh img { width: 64px; height: 64px; margin: -10px 0; }
+#s8 .rowh { font: 400 15px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mist); padding: 16px 0; border-top: 1px solid var(--line); display: flex; align-items: center; }
+#s8 .cell { padding: 16px 22px; border-top: 1px solid var(--line); font-size: 22px; color: var(--mist); display: flex; align-items: center; }
+#s8 .cell.hi, #s8 .colh.hi { color: var(--paper); background: #ffb0880f; border-left: 1px solid #ffb08866; border-right: 1px solid #ffb08866; }
+#s8 .colh.hi { border-top: 1px solid #ffb08866; border-radius: 18px 18px 0 0; }
+#s8 .cell.hi.last { border-bottom: 1px solid #ffb08866; border-radius: 0 0 18px 18px; }
+#s8 .tagme { font: 400 13px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-on-key); background: var(--key); padding: 6px 9px; border-radius: 999px; margin-left: auto; }
+#s8 .src { position: absolute; left: 120px; top: 915px; display: flex; gap: 12px; align-items: center; font: 400 17px/1.3 var(--mono); color: var(--mist); }
+
+/* 9 · Escalera */
+#s9 .head { position: absolute; left: 120px; top: 135px; width: 1680px; display: grid; gap: 14px; }
+#s9 .render { left: 230px; top: 215px; width: 1460px; height: 653px; }
+#s9 .steps4 { position: absolute; left: 120px; top: 770px; width: 1680px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+#s9 .s { padding: 18px 22px 20px; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; align-items: center; }
+#s9 .s .t { font: 600 23px/1.2 var(--display); }
+#s9 .s p { grid-column: 1 / -1; color: var(--mist); font-size: 19.5px; line-height: 1.35; }
+
+/* 10 · Ideas */
+#s10 .head { position: absolute; left: 120px; top: 135px; width: 1680px; display: grid; gap: 14px; }
+#s10 table { position: absolute; left: 120px; top: 300px; width: 1680px; border-collapse: separate; border-spacing: 0; font-size: 21px; }
+#s10 th { text-align: left; font: 400 14px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mist); padding: 0 16px 14px; }
+#s10 td { padding: 13px 16px; border-top: 1px solid var(--line); vertical-align: middle; line-height: 1.3; }
+#s10 td:first-child { font-weight: 600; width: 290px; }
+#s10 td:first-child span { display: inline-flex; align-items: center; gap: 12px; }
+#s10 td:first-child img { width: 46px; height: 46px; }
+#s10 td:nth-child(2) { color: var(--paper); width: 330px; }
+#s10 td:nth-child(3), #s10 td:nth-child(4) { color: var(--mist); }
+#s10 td:last-child { font: 400 17px/1.3 var(--mono); color: var(--key); width: 230px; }
+#s10 tr.hi td { background: #ffb0880d; }
+#s10 .foot { position: absolute; left: 120px; top: 900px; font-size: 22px; color: var(--mist); }
+#s10 .foot b { color: var(--paper); }
+
+/* 11 · Tu web */
+#s11 .browser { left: 100px; top: 120px; width: 880px; height: 850px; }
+#s11 .wf { position: absolute; left: 100px; top: 172px; width: 880px; height: 798px; z-index: 2; padding: 22px 34px; display: grid; gap: 14px; align-content: start; }
+#s11 .wf .nav { display: flex; justify-content: space-between; align-items: center; font: 700 17px/1 var(--display); }
+#s11 .wf .nav span:last-child { font: 600 14px/1 var(--body); padding: 9px 14px; border-radius: 999px; background: var(--key); color: var(--ink-on-key); }
+#s11 .wf .sec { position: relative; border: 1px dashed #5be4ff55; border-radius: 16px; padding: 16px 20px 16px 70px; }
+#s11 .wf .sec .num { position: absolute; left: 16px; top: 14px; width: 36px; height: 36px; font-size: 16px; }
+#s11 .wf .h4 { margin: 0; font: 600 30px/1.15 var(--display); }
+#s11 .wf .sub { font-size: 18px; color: var(--mist); margin-top: 6px; }
+#s11 .wf .btnmini { display: inline-block; margin-top: 12px; font: 600 15px/1 var(--body); padding: 11px 16px; border-radius: 999px; background: var(--key); color: var(--ink-on-key); }
+#s11 .wf .quote { font: 500 20px/1.35 var(--display); color: var(--paper); }
+#s11 .wf .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 16px; color: var(--mist); }
+#s11 .wf .three div { background: var(--deep); border-radius: 10px; padding: 10px 12px; }
+#s11 .wf .three b { display: block; color: var(--paper); font-size: 16px; }
+#s11 .wf .ph { font-size: 17px; color: var(--mist); }
+#s11 .wf .ph span { color: var(--key); }
+#s11 .wf .bigbtn { display: inline-block; font: 600 19px/1 var(--body); padding: 15px 26px; border-radius: 999px; background: var(--key); color: var(--ink-on-key); }
+#s11 .right { position: absolute; left: 1060px; top: 140px; width: 760px; display: grid; gap: 18px; }
+#s11 .rules { display: grid; gap: 12px; margin-top: 10px; }
+#s11 .rules li { display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: start; font-size: 22px; line-height: 1.35; }
+#s11 .rules li b { color: var(--paper); }
+#s11 .rules li span.t { color: var(--mist); }
+
+/* 12 · Tips */
+#s12 .head { position: absolute; left: 120px; top: 135px; width: 1680px; display: grid; gap: 14px; }
+#s12 .tips { position: absolute; left: 120px; top: 300px; width: 900px; display: grid; gap: 14px; }
+#s12 .tip { padding: 16px 22px; display: grid; grid-template-columns: 250px 1fr; gap: 16px; align-items: center; }
+#s12 .tip .t { font: 600 22px/1.2 var(--display); }
+#s12 .tip p { font-size: 20px; color: var(--mist); line-height: 1.35; }
+#s12 .side { position: absolute; left: 1070px; top: 300px; width: 730px; display: grid; gap: 18px; }
+#s12 .box { padding: 22px 26px; display: grid; gap: 12px; }
+#s12 .box .h { font: 600 26px/1.2 var(--display); }
+#s12 .box p { font-size: 20px; color: var(--mist); line-height: 1.38; }
+#s12 .thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+#s12 .thumbs img { width: 100%; height: 130px; object-fit: contain; background: radial-gradient(70% 70% at 50% 50%, #1a1f5c, #0c0e22); border-radius: 12px; border: 1px solid var(--line); }
+#s12 .links { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* 13 · Skills */
+#s13 .left { position: absolute; left: 120px; top: 140px; width: 820px; display: grid; gap: 24px; }
+#s13 .left .title { font-size: 58px; }
+#s13 .facts { display: grid; gap: 14px; }
+#s13 .facts li { display: grid; grid-template-columns: 40px 1fr; gap: 16px; font-size: 22px; line-height: 1.38; color: var(--mist); }
+#s13 .facts li b { color: var(--paper); }
+#s13 .why { padding: 20px 24px; font-size: 22px; line-height: 1.4; }
+#s13 .why .lbl { color: var(--key); display: block; margin-bottom: 8px; }
+#s13 .codecard { position: absolute; left: 1010px; top: 130px; width: 820px; padding: 0; overflow: hidden; }
+#s13 .codecard .bar { display: flex; gap: 10px; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--line); background: #0b0d22; }
+#s13 .codecard .bar .dot { width: 12px; height: 12px; border-radius: 50%; }
+#s13 .codecard .bar .fn { margin-left: 10px; font: 400 15px/1 var(--mono); color: var(--mist); }
+#s13 .codecard .body { padding: 20px 26px 24px; display: grid; gap: 14px; }
+#s13 .tree { font: 400 17px/1.45 var(--mono); color: var(--mist); white-space: pre; padding-bottom: 14px; border-bottom: 1px dashed var(--line); }
+#s13 .tree b { color: var(--rim); font-weight: 400; }
+#s13 .where { position: absolute; left: 120px; top: 905px; width: 1680px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+#s13 .where .lbl { color: var(--mist); margin-right: 6px; }
+
+/* 14 · Tres skills */
+#s14 .head { position: absolute; left: 120px; top: 135px; width: 1680px; display: grid; gap: 14px; }
+#s14 .three { position: absolute; left: 120px; top: 310px; width: 1680px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+#s14 .sk { padding: 22px 28px 26px; display: grid; gap: 14px; align-content: start; min-height: 530px; }
+#s14 .sk .top { display: flex; align-items: center; gap: 14px; }
+#s14 .sk .top img { width: 92px; height: 92px; margin: -12px -6px -12px -14px; }
+#s14 .sk .t { font: 600 27px/1.15 var(--display); }
+#s14 .sk .what { font-size: 23px; color: var(--paper); line-height: 1.35; }
+#s14 .sk ol { counter-reset: i; display: grid; gap: 12px; }
+#s14 .sk ol li { counter-increment: i; position: relative; padding-left: 38px; font-size: 21.5px; color: var(--mist); line-height: 1.35; }
+#s14 .sk ol li::before { content: counter(i); position: absolute; left: 0; top: 1px; width: 24px; height: 24px; border-radius: 7px; background: var(--panel); border: 1px solid var(--line); font: 600 13px/24px var(--mono); text-align: center; color: var(--rim); }
+#s14 .sk .use { margin-top: 8px; font: 400 17px/1.45 var(--mono); color: var(--key); }
+#s14 .note-bar { top: 880px; font-size: 21px; }
+
+/* 15 · Anatomía de un agente */
+#s15 .head { position: absolute; left: 120px; top: 125px; width: 930px; display: grid; gap: 12px; }
+#s15 .head .title { font-size: 46px; }
+#s15 .render { left: 360px; top: 250px; width: 1200px; height: 752px; }
+#s15 .callout.card { width: 330px; max-width: 330px; }
+
+/* 16 · Construye */
+#s16 .head { position: absolute; left: 120px; top: 135px; width: 1680px; display: grid; gap: 14px; }
+#s16 .six { position: absolute; left: 120px; top: 300px; width: 1000px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+#s16 .st { padding: 18px 22px 20px; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; align-items: start; min-height: 168px; }
+#s16 .st .t { font: 600 22px/1.25 var(--display); align-self: center; }
+#s16 .st p { grid-column: 2; font-size: 18.5px; color: var(--mist); line-height: 1.35; }
+#s16 .levels { position: absolute; left: 1180px; top: 300px; width: 620px; display: grid; gap: 16px; }
+#s16 .lv { padding: 18px 22px 20px; display: grid; gap: 8px; }
+#s16 .lv .lbl { color: var(--rim); }
+#s16 .lv .t { font: 600 23px/1.25 var(--display); }
+#s16 .lv p { font-size: 19px; color: var(--mist); line-height: 1.38; }
+#s16 .lv code { font: 400 16px/1 var(--mono); color: var(--key); background: var(--panel); padding: 3px 7px; border-radius: 6px; }
+#s16 .lvh { font: 400 16px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--key); }
+
+/* 17 · Auditores */
+#s17 .head { position: absolute; left: 120px; top: 125px; width: 1680px; display: grid; gap: 12px; }
+#s17 .render { left: 235px; top: 285px; width: 1450px; height: 546px; }
+#s17 .bottom { position: absolute; left: 120px; top: 765px; width: 1680px; display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+#s17 .bx { padding: 18px 26px 18px; display: grid; gap: 8px; align-content: start; }
+#s17 .bx .lbl { color: var(--rim); }
+#s17 .bx li { display: flex; gap: 12px; font-size: 20px; color: var(--mist); line-height: 1.35; }
+#s17 .verdicts { display: flex; gap: 10px; margin-top: 4px; }
+#s17 .verdicts span { font: 400 15px/1 var(--mono); padding: 9px 12px; border-radius: 999px; border: 1px solid var(--line); }
+#s17 .callout.pill .metric { background: #0d0f26; color: var(--paper); }
+
+/* 18 · Plan de 30 días */
+#s18 .head { position: absolute; left: 120px; top: 135px; width: 1680px; display: grid; gap: 14px; }
+#s18 .track { position: absolute; left: 120px; top: 368px; width: 1680px; height: 2px; background: linear-gradient(90deg, var(--rim), var(--key)); opacity: .7; }
+#s18 .weeks { position: absolute; left: 120px; top: 300px; width: 1680px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; }
+#s18 .wk { display: grid; gap: 10px; align-content: start; }
+#s18 .wk img { width: 120px; height: 120px; margin-left: -16px; }
+#s18 .wk .when { font: 400 17px/1 var(--mono); color: var(--key); letter-spacing: .06em; }
+#s18 .wk .t { font: 600 27px/1.15 var(--display); }
+#s18 .wk ul { display: grid; gap: 6px; }
+#s18 .wk li { position: relative; padding-left: 22px; font-size: 19.5px; color: var(--mist); line-height: 1.35; }
+#s18 .wk li::before { content: ''; position: absolute; left: 2px; top: .6em; width: 8px; height: 8px; border-radius: 3px; background: var(--rim); }
+#s18 .wk .out { margin-top: 6px; padding: 12px 16px; font-size: 18.5px; line-height: 1.3; }
+#s18 .wk .out span { display: block; font: 400 13px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--rim); margin-bottom: 7px; }
+#s18 .note-bar { top: 840px; font-size: 21px; }
+
+/* 19 · Próxima sesión */
+#s19 .left { position: absolute; left: 120px; top: 135px; width: 1000px; display: grid; gap: 22px; }
+#s19 .left .title { font-size: 62px; }
+#s19 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 6px; }
+#s19 .bx { padding: 22px 24px 24px; display: grid; gap: 12px; align-content: start; }
+#s19 .bx .lbl { color: var(--rim); }
+#s19 .bx.trae .lbl { color: var(--key); }
+#s19 .bx li { display: flex; gap: 12px; font-size: 22px; color: var(--mist); line-height: 1.4; }
+#s19 .bx ul { display: grid; gap: 8px; }
+#s19 .bx li b { color: var(--paper); font-weight: 600; }
+#s19 .right { position: absolute; left: 1190px; top: 135px; width: 630px; display: grid; gap: 20px; }
+#s19 .qrcard { padding: 24px; display: grid; grid-template-columns: 200px 1fr; gap: 22px; align-items: center; }
+#s19 .qr { width: 200px; height: 200px; padding: 14px; background: var(--paper); border-radius: 18px; }
+#s19 .qr svg { width: 100%; height: 100%; display: block; }
+#s19 .qrcard .t { font: 600 25px/1.2 var(--display); }
+#s19 .qrcard p { font-size: 19px; color: var(--mist); line-height: 1.38; margin: 8px 0 14px; }
+#s19 .contact { padding: 24px 26px; display: grid; gap: 14px; }
+#s19 .contact .row { display: flex; flex-wrap: wrap; gap: 12px; }
+#s19 .email { font: 400 21px/1 var(--mono); }
+#s19 .orb { position: absolute; right: 70px; top: 650px; width: 300px; height: 300px; opacity: .95; }
+</style>
+</head>
+<body>
+
+<!-- ============ 1 · PORTADA ============ -->
+<section class="slide" id="s1" data-tab="inicio">
+  <svg class="grid" data-grid viewBox="0 0 1920 430" aria-hidden="true"></svg>
+  <div class="copy">
+    <h2 class="eyebrow">Guía post-asesoría · Negocios con IA</h2>
+    <p class="title">Un negocio de IA que tenga sentido. <em>Y que escale.</em></p>
+    <p class="lede">Lo que vimos en la asesoría, ordenado para que lo apliques: una sola idea, un solo cliente y un sistema de agentes que haga el trabajo repetible.</p>
+    <p class="for" data-if="mentee">Guía preparada para <span data-cfg="mentee"></span><span data-if="sessionDate"> · sesión del <span data-cfg="sessionDate"></span></span></p>
+    <div class="ctas">
+      <a class="btn key" href="#s2">Ver el camino <span class="mono">→</span></a>
+      <a class="btn rim" data-if="workbookUrl" data-cfg-href="workbookUrl" href="#">Abrir cuaderno de trabajo <span class="mono">↗</span></a>
+    </div>
+  </div>
+  <div class="render hero"><img src="../assets/renders/system.png" alt="Escalones que suben hacia una esfera con órbita, símbolo de un sistema de agentes"></div>
+</section>
+
+<!-- ============ 2 · MAPA ============ -->
+<section class="slide" id="s2" data-tab="inicio">
+  <div class="head">
+    <div style="display: grid; gap: 14px">
+      <h2 class="eyebrow">El camino</h2>
+      <p class="title">Seis tramos, en este orden</p>
+    </div>
+    <p class="lede" style="max-width: 600px; font-size: 23px">El orden importa: automatizar un negocio que todavía no entiendes solo multiplica el desorden. Toca un tramo para ir directo.</p>
+  </div>
+  <div class="cards">
+    <a class="card slab" href="#s3"><img src="../assets/renders/icon-target.png" alt=""><span class="n">PÁG. 03–05</span><span class="t">Enfoque</span><span class="d">Una cosa, un cliente, un dolor.</span><span class="go">→</span></a>
+    <a class="card slab" href="#s6"><img src="../assets/renders/icon-coin.png" alt=""><span class="n">PÁG. 06–07</span><span class="t">Modelo</span><span class="d">Que las cuentas den antes de construir.</span><span class="go">→</span></a>
+    <a class="card slab" href="#s8"><img src="../assets/renders/icon-steps.png" alt=""><span class="n">PÁG. 08–10</span><span class="t">Service-as-a-Software</span><span class="d">Vende el trabajo hecho, no la herramienta.</span><span class="go">→</span></a>
+    <a class="card slab" href="#s11"><img src="../assets/renders/icon-browser.png" alt=""><span class="n">PÁG. 11–12</span><span class="t">Tu web</span><span class="d">Una página que venda desde la primera semana.</span><span class="go">→</span></a>
+    <a class="card slab" href="#s13"><img src="../assets/renders/icon-orb.png" alt=""><span class="n">PÁG. 13–17</span><span class="t">Skills y agentes</span><span class="d">Tu proceso convertido en un sistema que trabaja.</span><span class="go">→</span></a>
+    <a class="card slab" href="#s18"><img src="../assets/renders/icon-gauge.png" alt=""><span class="n">PÁG. 18–19</span><span class="t">Plan y próxima sesión</span><span class="d">Tus 30 días y lo que traes a la siguiente.</span><span class="go">→</span></a>
+  </div>
+</section>
+
+<!-- ============ 3 · ENFOQUE ============ -->
+<!-- SUPUESTO: el ejemplo que recorre la guía es una clínica odontológica pequeña. Cámbialo por el sector de tu asesorado si lo prefieres. -->
+<section class="slide" id="s3" data-tab="enfoque">
+  <div class="left">
+    <h2 class="eyebrow">Enfoque</h2>
+    <p class="title">Una cosa. Un cliente. <em>Un dolor.</em></p>
+    <p class="lede">Al empezar, cada idea nueva parece una oportunidad. Casi todas son distracciones. Tu primer trabajo es escribir esta frase y defenderla.</p>
+    <div class="frase slab">
+      <span class="lbl r">Tu frase</span>
+      <p class="tpl">Ayudo a <span class="blank">cliente concreto</span> a <span class="blank">resultado medible</span> sin <span class="blank">lo que hoy le duele</span>.</p>
+      <p class="ex"><b>Ejemplo</b>Ayudo a clínicas odontológicas de 2 a 5 sillones a llenar los huecos de su agenda sin que recepción llame paciente por paciente.</p>
+    </div>
+  </div>
+  <div class="render" data-anchors="focus"><img src="../assets/renders/focus.png" alt="Diana con un dardo en el centro y piezas sueltas fuera de ella"></div>
+  <p class="pause"><b>Prueba de foco:</b> si tu frase sirve para cualquier negocio, todavía no es tu frase. <b>Y anota tres ideas que vas a pausar 90 días.</b></p>
+</section>
+
+<!-- ============ 4 · CLIENTE IDEAL ============ -->
+<section class="slide" id="s4" data-tab="enfoque">
+  <div class="head">
+    <h2 class="eyebrow">Enfoque · tu cliente</h2>
+    <p class="title">¿Para quién construyes? <em>Con nombre y apellido.</em></p>
+    <p class="lede" style="font-size: 24px">Llena la ficha. Si una respuesta te cuesta, ahí falta una conversación con un cliente real.</p>
+  </div>
+  <img class="person" src="../assets/renders/icon-person.png" alt="">
+  <div class="ficha">
+    <div class="f slab"><span class="lbl">01 · Quién es</span><span class="q">¿Qué cargo tiene y qué tamaño tiene su negocio?</span><p class="ex"><b>Ej.</b>Quien administra una clínica de 2 a 5 sillones.</p></div>
+    <div class="f slab"><span class="lbl">02 · Qué hace hoy</span><span class="q">¿Cómo resuelve el problema sin ti?</span><p class="ex"><b>Ej.</b>Recepción llama uno por uno el día anterior.</p></div>
+    <div class="f slab"><span class="lbl">03 · Cuánto le cuesta</span><span class="q">¿Cuánto pierde al mes por ese problema?</span><p class="ex"><b>Ej.</b>Cada paciente que no llega es una hora de sillón vacío.</p></div>
+    <div class="f slab"><span class="lbl">04 · Dónde está</span><span class="q">¿Dónde lo encuentras sin pagar anuncios?</span><p class="ex"><b>Ej.</b>Gremios, proveedores de insumos, grupos de odontólogos.</p></div>
+    <div class="f slab"><span class="lbl">05 · Quién decide</span><span class="q">¿Quién dice que sí y quién paga?</span><p class="ex"><b>Ej.</b>Decide la dirección; paga la clínica cada mes.</p></div>
+    <div class="f slab"><span class="lbl">06 · Qué ya probó</span><span class="q">¿Qué intentó antes y por qué lo dejó?</span><p class="ex"><b>Ej.</b>Recordatorios automáticos genéricos que nadie responde.</p></div>
+  </div>
+  <div class="note-bar"><span class="lbl">Prueba de los 10 nombres</span><span>Si no puedes escribir 10 personas reales que encajen en la ficha, tu cliente todavía es una idea.</span></div>
+</section>
+
+<!-- ============ 5 · DOLORES ============ -->
+<section class="slide" id="s5" data-tab="enfoque">
+  <div class="head">
+    <h2 class="eyebrow">Enfoque · sus dolores</h2>
+    <p class="title">Pregunta por lo que ya pasó, <em>no por lo que haría.</em></p>
+  </div>
+  <img class="chat" src="../assets/renders/icon-chat.png" alt="">
+  <ol class="steps">
+    <li class="step slab"><span class="num">1</span><span class="t">Conversa con 10</span><p>Media hora con cada uno. No vendas: escucha y toma nota de sus palabras exactas.</p></li>
+    <li class="step slab"><span class="num">2</span><span class="t">Busca el patrón</span><p>El dolor que aparece en 7 de 10 conversaciones, dicho de formas distintas, es el tuyo.</p></li>
+    <li class="step slab"><span class="num">3</span><span class="t">Ponle precio</span><p>¿Cuánto le cuesta al mes? Si no le cuesta nada, no lo va a pagar.</p></li>
+  </ol>
+  <div class="qs">
+    <div class="qbox slab">
+      <span class="lbl r">Preguntas que sí funcionan</span>
+      <div class="row"><span class="chip">¿Cuándo fue la última vez que te pasó?</span><span class="chip">¿Qué hiciste para resolverlo?</span></div>
+      <div class="row"><span class="chip">¿Cuánto te costó, en tiempo o dinero?</span><span class="chip">¿Qué has probado y por qué lo dejaste?</span></div>
+    </div>
+    <div class="qbox slab no">
+      <span class="lbl k">Evita: te dan opiniones, no datos</span>
+      <div class="row"><span class="chip">¿Usarías una app que…?</span><span class="chip">¿Te parece buena idea?</span></div>
+      <div class="row"><span class="chip">¿Cuánto pagarías por…?</span></div>
+    </div>
+  </div>
+  <p class="src">Método basado en «The Mom Test», de Rob Fitzpatrick. Sus palabras exactas serán el texto de tu web.</p>
+</section>
+
+<!-- ============ 6 · MODELO EN UNA PÁGINA ============ -->
+<section class="slide" id="s6" data-tab="modelo">
+  <div class="head">
+    <div style="display: grid; gap: 14px">
+      <h2 class="eyebrow">Modelo de negocio</h2>
+      <p class="title" style="font-size: 58px; white-space: nowrap">Tu modelo cabe en una página</p>
+    </div>
+    <p class="lede" style="max-width: 600px; font-size: 23px">Ocho preguntas. Respóndelas para tu negocio antes de escribir una línea de código.</p>
+  </div>
+  <div class="canvas">
+    <div class="b slab"><div class="top"><span class="num">1</span><span class="lbl">Cliente</span></div><span class="q">¿Quién exactamente?</span><p class="ex"><b>Ej.</b>Clínicas de 2 a 5 sillones.</p></div>
+    <div class="b slab"><div class="top"><span class="num">2</span><span class="lbl">Dolor</span></div><span class="q">¿Qué le cuesta hoy?</span><p class="ex"><b>Ej.</b>Citas perdidas: sillones vacíos.</p></div>
+    <div class="b slab hi"><div class="top"><span class="num">3</span><span class="lbl">Resultado</span></div><span class="q">¿Qué le prometes, en números?</span><p class="ex"><b>Ej.</b>Agenda confirmada y huecos recuperados.</p></div>
+    <div class="b slab"><div class="top"><span class="num">4</span><span class="lbl">Entrega</span></div><span class="q">¿Cómo lo haces?</span><p class="ex"><b>Ej.</b>Agente de WhatsApp con revisión humana.</p></div>
+    <div class="b slab"><div class="top"><span class="num">5</span><span class="lbl">Canal</span></div><span class="q">¿Cómo te encuentra?</span><p class="ex"><b>Ej.</b>Gremios, proveedores y referidos.</p></div>
+    <div class="b slab hi"><div class="top"><span class="num">6</span><span class="lbl">Precio</span></div><span class="q">¿Cómo cobras?</span><p class="ex"><b>Ej.</b>Base mensual más un monto por cita recuperada.</p></div>
+    <div class="b slab"><div class="top"><span class="num">7</span><span class="lbl">Costo</span></div><span class="q">¿Cuánto te cuesta entregar a un cliente?</span><p class="ex"><b>Ej.</b>IA, WhatsApp y tus horas de supervisión.</p></div>
+    <div class="b slab"><div class="top"><span class="num">8</span><span class="lbl">Ventaja</span></div><span class="q">¿Por qué tú y no otro?</span><p class="ex"><b>Ej.</b>Conoces cómo trabaja una clínica por dentro.</p></div>
+  </div>
+  <p class="foot"><b>El bloque que dejes vacío</b> es tu próxima tarea, no un detalle para después.</p>
+</section>
+
+<!-- ============ 7 · LAS CUENTAS ============ -->
+<!-- SUPUESTO: números redondos de ejemplo, no datos de mercado. -->
+<section class="slide" id="s7" data-tab="modelo">
+  <div class="head">
+    <h2 class="eyebrow">Modelo · las cuentas</h2>
+    <p class="title">¿Escala o solo te llena la agenda?</p>
+  </div>
+  <div class="formulas">
+    <div class="fm slab"><span class="lbl">Clientes que necesitas</span><span class="eq">meta mensual ÷ precio</span></div>
+    <div class="fm slab"><span class="lbl">Horas al mes</span><span class="eq">clientes × horas por cliente</span></div>
+    <div class="fm slab"><span class="lbl">Precio justo</span><span class="eq">una parte del valor que recuperas</span><p class="ex" style="margin-top: 4px">Si recuperas 15 citas de 40 USD, creas 600 USD al mes. Cobrar 300 es razonable.</p></div>
+  </div>
+  <p class="cap">Ejemplo con números redondos · meta 3.000 USD/mes · precio 300 USD/mes</p>
+  <table>
+    <thead><tr><th></th><th>Todo a mano</th><th class="hi">Con agentes y tu revisión</th></tr></thead>
+    <tbody>
+      <tr><td>Clientes para la meta</td><td>10</td><td>10</td></tr>
+      <tr><td>Horas por cliente al mes</td><td>12</td><td>2</td></tr>
+      <tr><td>Horas al mes para la meta</td><td>120</td><td class="good">20</td></tr>
+      <tr><td>Si llegas a 40 clientes</td><td class="bad">480 h: no te alcanza el mes</td><td class="good">80 h: medio tiempo</td></tr>
+      <tr><td>Cada cliente nuevo</td><td>Te quita tiempo</td><td>Suma ingreso casi sin sumar horas</td></tr>
+    </tbody>
+  </table>
+  <div class="note-bar"><span class="lbl">La regla</span><span>Un negocio escala cuando cada cliente nuevo te cuesta menos tiempo que el anterior.</span></div>
+</section>
+
+<!-- ============ 8 · SERVICE-AS-A-SOFTWARE ============ -->
+<section class="slide" id="s8" data-tab="saas">
+  <div class="head">
+    <h2 class="eyebrow">Service-as-a-Software</h2>
+    <p class="title">Vende el trabajo hecho, <em>no la herramienta.</em></p>
+    <p class="lede" style="max-width: 1400px">En lugar de venderle a tu cliente un software para que haga el trabajo por su cuenta, le entregas el trabajo terminado. Lo hacen agentes de IA y tú supervisas la calidad.</p>
+  </div>
+  <div class="cmp">
+    <span></span>
+    <div class="colh"><img src="../assets/renders/icon-person.png" alt="">Servicio tradicional</div>
+    <div class="colh"><img src="../assets/renders/icon-browser.png" alt="">Software (SaaS)</div>
+    <div class="colh hi"><img src="../assets/renders/icon-orb.png" alt="">Service-as-a-Software<span class="tagme">Tu apuesta</span></div>
+    <span class="rowh">Qué compra</span><div class="cell">Horas de una persona</div><div class="cell">Acceso a una herramienta</div><div class="cell hi">Un resultado entregado</div>
+    <span class="rowh">Quién trabaja</span><div class="cell">Tú o tu equipo</div><div class="cell">El propio cliente</div><div class="cell hi">Agentes de IA, con tu revisión</div>
+    <span class="rowh">Cómo cobras</span><div class="cell">Por hora o por proyecto</div><div class="cell">Por usuario al mes</div><div class="cell hi">Por resultado o suscripción</div>
+    <span class="rowh">Cómo crece</span><div class="cell">Contratando gente</div><div class="cell">Bien, si el cliente aprende a usarlo</div><div class="cell hi last">Bien, y el cliente no aprende nada nuevo</div>
+  </div>
+  <div class="src">Término popularizado por Foundation Capital (2024). <a class="linkchip" href="https://foundationcapital.com/ai-service-as-software/">Leer el artículo ↗</a></div>
+</section>
+
+<!-- ============ 9 · LA ESCALERA ============ -->
+<section class="slide" id="s9" data-tab="saas">
+  <div class="head">
+    <h2 class="eyebrow">Service-as-a-Software · cómo llegar</h2>
+    <p class="title">De servicio a software, <em>peldaño por peldaño.</em></p>
+  </div>
+  <div class="render" data-anchors="stairs"><img src="../assets/renders/stairs.png" alt="Cuatro escalones: una conversación, un documento, un agente y monedas"></div>
+  <span class="pin" data-place="stairs:step-0" data-dx="-26" data-dy="-70">1</span>
+  <span class="pin" data-place="stairs:step-1" data-dx="-26" data-dy="-70">2</span>
+  <span class="pin" data-place="stairs:step-2" data-dx="-26" data-dy="-70">3</span>
+  <span class="pin" data-place="stairs:step-3" data-dx="-26" data-dy="-70">4</span>
+  <div class="steps4">
+    <div class="s slab"><span class="num">1</span><span class="t">Hazlo a mano</span><p>Con 3 a 5 clientes. Aprendes el proceso real y cobras desde el primer día.</p></div>
+    <div class="s slab"><span class="num">2</span><span class="t">Escríbelo</span><p>Cada paso, cada decisión, ejemplos buenos y malos. Ese documento será tu skill.</p></div>
+    <div class="s slab"><span class="num">3</span><span class="t">Automatiza lo repetible</span><p>Un agente hace la mayor parte. Tú revisas lo que pide criterio.</p></div>
+    <div class="s slab"><span class="num">4</span><span class="t">Vende el resultado</span><p>Cobra por resultado o suscripción. Tu tiempo deja de ser el límite.</p></div>
+  </div>
+</section>
+
+<!-- ============ 10 · IDEAS ============ -->
+<section class="slide" id="s10" data-tab="saas">
+  <div class="head">
+    <h2 class="eyebrow">Service-as-a-Software · ideas</h2>
+    <p class="title" style="font-size: 56px">Resultados que ya se pueden vender así</p>
+  </div>
+  <table>
+    <thead><tr><th>Cliente</th><th>Resultado que vendes</th><th>Lo hace el agente</th><th>Lo revisas tú</th><th>Cobras por</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td><span><img src="../assets/renders/icon-person.png" alt="">Clínicas pequeñas</span></td><td>Citas confirmadas y huecos recuperados</td><td>Confirma y reagenda por WhatsApp</td><td>Quejas y casos raros</td><td>Cita recuperada</td></tr>
+      <tr><td><span><img src="../assets/renders/icon-chat.png" alt="">Restaurantes</span></td><td>Reseñas respondidas en 24 horas</td><td>Redacta con el tono del local</td><td>Reseñas negativas</td><td>Mes de servicio</td></tr>
+      <tr><td><span><img src="../assets/renders/icon-target.png" alt="">Inmobiliarias</span></td><td>Interesados calificados</td><td>Pregunta presupuesto, zona y plazo</td><td>Los de mayor valor</td><td>Contacto calificado</td></tr>
+      <tr><td><span><img src="../assets/renders/icon-layers.png" alt="">Contadores</span></td><td>Facturas clasificadas</td><td>Lee y ordena documentos</td><td>Lo que no cuadra</td><td>Documento procesado</td></tr>
+      <tr><td><span><img src="../assets/renders/icon-coin.png" alt="">Academias y gimnasios</span></td><td>Cobranza al día</td><td>Recuerda pagos con tono amable</td><td>Acuerdos de pago</td><td>Monto recuperado</td></tr>
+      <tr><td><span><img src="../assets/renders/icon-browser.png" alt="">Tiendas en línea</span></td><td>Preguntas de clientes resueltas</td><td>Responde dudas de producto y envío</td><td>Reclamos</td><td>Conversación resuelta</td></tr>
+    </tbody>
+  </table>
+  <p class="foot"><b>Elige uno solo:</b> el sector que mejor conoces o donde ya tienes contactos.</p>
+</section>
+
+<!-- ============ 11 · TU WEB ============ -->
+<section class="slide" id="s11" data-tab="web">
+  <div class="browser"><div class="bar"><span class="dot" style="background: var(--key)"></span><span class="dot" style="background: var(--rim)"></span><span class="dot" style="background: var(--paper)"></span><span class="url">ejemplo · tu primera página</span></div></div>
+  <div class="wf">
+    <div class="nav"><span>Tu marca</span><span>Agenda 20 min</span></div>
+    <div class="sec"><span class="num">1</span><p class="h4">Tu agenda confirmada, sin llamar paciente por paciente.</p><p class="sub">Para clínicas odontológicas de 2 a 5 sillones.</p><span class="btnmini">Agenda 20 minutos</span></div>
+    <div class="sec"><span class="num">2</span><p class="quote">«Cada paciente que no llega es una hora de sillón vacío.»</p></div>
+    <div class="sec"><span class="num">3</span><div class="three"><div><b>1. Conectamos</b>tu agenda</div><div><b>2. Confirmamos</b>por WhatsApp</div><div><b>3. Recuperamos</b>los huecos</div></div></div>
+    <div class="sec"><span class="num">4</span><p class="ph">Caso piloto: <span>«__ citas recuperadas en 30 días»</span>, con nombre y foto.</p></div>
+    <div class="sec"><span class="num">5</span><p class="ph">Desde <span>300 USD al mes</span> · pagas una parte por resultado.</p></div>
+    <div class="sec"><span class="num">6</span><span class="bigbtn">Agenda 20 minutos</span></div>
+  </div>
+  <div class="right">
+    <h2 class="eyebrow">Tu web</h2>
+    <p class="title">Una página. Un cliente. <em>Un botón.</em></p>
+    <p class="lede" style="font-size: 23px">Tu primera web tiene un solo trabajo: que la persona correcta agende una llamada contigo.</p>
+    <ol class="rules">
+      <li><span class="num">1</span><span class="t"><b>Titular:</b> el resultado, para un cliente concreto.</span></li>
+      <li><span class="num">2</span><span class="t"><b>El dolor,</b> con las palabras de tus entrevistas.</span></li>
+      <li><span class="num">3</span><span class="t"><b>Cómo funciona,</b> en tres pasos.</span></li>
+      <li><span class="num">4</span><span class="t"><b>Prueba:</b> un caso y un número, aunque sea tu piloto.</span></li>
+      <li><span class="num">5</span><span class="t"><b>Precio o «desde»:</b> filtra a quien solo curiosea.</span></li>
+      <li><span class="num">6</span><span class="t"><b>Un solo botón:</b> agenda o WhatsApp. Nada más.</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 12 · TIPS DE WEB ============ -->
+<section class="slide" id="s12" data-tab="web">
+  <div class="head">
+    <h2 class="eyebrow">Tu web · tips</h2>
+    <p class="title" style="font-size: 54px; white-space: nowrap">Publícala esta semana. <em>Mejórala con datos.</em></p>
+  </div>
+  <div class="tips">
+    <div class="tip slab"><span class="t">Siete días</span><p>Una página bien hecha vale más que un sitio completo a medias.</p></div>
+    <div class="tip slab"><span class="t">Sus palabras</span><p>Copia frases de tus entrevistas. Tu cliente se reconoce en ellas.</p></div>
+    <div class="tip slab"><span class="t">Mide desde el día uno</span><p>Visitas → conversaciones → clientes. Si un paso se cae, sabes qué arreglar.</p></div>
+    <div class="tip slab"><span class="t">Un objetivo</span><p>Con cinco botones, nadie toca ninguno.</p></div>
+    <div class="tip slab"><span class="t">Herramientas</span><p>Sin código: Framer, Webflow o Carrd. Con IA: Lovable o v0, y publicas en Vercel.</p></div>
+  </div>
+  <div class="side">
+    <div class="box slab">
+      <p class="h">¿Y el 3D?</p>
+      <p>Vende cuando tu cliente necesita ver o tocar: un espacio, un producto técnico, un proceso difícil de explicar. Si no, distrae.</p>
+      <div class="thumbs"><img src="../assets/renders/building.png" alt="Torre 3D"><img src="../assets/renders/solar.png" alt="Kit solar 3D"><img src="../assets/renders/flow.png" alt="Recorrido de un pago en 3D"></div>
+      <div class="links"><a class="linkchip" data-if="webUrl" data-cfg-href="webUrl" href="#">Ver un ejemplo vivo de web 3D ↗</a></div>
+    </div>
+    <div class="box slab">
+      <p class="h">Imágenes y video con IA</p>
+      <p>Higgsfield: plan Free en su web, con pocos modelos. Su API es de pago, con saldo prepagado desde 5 USD. Verificado en octubre de 2026.</p>
+      <div class="links"><a class="linkchip" href="https://higgsfield.ai/creator-hub/help-center/plans/how-do-higgsfield-plans-work">Planes ↗</a><a class="linkchip" href="https://docs.higgsfield.ai/docs/quickstart">API: quickstart ↗</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13 · SKILLS: QUÉ SON ============ -->
+<section class="slide" id="s13" data-tab="agentes">
+  <div class="left">
+    <h2 class="eyebrow">Skills</h2>
+    <p class="title">Una skill es el manual que tu IA lee <em>antes de trabajar.</em></p>
+    <ul class="facts">
+      <li><span class="num">1</span><span>Es una <b>carpeta con un archivo SKILL.md</b>: nombre, cuándo usarla e instrucciones paso a paso.</span></li>
+      <li><span class="num">2</span><span>Puede incluir <b>plantillas, ejemplos y scripts</b>.</span></li>
+      <li><span class="num">3</span><span>La IA <b>la carga solo cuando la tarea lo pide</b>, así no se satura con lo que no necesita.</span></li>
+    </ul>
+    <div class="why slab"><span class="lbl">Por qué te hace escalable</span>Tu proceso deja de vivir en tu cabeza. Cualquier agente lo ejecuta igual, cada vez, y cuando mejoras la skill, mejora todo el sistema.</div>
+  </div>
+  <div class="codecard slab">
+    <div class="bar"><span class="dot" style="background: var(--key)"></span><span class="dot" style="background: var(--rim)"></span><span class="dot" style="background: var(--paper)"></span><span class="fn">confirmar-citas/SKILL.md · ejemplo</span></div>
+    <div class="body">
+      <div class="tree"><b>confirmar-citas/</b>
+├── SKILL.md
+├── plantillas/mensajes.md
+└── ejemplos/buenos-y-malos.md</div>
+      <div class="code"><span class="c">---</span>
+<span class="k">name:</span> <span class="v">confirmar-citas</span>
+<span class="k">description:</span> <span class="v">Confirma y reagenda citas de clínicas</span>
+<span class="v">  odontológicas por WhatsApp. Úsala cuando haya</span>
+<span class="v">  citas de mañana sin confirmar.</span>
+<span class="c">---</span>
+# Confirmar citas
+1. Lee la agenda de mañana.
+2. Escribe a cada paciente con la plantilla.
+3. Si pide cambio, ofrece dos horarios libres.
+4. Si menciona dolor o urgencia, pásalo a recepción.
+
+## Nunca
+- Dar indicaciones médicas.
+- Prometer horarios que no están libres.</div>
+    </div>
+  </div>
+  <div class="where">
+    <span class="lbl">Dónde se usan</span>
+    <a class="linkchip" href="https://claude.com/docs/skills/how-to">En Claude, planes de pago: se suben en .zip ↗</a>
+    <a class="linkchip" href="https://code.claude.com/docs/en/skills">En Claude Code: carpeta .claude/skills/ ↗</a>
+    <a class="linkchip" href="https://agentskills.io/specification">Formato abierto: agentskills.io ↗</a>
+  </div>
+</section>
+
+<!-- ============ 14 · TRES SKILLS ============ -->
+<section class="slide" id="s14" data-tab="agentes">
+  <div class="head">
+    <h2 class="eyebrow">Skills · las tres primeras</h2>
+    <p class="title" style="font-size: 58px">Crea estas tres antes que cualquier agente</p>
+  </div>
+  <div class="three">
+    <div class="sk slab">
+      <div class="top"><img src="../assets/renders/icon-knot.png" alt=""><span class="t">Skill de pensamiento</span></div>
+      <p class="what">Ordena cómo razona la IA antes de responder.</p>
+      <ol>
+        <li>Define el objetivo y para quién es.</li>
+        <li>Lista los supuestos y lo que falta saber.</li>
+        <li>Propón dos o tres opciones con pros y contras.</li>
+        <li>Elige una y explica por qué.</li>
+        <li>Nombra el mayor riesgo y cómo lo vigilas.</li>
+      </ol>
+      <p class="use">Para decisiones, precios y propuestas.</p>
+    </div>
+    <div class="sk slab">
+      <div class="top"><img src="../assets/renders/icon-shield.png" alt=""><span class="t">Skill de retroalimentación</span></div>
+      <p class="what">Revisa un entregable contra una rúbrica.</p>
+      <ol>
+        <li>Puntúa cada criterio de 1 a 5.</li>
+        <li>Cita la parte exacta que falla.</li>
+        <li>Propón la corrección, no solo el problema.</li>
+        <li>Cierra con un veredicto: aprobado, corregir o rehacer.</li>
+      </ol>
+      <p class="use">Para textos, ofertas y mensajes a clientes. Es la base de tu agente auditor.</p>
+    </div>
+    <div class="sk slab">
+      <div class="top"><img src="../assets/renders/icon-layers.png" alt=""><span class="t">Skill de tu proceso</span></div>
+      <p class="what">Tu servicio paso a paso, escrito para alguien nuevo.</p>
+      <ol>
+        <li>Qué datos necesita para empezar.</li>
+        <li>Los pasos, en orden.</li>
+        <li>Cómo debe verse el resultado.</li>
+        <li>Tres ejemplos buenos y tres malos.</li>
+        <li>Lo que nunca debe hacer.</li>
+      </ol>
+      <p class="use">Para el trabajo que vendes.</p>
+    </div>
+  </div>
+  <div class="note-bar"><span class="lbl">Atajo</span><span>Pídele a Claude: «Entrevístame para crear una skill de mi proceso de [tarea]». Anthropic publica una skill para eso, skill-creator.</span></div>
+</section>
+
+<!-- ============ 15 · ANATOMÍA DE UN AGENTE ============ -->
+<section class="slide" id="s15" data-tab="agentes">
+  <div class="head">
+    <h2 class="eyebrow">Agentes desde cero</h2>
+    <p class="title">Un agente es un empleado digital <em>con manual, herramientas y límites.</em></p>
+  </div>
+  <div class="render" data-anchors="agent"><img src="../assets/renders/agent.png" alt="Esfera central con un anillo y cuatro piezas alrededor: documento, llave, cubos y escudo"></div>
+  <div class="callout card" data-at="120,400" data-for="agent:cards"><b>Instrucciones y skills</b>Su rol y su manual de trabajo.</div>
+  <div class="callout card" data-at="120,700" data-for="agent:memory"><b>Memoria</b>Lo que recuerda entre tareas: clientes, historial, decisiones.</div>
+  <div class="callout card" data-at="1470,330" data-for="agent:key"><b>Herramientas</b>Lo que puede hacer: leer la agenda, enviar un WhatsApp, buscar.</div>
+  <div class="callout card" data-at="1470,700" data-for="agent:shield"><b>Límites</b>Lo que no puede hacer y cuándo pasarte el caso.</div>
+  <div class="callout card" data-at="1090,240" data-for="agent:core" style="width: 320px"><b>Modelo</b>El cerebro que razona: Claude u otro.</div>
+  <div class="callout card" data-at="540,880" data-for="agent:loop" style="width: 380px"><b>Bucle</b>Piensa, actúa, revisa el resultado y repite.</div>
+</section>
+
+<!-- ============ 16 · CONSTRUYE TU PRIMER AGENTE ============ -->
+<!-- SUPUESTO: herramientas citadas como ejemplos actuales (oct 2026). Revisa que sigan vigentes al compartir. -->
+<section class="slide" id="s16" data-tab="agentes">
+  <div class="head">
+    <h2 class="eyebrow">Agentes · tu primer agente</h2>
+    <p class="title">Seis pasos, <em>del papel a producción.</em></p>
+  </div>
+  <div class="six">
+    <div class="st slab"><span class="num">1</span><span class="t">Una tarea con entrada y salida</span><p>«Citas de mañana» entra, «mensajes enviados y respuestas anotadas» sale.</p></div>
+    <div class="st slab"><span class="num">2</span><span class="t">Escribe el proceso</span><p>Como para alguien nuevo. Esa es tu skill de proceso.</p></div>
+    <div class="st slab"><span class="num">3</span><span class="t">Solo las herramientas necesarias</span><p>Si no tiene que borrar nada, no le des permiso de borrar.</p></div>
+    <div class="st slab"><span class="num">4</span><span class="t">Prueba con 20 casos reales</span><p>Guarda las respuestas buenas y malas: son tu set de pruebas.</p></div>
+    <div class="st slab"><span class="num">5</span><span class="t">Agrega un auditor</span><p>Otro agente revisa antes de que algo llegue al cliente.</p></div>
+    <div class="st slab"><span class="num">6</span><span class="t">Aprueba tú, y suelta de a poco</span><p>Al inicio, todo pasa por ti. Con pocos errores, solo lo dudoso.</p></div>
+  </div>
+  <div class="levels">
+    <span class="lvh">Tres niveles para construirlo</span>
+    <div class="lv slab"><span class="lbl">Sin código</span><span class="t">Claude + tus skills</span><p>Tus skills activadas en Claude y un Proyecto con tus instrucciones y documentos. Para conectar WhatsApp, correo u hojas de cálculo: n8n o Make.</p></div>
+    <div class="lv slab"><span class="lbl">Poco código</span><span class="t">Subagentes en Claude Code</span><p>Un archivo <code>.md</code> en <code>.claude/agents/</code> con nombre, descripción, herramientas e instrucciones.</p></div>
+    <div class="lv slab"><span class="lbl">Código</span><span class="t">Claude Agent SDK o la API</span><p>Cuando el proceso ya está validado y el volumen lo pide.</p></div>
+  </div>
+</section>
+
+<!-- ============ 17 · AUDITORES ============ -->
+<section class="slide" id="s17" data-tab="agentes">
+  <div class="head">
+    <h2 class="eyebrow">Agentes auditores</h2>
+    <p class="title" style="font-size: 56px">Un agente hace. Otro revisa. <em>Tú decides lo dudoso.</em></p>
+  </div>
+  <div class="render" data-anchors="audit"><img src="../assets/renders/audit.png" alt="Cuatro estaciones: agente, escudo de auditor, persona y mensaje, con una flecha de regreso del auditor al agente"></div>
+  <div class="callout pill" data-place="audit:st-0" data-dx="-95" data-dy="10"><span class="metric">1 · Agente que hace</span></div>
+  <div class="callout pill" data-place="audit:st-1" data-dx="-90" data-dy="10"><span class="metric">2 · Agente auditor</span></div>
+  <div class="callout pill" data-place="audit:st-2" data-dx="-30" data-dy="10"><span class="metric">3 · Tú</span></div>
+  <div class="callout pill" data-place="audit:st-3" data-dx="-60" data-dy="10"><span class="metric">4 · Cliente</span></div>
+  <div class="callout pill" data-place="audit:back" data-dx="-170" data-dy="-58"><span class="metric" style="color: var(--key); border-color: #ffb08866; background: #1a1210">Vuelve con observaciones · máx. 2 vueltas</span></div>
+  <div class="bottom">
+    <div class="bx slab">
+      <span class="lbl">La rúbrica del auditor · ejemplo</span>
+      <ul>
+        <li><span class="check"></span>¿Nombre, fecha y hora correctos?</li>
+        <li><span class="check"></span>¿Suena como la clínica, no como un robot?</li>
+        <li><span class="check"></span>¿Cero indicaciones médicas?</li>
+      </ul>
+      <div class="verdicts"><span class="r">Aprobado</span><span class="k">Corregir</span><span>Pasar a un humano</span></div>
+    </div>
+    <div class="bx slab">
+      <span class="lbl k">Tres reglas</span>
+      <ul>
+        <li><span class="num" style="width: 30px; height: 30px; font-size: 14px">1</span>El auditor no reescribe: señala y devuelve.</li>
+        <li><span class="num" style="width: 30px; height: 30px; font-size: 14px">2</span>Lo que no puede decidir, llega a ti.</li>
+        <li><span class="num" style="width: 30px; height: 30px; font-size: 14px">3</span>Cada error que corriges se vuelve una regla en la skill. Así aprende el sistema.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 18 · PLAN DE 30 DÍAS ============ -->
+<section class="slide" id="s18" data-tab="plan">
+  <div class="head">
+    <h2 class="eyebrow">Plan</h2>
+    <p class="title">Tus próximos 30 días</p>
+  </div>
+  <div class="track"></div>
+  <div class="weeks">
+    <div class="wk">
+      <img src="../assets/renders/icon-target.png" alt="">
+      <span class="when">Semana 1</span><span class="t">Enfoque</span>
+      <ul><li>Escribe tu frase.</li><li>Llena la ficha de cliente.</li><li>Agenda y haz 10 conversaciones.</li></ul>
+      <p class="out slab"><span>Entregable</span>Frase, ficha y resumen de 10 conversaciones</p>
+    </div>
+    <div class="wk">
+      <img src="../assets/renders/icon-browser.png" alt="">
+      <span class="when">Semana 2</span><span class="t">Modelo y oferta</span>
+      <ul><li>Modelo en una página.</li><li>Cuentas y precio.</li><li>Web de una página publicada.</li></ul>
+      <p class="out slab"><span>Entregable</span>Oferta con precio y web en línea</p>
+    </div>
+    <div class="wk">
+      <img src="../assets/renders/icon-person.png" alt="">
+      <span class="when">Semana 3</span><span class="t">Primer cliente, a mano</span>
+      <ul><li>Entrega a 1–3 clientes piloto.</li><li>Anota cada paso que haces.</li><li>Cobra, aunque sea con descuento.</li></ul>
+      <p class="out slab"><span>Entregable</span>Tu proceso escrito, versión 1</p>
+    </div>
+    <div class="wk">
+      <img src="../assets/renders/icon-orb.png" alt="">
+      <span class="when">Semana 4</span><span class="t">Primer agente</span>
+      <ul><li>Skill de proceso.</li><li>Agente para la parte más repetitiva.</li><li>Auditor y tu aprobación final.</li></ul>
+      <p class="out slab"><span>Entregable</span>Agente en piloto y tu primer número</p>
+    </div>
+  </div>
+  <div class="note-bar"><span class="lbl">Un número por semana</span><span>Conversaciones → ofertas enviadas → clientes → horas por cliente. Anótalo cada viernes.</span></div>
+</section>
+
+<!-- ============ 19 · PRÓXIMA SESIÓN ============ -->
+<section class="slide" id="s19" data-tab="plan">
+  <div class="left">
+    <h2 class="eyebrow">Próxima sesión</h2>
+    <p class="title">Esto apenas empieza. <em>La próxima, construimos.</em></p>
+    <p class="lede" style="font-size: 24px">En la siguiente sesión construimos sobre lo que traigas. Mientras más traigas, más lejos llegamos en una hora.</p>
+    <div class="two">
+      <div class="bx slab">
+        <span class="lbl">Lo que haremos en la sesión</span>
+        <ul>
+          <li><span class="num" style="width: 30px; height: 30px; font-size: 14px">1</span><span><b>Revisar tu modelo</b> con tus números reales.</span></li>
+          <li><span class="num" style="width: 30px; height: 30px; font-size: 14px">2</span><span><b>Construir en vivo</b> tu primer agente y su auditor.</span></li>
+          <li><span class="num" style="width: 30px; height: 30px; font-size: 14px">3</span><span><b>Definir tu precio</b> por resultado.</span></li>
+          <li><span class="num" style="width: 30px; height: 30px; font-size: 14px">4</span><span><b>Afinar tu web</b> con lo que dijeron tus entrevistas.</span></li>
+        </ul>
+      </div>
+      <div class="bx slab trae">
+        <span class="lbl">Trae esto</span>
+        <ul>
+          <li><span class="check"></span><span>Tu frase de enfoque.</span></li>
+          <li><span class="check"></span><span>El resumen de tus 10 conversaciones.</span></li>
+          <li><span class="check"></span><span>Tu proceso escrito, aunque sea en borrador.</span></li>
+          <li><span class="check"></span><span>Tu primer número: conversaciones, ofertas o clientes.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="qrcard slab" data-if="workbookUrl">
+      <div class="qr" data-qr="workbookUrl" aria-label="Código QR del cuaderno de trabajo"></div>
+      <div>
+        <p class="t">Tu cuaderno de trabajo</p>
+        <p>Llena tu modelo, calcula si escala y genera tu primera skill. Envíame el resumen antes de la sesión.</p>
+        <a class="btn rim" data-cfg-href="workbookUrl" href="#">Abrir cuaderno <span class="mono">↗</span></a>
+      </div>
+    </div>
+    <div class="contact slab">
+      <p class="lbl k">Agenda la próxima sesión</p>
+      <div class="row">
+        <a class="btn key" data-if="calendarUrl" data-cfg-href="calendarUrl" href="#">Agendar <span class="mono">↗</span></a>
+        <a class="btn key" data-cfg-href="mailto" href="#">Escríbeme <span class="mono">↗</span></a>
+        <a class="btn" data-if="whatsapp" data-cfg-href="whatsapp" href="#">WhatsApp <span class="mono">↗</span></a>
+      </div>
+      <p class="email" data-cfg="email"></p>
+    </div>
+  </div>
+  <img class="orb" src="../assets/renders/icon-orb.png" alt="">
+</section>
+
+<script type="module">
+import { initDeck } from './deck.js';
+await initDeck({
+  tabs: [
+    ['inicio', 'Inicio', 's1'], ['enfoque', 'Enfoque', 's3'], ['modelo', 'Modelo', 's6'], ['saas', 'Service-as-a-Software', 's8'],
+    ['web', 'Tu web', 's11'], ['agentes', 'Skills y agentes', 's13'], ['plan', 'Plan', 's18'],
+  ],
+  serviceKey: 'guideService',
+  mailSubject: 'Próxima sesión de asesoría',
+});
+</script>
+</body>
+</html>

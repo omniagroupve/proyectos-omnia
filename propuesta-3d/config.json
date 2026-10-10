@@ -1,11 +1,15 @@
 {
-  "_nota": "Edita estos valores y ejecuta `npm run build` para regenerar el PDF y la web. Los campos vacíos se ocultan.",
+  "_nota": "Edita estos valores y ejecuta `npm run build` para regenerar PDFs y webs. Los campos vacíos se ocultan. mentee y sessionDate personalizan la portada de la guía; workbookUrl es el cuaderno de trabajo; webUrl es el ejemplo de web 3D.",
   "studio": "OMNIA",
   "service": "Experiencias web 3D",
+  "guideService": "Asesoría · Negocios con IA",
   "email": "omniagroupve@gmail.com",
   "whatsapp": "",
   "calendarUrl": "",
   "webUrl": "https://claude.ai/artifact/JyWwoL1Lq8JPLHFtbEMMuF",
+  "workbookUrl": "https://claude.ai/artifact/H3FN2sXVXQ81Lv5fzVtYaP",
+  "mentee": "",
+  "sessionDate": "",
   "region": "Venezuela · Colombia · remoto para LatAm",
   "edition": "Octubre 2026"
 }

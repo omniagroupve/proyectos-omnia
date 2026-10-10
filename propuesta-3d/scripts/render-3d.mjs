@@ -14,7 +14,13 @@ const SHOTS = [
   { file: 'solar', scene: 'solar', width: 1100, height: 900 },
   { file: 'flow', scene: 'flow', width: 1600, height: 640 },
   { file: 'pipeline', scene: 'pipeline', width: 1600, height: 700 },
-  ...['layers', 'target', 'spark', 'steps', 'chat', 'browser', 'console', 'coin', 'key', 'play', 'knot', 'cursor', 'gauge', 'cube']
+  // Guía de negocio con IA
+  { file: 'system', scene: 'system', width: 1500, height: 940 },
+  { file: 'focus', scene: 'focus', width: 900, height: 900 },
+  { file: 'stairs', scene: 'stairs', width: 1700, height: 760 },
+  { file: 'agent', scene: 'agent', width: 1500, height: 940 },
+  { file: 'audit', scene: 'audit', width: 1700, height: 640 },
+  ...['layers', 'target', 'spark', 'steps', 'chat', 'browser', 'console', 'coin', 'key', 'play', 'knot', 'cursor', 'gauge', 'cube', 'person', 'orb', 'shield']
     .map((kind) => ({ file: `icon-${kind}`, scene: 'icon', kind, width: 360, height: 360, pixelRatio: 1.5 })),
 ];
 

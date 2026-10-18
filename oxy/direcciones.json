@@ -1,0 +1,116 @@
+{
+  "_comentario": "Oxy · 4 direcciones de marca (Fase 2 de manualmarca). Entrada de board.py.",
+  "brand": {
+    "name": "oxy",
+    "tagline": "Péptidos para la piel",
+    "sector": "Cuidado de la piel y nutricosmética con péptidos · DTC Colombia, Venezuela y diáspora",
+    "headline": "Péptidos, sin ruido."
+  },
+  "directions": [
+    {
+      "id": "A",
+      "name": "Bruma",
+      "archetype": "Inocente + Sabio",
+      "concept": "El aire como lujo: lechosa, fresca y callada. La ciencia se nota en los datos, no en el ruido.",
+      "palette_logic": "Neutra fría (leche y bruma) + Azul O₂, el color real del oxígeno líquido",
+      "logo": {"type": "wordmark", "style": "lower", "dot": "°", "tracking": "-0.01em",
+               "why": "Wordmark minúsculo monolínea dibujado a mano: «o» circular perfecta y una burbuja «°» que se lee como oxígeno y frescura. La burbuja se separa como isotipo (o°)."},
+      "fonts": {"display": "Jost", "body": "Jost", "accent": "DM Mono", "display_weight": 300,
+                "logic": "Geométrica ligera (una familia) + mono de laboratorio para datos"},
+      "palette": [
+        {"name": "Leche", "hex": "#F5F5F2", "role": "Fondo · 60%"},
+        {"name": "Bruma", "hex": "#DCE2E2", "role": "Secundario · 30%"},
+        {"name": "Azul O2", "hex": "#A8C6D8", "role": "Acento · 10%"},
+        {"name": "Pizarra", "hex": "#2B3133", "role": "Texto"},
+        {"name": "Piedra", "hex": "#626A6B", "role": "Texto secundario"},
+        {"name": "Azul Profundo", "hex": "#3E6479", "role": "Enlaces y UI"}
+      ],
+      "voice": {"sample": "Cinco péptidos, un fluido, un paso. Tu piel no necesita más ruido.",
+                "tagline": "Péptidos, sin ruido.",
+                "say": "«5 péptidos al 4 %. Un paso, mañana y noche.»",
+                "dont": "«¡La fórmula milagrosa que borra 10 años!»"},
+      "graphics": "Burbujas (°) como sistema: viñetas, marcadores y patrón al 6 %. Línea «cadena» de péptidos de 1 px para separar datos. Esquinas rectas en tarjetas, píldoras solo en botones.",
+      "photo": "Luz de mañana nublada, superficies húmedas, vidrio esmerilado, hielo y agua. Piel real con textura, retoque mínimo, blancos fríos.",
+      "applications": ["Tubo esmerilado Bruma con wordmark Pizarra y concentración en DM Mono.", "Post 4:5: gota de producto sobre acrílico, titular en minúsculas Jost 300.", "Web: fondo Leche, botón píldora Pizarra con texto Leche (12.1:1)."],
+      "rationale": "La más cercana al efecto Rhode (restricción, minúsculas, un color de firma) pero con un territorio propio: el aire y el oxígeno, en vez del beige o el rosa."
+    },
+    {
+      "id": "B",
+      "name": "Fórmula",
+      "archetype": "Sabio + Creador",
+      "concept": "Ciencia que se lee: cada péptido con nombre, porcentaje y lote, a la vista.",
+      "palette_logic": "Monocromática azul acero + cobre (guiño al péptido de cobre GHK-Cu)",
+      "logo": {"type": "combination", "symbol": "dots", "style": "upper", "tracking": "0.16em",
+               "why": "Símbolo de cadena peptídica (cuentas enlazadas) + nombre en versales espaciadas. El símbolo sirve como app icon y sello de lote."},
+      "fonts": {"display": "Geist", "body": "Geist", "accent": "Geist Mono", "display_weight": 500,
+                "logic": "Superfamilia neogrotesca + su mono"},
+      "palette": [
+        {"name": "Agua", "hex": "#EEF3F4", "role": "Fondo · 60%"},
+        {"name": "Azul Acero", "hex": "#2D4E61", "role": "Primario · 30%"},
+        {"name": "Cobre", "hex": "#B5683F", "role": "Acento · 10%"},
+        {"name": "Cristal", "hex": "#CFDDE3", "role": "Secundario"},
+        {"name": "Tinta", "hex": "#102029", "role": "Texto"}
+      ],
+      "voice": {"sample": "GHK-Cu al 1 %, matrixyl al 3 %. Te decimos qué hace cada uno y en cuántas semanas medirlo.",
+                "tagline": "Cada péptido, con nombre.",
+                "say": "«Lote 26-041 · 1 % GHK-Cu · prueba en 8 semanas.»",
+                "dont": "«Tecnología avanzada de última generación.»"},
+      "graphics": "Tablas, fichas técnicas y cifras tabulares como gráfica. Retícula de 8 px visible en piezas editoriales. Iconos de 1.5 px.",
+      "photo": "Estudio, fondo liso Agua, producto frontal con sombra suave, macros de textura con escala métrica.",
+      "applications": ["Caja con ficha técnica impresa en Geist Mono y sello de cadena en cobre.", "Carrusel «qué hace cada péptido» con cifras grandes.", "PDP con tabla de ingredientes desplegable y lote verificable."],
+      "rationale": "Encaja si la diferenciación es la transparencia; aleja a Oxy del mercado gris de péptidos con trazabilidad visible."
+    },
+    {
+      "id": "C",
+      "name": "Jalea",
+      "archetype": "Amante + Bufón",
+      "concept": "Glow comestible: brillo, color jugoso y un guiño, con acabado premium.",
+      "palette_logic": "Complementaria suave: frambuesa + menta hielo sobre leche rosada",
+      "logo": {"type": "monogram", "shape": "rounded", "initials": "o", "style": "lower",
+               "why": "Una «o» en una pastilla brillante tipo gominola: sticker, avatar y tapa de producto. Pensada para ediciones de color por temporada."},
+      "fonts": {"display": "Instrument Serif", "body": "Figtree", "display_weight": 400,
+                "logic": "Serif display condensada + sans amable"},
+      "palette": [
+        {"name": "Leche Rosa", "hex": "#FBF3F1", "role": "Fondo · 60%"},
+        {"name": "Frambuesa", "hex": "#B8325A", "role": "Primario · 30%"},
+        {"name": "Menta Hielo", "hex": "#C9EBDF", "role": "Acento · 10%"},
+        {"name": "Ciruela", "hex": "#3A1D2B", "role": "Texto"},
+        {"name": "Mantequilla", "hex": "#F4E3B5", "role": "Apoyo"}
+      ],
+      "voice": {"sample": "Labios de vidrio, con péptidos. Ponte uno, guárdalo en el bolsillo y repite.",
+                "tagline": "Glow con fórmula.",
+                "say": "«Frambuesa helada: el tono que se ve en cada foto.»",
+                "dont": "«Estimada clienta, le informamos de nuestra promoción.»"},
+      "graphics": "Formas de gota y pastilla con brillo, tintes por producto, stickers. Tipografía grande recortada por el borde.",
+      "photo": "Flash directo, color saturado, primerísimos planos de labios y texturas brillantes, fondos planos de color.",
+      "applications": ["Tubo labial translúcido por tono con tapa Frambuesa.", "Reel: «swatch» del tono en 3 segundos.", "Web: tarjetas de tono con fondo de color plano."],
+      "rationale": "La más viral y la más cercana a la estética de belleza en redes; también la más fácil de confundir con Rhode y otras marcas de glow."
+    },
+    {
+      "id": "D",
+      "name": "Nocturno",
+      "archetype": "Mago + Gobernante",
+      "concept": "El laboratorio de noche: los péptidos trabajan mientras duermes.",
+      "palette_logic": "Oscura pizarra + perla y platino",
+      "logo": {"type": "emblem", "shape": "circle", "style": "upper", "small": "Ciencia de péptidos",
+               "why": "Sello circular con anillo de texto: funciona en relieve, estampado en caliente y tapa metálica. Solo para empaque premium y regalos."},
+      "fonts": {"display": "Bodoni Moda", "body": "Manrope", "display_weight": 500,
+                "logic": "Serif de alto contraste + sans geométrica"},
+      "palette": [
+        {"name": "Pizarra Noche", "hex": "#12161A", "role": "Primario · 60%"},
+        {"name": "Perla", "hex": "#ECE9E2", "role": "Fondo claro · 30%"},
+        {"name": "Platino", "hex": "#B7BCC1", "role": "Acento · 10%"},
+        {"name": "Medianoche", "hex": "#1F2C36", "role": "Secundario"},
+        {"name": "Humo", "hex": "#7D868D", "role": "Neutro"}
+      ],
+      "voice": {"sample": "Cuando apagas la luz, la piel empieza su turno. Dale los péptidos para trabajar.",
+                "tagline": "Mientras duermes.",
+                "say": "«Un ritual de noche en dos pasos.»",
+                "dont": "«¡Oferta imperdible, solo por hoy!»"},
+      "graphics": "Filetes platino de 0.5 pt, anillos concéntricos, iconos de línea fina, papel algodón con relieve seco.",
+      "photo": "Claroscuro, luz puntual fría, fondos oscuros, gotas sobre metal y vidrio negro.",
+      "applications": ["Estuche negro con sello en estampado platino.", "Post: frasco sobre fondo oscuro con titular Bodoni en Perla.", "Web en modo oscuro con detalles platino."],
+      "rationale": "Posiciona a Oxy en gama alta y regalo; sacrifica frescura y se aleja de lo «fresco» que pediste."
+    }
+  ]
+}

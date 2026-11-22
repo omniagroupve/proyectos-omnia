@@ -1,15 +1,15 @@
 # Andrés Chumaceiro · Ron Santa Teresa
 Due diligence y mensaje de LinkedIn para Panal · 22 nov 2026
 
-**Objetivo:** que Santa Teresa sea el patrocinante principal de bebidas del evento de Panal, con Andrés en el panel.
+**Objetivo:** que Santa Teresa sea el patrocinante principal de bebidas dEnjambre by Panal (cierre de año del ecosistema tecnológico), con Andrés en el panel.
 
 ---
 
 ## 1. El mensaje
 
-### A. Nota de conexión (255 de 300 caracteres)
+### A. Nota de conexión (252 de 300 caracteres)
 
-> Andrés, en la gala del XO se recordó que "todos somos codepositarios". Panal es esa idea aplicada al emprendimiento venezolano: cada celda sostiene a las demás. Quiero que Santa Teresa sea el brindis de nuestro panel, y usted una de sus voces. ¿Le cuento?
+> Andrés, en la gala del XO se recordó que "todos somos codepositarios". Esa idea es Enjambre by Panal: el cierre de año del ecosistema tecnológico venezolano. Quiero que el brindis de esa noche sea Santa Teresa, y que usted esté en el panel. ¿Le cuento?
 
 ### B. Mensaje cuando acepte (o por InMail)
 
@@ -17,10 +17,10 @@ Due diligence y mensaje de LinkedIn para Panal · 22 nov 2026
 >
 > Este año Santa Teresa hizo algo que casi ninguna empresa venezolana hace: abrió su capital en la Bolsa de Caracas para que más venezolanos sean dueños. Y con Alcatraz lleva más de 20 años demostrando que una empresa puede convertir a alguien sin oportunidades en emprendedor.
 >
-> Panal hace eso en el ecosistema: conecta emprendedores con fondos, aceleradoras y marcas, celda por celda. [FECHA] · [LUGAR] · [N] fundadores e inversionistas.
+> Panal hace eso en el ecosistema: conecta emprendedores con fondos, aceleradoras y marcas, celda por celda. Y cada diciembre lo reunimos todo en **Enjambre by Panal**, el evento de cierre de año del ecosistema tecnológico venezolano: fundadores, inversionistas, corporativos y talento en una misma noche, para hacer balance del año y arrancar el siguiente juntos. [FECHA] · [LUGAR] · [N] asistentes.
 >
 > Le propongo dos cosas:
-> 1. Que Santa Teresa sea la bebida oficial y el brindis que cierra el panel.
+> 1. Que Santa Teresa sea la bebida oficial de Enjambre y el brindis de cierre de año. Ustedes acaban de lanzar el 1796 X.O. para las celebraciones de diciembre, y no se me ocurre un mejor escenario para él.
 > 2. Que usted esté en ese panel, con el tema "De la hacienda al ecosistema: qué significa ser codepositario hoy". Usted pasó de abogado a asuntos públicos y luego a operar el negocio. Pocos pueden contar esa historia mejor.
 >
 > ¿Tiene 15 minutos la semana que viene?

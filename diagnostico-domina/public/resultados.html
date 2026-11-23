@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Resultados · Panal × Domina</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0B0B0C;--card:#141416;--line:#26262A;--ink:#F4F2EC;--mute:#9A9890;--honey:#FFB800}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;padding:32px 16px;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto}
+header{display:flex;align-items:center;gap:14px;margin-bottom:28px;flex-wrap:wrap}
+h1{font-family:'Space Grotesk';font-size:30px;letter-spacing:-.02em}
+h1 em{color:var(--honey);font-style:normal}
+img{height:16px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.card h2{font-family:'Space Grotesk';font-size:22px}
+.meta{color:var(--mute);font-size:13px;margin-bottom:14px}
+.r{border-top:1px solid var(--line);padding:10px 0}
+.r .p{color:var(--mute);font-size:13px}
+.r .a{font-size:15px;white-space:pre-wrap}
+.r .a b{color:var(--honey);font-weight:600}
+.login{max-width:380px;margin:80px auto;text-align:center}
+input{width:100%;background:var(--card);border:1px solid var(--line);color:var(--ink);padding:14px;border-radius:10px;font:inherit;margin:18px 0 10px}
+button{background:var(--honey);border:0;padding:12px 20px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer}
+.empty{color:var(--mute)}
+</style></head><body><div class="wrap" id="app"></div>
+<script>
+const app=document.getElementById('app');
+const esc=s=>String(s??'—').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+function fmt(v){ if(v==null||v==='') return '—'; if(Array.isArray(v)) return v.map(esc).join('\n');
+  if(typeof v==='object') return Object.entries(v).map(([k,x])=>`<b>${esc(x)}</b> · ${esc(k)}`).join('\n'); return esc(v); }
+async function load(key){
+  const r=await fetch('/api/responses?key='+encodeURIComponent(key));
+  if(!r.ok){ localStorage.removeItem('pd-key'); return login('Clave incorrecta'); }
+  localStorage.setItem('pd-key',key);
+  const data=await r.json();
+  app.innerHTML=`<header><h1>Respuestas <em>Panal × Domina</em></h1><img src="/domina-white.png" alt="Domina"></header>
+  ${data.length?`<div class="grid">${data.map(d=>`<div class="card"><h2>${esc(d.respuestas?.nombre?.respuesta)}</h2>
+    <div class="meta">${esc(d.respuestas?.rol?.respuesta)} · ${new Date(d.recibido||d.enviado).toLocaleString('es')}</div>
+    ${Object.values(d.respuestas).map(x=>`<div class="r"><div class="p">${esc(x.pregunta)}</div><div class="a">${fmt(x.respuesta)}</div></div>`).join('')}
+  </div>`).join('')}</div>`:'<p class="empty">Aún no hay respuestas.</p>'}`;
+}
+function login(msg=''){
+  app.innerHTML=`<div class="login"><h1>Resultados</h1><p class="empty">${msg||'Ingresa la clave de administrador'}</p>
+  <input id="k" type="password" placeholder="Clave"><button id="b">Ver respuestas</button></div>`;
+  const go=()=>load(document.getElementById('k').value); document.getElementById('b').onclick=go;
+  document.getElementById('k').onkeydown=e=>{if(e.key==='Enter')go()};
+}
+const k=new URLSearchParams(location.search).get('key')||localStorage.getItem('pd-key'); k?load(k):login();
+</script></body></html>

@@ -581,12 +581,27 @@ function finalScreen(){
 async function submit(){
   const payload = buildPayload();
   let ok=false;
-  try{
-    const r = await fetch('/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    ok = r.ok;
-  }catch(e){}
+  if(/vercel\.app$/.test(location.hostname)){
+    try{ const r = await fetch('/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); ok = r.ok; }catch(e){}
+  }
+  if(!ok){
+    try{
+      const r = await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(flatten(payload))});
+      const j = await r.json().catch(()=>({}));
+      ok = r.ok && String(j.success)==='true';
+    }catch(e){}
+  }
   submitted = ok; save();
   showThanks(ok,payload);
+}
+const FORM_ENDPOINT='https://formsubmit.co/ajax/lucastumpog@gmail.com';
+function flatten(p){
+  const name=p.respuestas.nombre?.respuesta||'Sin nombre';
+  const o={_subject:`Diagnóstico IA Domina · ${name}`,_template:'table',_captcha:'false'};
+  Object.values(p.respuestas).forEach((r,k)=>{ let v=r.respuesta;
+    if(Array.isArray(v)) v=v.join(' | '); else if(v&&typeof v==='object') v=Object.entries(v).map(([a,b])=>`${a}: ${b}`).join(' | ');
+    o[`${String(k+1).padStart(2,'0')}. ${r.pregunta}`.slice(0,180)] = v==null||v===''?'—':String(v); });
+  return o;
 }
 function buildPayload(){
   const out={ enviado: new Date().toISOString(), respuestas:{} };

@@ -7,17 +7,17 @@
 <meta name="description" content="Diagnóstico previo al programa de Inteligencia Artificial y Automatización de Procesos diseñado por Panal para Domina.">
 <meta property="og:title" content="Panal × Domina · Diagnóstico IA">
 <meta property="og:description" content="8 minutos para diseñar un programa de IA a la medida de Domina.">
-<meta name="theme-color" content="#111113">
-<link rel="icon" href="/panal-symbol.svg" type="image/svg+xml">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="/panal-symbol-dark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#111113; --bg2:#1A1A1D; --line:#26262A; --line2:#34343a;
-  --ink:#F5F5F7; --mute:#9A9890; --dim:#5f5e59;
+  --bg:#FFFFFF; --bg2:#F5F5F7; --line:#E8E8ED; --line2:#D2D2D7;
+  --ink:#111113; --mute:#6E6E73; --dim:#A1A1A6;
   --honey:#FF9F0A; --honey2:#FFB340; --honeyDeep:#E68A00;
-  --honeyGlow:rgba(255,159,10,.14);
+  --honeyGlow:rgba(255,159,10,.18); --card:#F5F5F7; --cardHover:#EDEDF0;
   --r:14px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -28,10 +28,10 @@ input,textarea{font:inherit;color:inherit}
 .help{font-size:17px}
 
 /* ---------- background ---------- */
-#hex{position:fixed;inset:0;z-index:0;opacity:.55;pointer-events:none}
-.glow{position:fixed;width:70vmax;height:70vmax;border-radius:50%;filter:blur(90px);opacity:.16;pointer-events:none;z-index:0;
+#hex{position:fixed;inset:0;z-index:0;opacity:1;pointer-events:none}
+.glow{position:fixed;width:70vmax;height:70vmax;border-radius:50%;filter:blur(100px);opacity:.07;pointer-events:none;z-index:0;
   background:radial-gradient(circle,var(--honey),transparent 60%);transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
-.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;
+.grain{display:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
 /* ---------- top bar ---------- */
@@ -42,11 +42,11 @@ header{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:c
 .x{color:var(--dim);font-size:15px}
 .domina{height:17px;width:auto;display:block;opacity:.95}
 .section-tag{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);white-space:nowrap;
-  border:1px solid var(--line);padding:7px 12px;border-radius:99px;background:rgba(20,20,22,.6);backdrop-filter:blur(8px);
+  border:1px solid var(--line);padding:7px 12px;border-radius:99px;background:rgba(255,255,255,.8);backdrop-filter:blur(8px);
   transition:opacity .4s}
-.section-tag b{color:var(--honey);font-weight:600}
+.section-tag b{color:var(--ink);font-weight:600}
 .progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--honeyDeep),var(--honey2));
-  z-index:11;width:0;transition:width .6s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 18px var(--honey)}
+  z-index:11;width:0;transition:width .6s cubic-bezier(.2,.8,.2,1);}
 
 /* ---------- stage ---------- */
 main{position:relative;z-index:2;height:100%;display:flex;align-items:center;justify-content:center;padding:90px clamp(16px,5vw,40px) 100px;overflow-y:auto}
@@ -61,15 +61,15 @@ main{position:relative;z-index:2;height:100%;display:flex;align-items:center;jus
 @keyframes outDown{to{opacity:0;transform:translateY(40px)}}
 .stagger>*{animation:in .6s cubic-bezier(.2,.8,.2,1) both}
 
-.qnum{display:flex;align-items:center;gap:10px;color:var(--honey);font-weight:600;font-size:14px;margin-bottom:16px}
-.qnum .hexi{width:22px;height:24px;display:grid;place-items:center;font-size:11px;color:#111;
+.qnum{display:flex;align-items:center;gap:10px;color:var(--mute);font-weight:600;font-size:14px;margin-bottom:16px}
+.qnum .hexi{width:22px;height:24px;display:grid;place-items:center;font-size:11px;color:#111113;
   background:var(--honey);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
 h1,h2{letter-spacing:-.035em;line-height:1.06;font-weight:600}
 h1{font-size:clamp(38px,7vw,72px)}
 h2{font-size:clamp(25px,4.2vw,38px)}
-h2 em,h1 em{font-style:normal;color:var(--honey)}
+h2 em,h1 em{font-style:normal;color:var(--mute)}
 .help{color:var(--mute);font-size:clamp(15px,2vw,17px);line-height:1.55;margin-top:14px;max-width:620px}
-.req{color:var(--honey)}
+.req{color:var(--dim)}
 
 /* ---------- inputs ---------- */
 .field{margin-top:34px}
@@ -78,50 +78,50 @@ h2 em,h1 em{font-style:normal;color:var(--honey)}
 .text-in:focus{border-color:var(--honey)}
 .text-in::placeholder,textarea::placeholder{color:var(--dim)}
 textarea.text-in{resize:none;min-height:120px;font-size:clamp(17px,2.2vw,21px);line-height:1.5;border:1px solid var(--line2);
-  border-radius:var(--r);padding:16px 18px;background:rgba(20,20,22,.55)}
+  border-radius:var(--r);padding:16px 18px;background:var(--card)}
 textarea.text-in:focus{border-color:var(--honey);box-shadow:0 0 0 4px var(--honeyGlow)}
 
 .opts{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
 .opts.one{grid-template-columns:1fr}
 .opt{display:flex;align-items:center;gap:12px;text-align:left;padding:14px 16px;border:1px solid var(--line2);border-radius:var(--r);
-  background:rgba(20,20,22,.6);backdrop-filter:blur(6px);transition:all .18s;font-size:15.5px;line-height:1.35;position:relative}
-.opt:hover{border-color:#55545a;background:rgba(32,32,35,.8)}
+  background:rgba(245,245,247,.92);backdrop-filter:blur(6px);transition:all .18s;font-size:15.5px;line-height:1.35;position:relative}
+.opt:hover{border-color:#A1A1A6;background:#EDEDF0}
 .opt .k{flex:none;width:26px;height:26px;border-radius:7px;border:1px solid var(--line2);display:grid;place-items:center;
   font-size:12px;font-weight:600;color:var(--mute);transition:all .18s}
 .opt .t small{display:block;color:var(--mute);font-size:13px;margin-top:3px}
-.opt.sel{border-color:var(--honey);background:linear-gradient(135deg,rgba(255,159,10,.16),rgba(255,159,10,.04));box-shadow:0 0 0 1px var(--honey) inset}
-.opt.sel .k{background:var(--honey);border-color:var(--honey);color:#111}
+.opt.sel{border-color:var(--honey);background:#FFF6E8;box-shadow:0 0 0 1px var(--honey) inset}
+.opt.sel .k{background:var(--honey);border-color:var(--honey);color:#111113}
 .opt .ic{font-size:20px;flex:none}
 .opt.pop{animation:pop .3s}
 @keyframes pop{50%{transform:scale(.97)}}
 .other-in{margin-top:12px;display:none}
 .other-in.show{display:block}
 .counter{margin-top:12px;font-size:13px;color:var(--mute)}
-.counter b{color:var(--honey)}
+.counter b{color:var(--ink)}
 
 /* level ladder */
 .ladder{display:grid;gap:10px}
 .rung{display:grid;grid-template-columns:56px 1fr;gap:16px;align-items:center;text-align:left;padding:14px 18px;border:1px solid var(--line2);
-  border-radius:var(--r);background:rgba(20,20,22,.6);transition:all .2s}
-.rung:hover{border-color:#55545a}
+  border-radius:var(--r);background:rgba(245,245,247,.92);transition:all .2s}
+.rung:hover{border-color:#A1A1A6}
 .rung .lv{font-weight:700;font-size:26px;color:var(--dim);display:flex;align-items:center;gap:6px}
 .rung .lv i{display:block;width:8px;height:22px;border-radius:2px;background:var(--line2)}
 .rung b{font-weight:600;font-size:17px;display:block}
 .rung span{color:var(--mute);font-size:14px;line-height:1.4}
-.rung.sel{border-color:var(--honey);background:linear-gradient(135deg,rgba(255,159,10,.16),rgba(255,159,10,.03))}
-.rung.sel .lv{color:var(--honey)}
+.rung.sel{border-color:var(--honey);background:#FFF6E8;box-shadow:0 0 0 1px var(--honey) inset}
+.rung.sel .lv{color:var(--ink)}
 
 /* scale */
 .scale{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:8px}
 .scale button{aspect-ratio:1/1;max-height:70px;border:1px solid var(--line2);border-radius:12px;font-size:22px;font-weight:600;
-  background:rgba(20,20,22,.6);transition:all .18s}
-.scale button:hover{border-color:#55545a}
-.scale button.sel{background:var(--honey);color:#111;border-color:var(--honey);transform:translateY(-3px);box-shadow:0 10px 30px -10px var(--honey)}
+  background:rgba(245,245,247,.92);transition:all .18s}
+.scale button:hover{border-color:#A1A1A6}
+.scale button.sel{background:var(--honey);color:#111113;border-color:var(--honey);transform:translateY(-3px);box-shadow:0 10px 30px -10px var(--honey)}
 .scale-l{display:flex;justify-content:space-between;color:var(--mute);font-size:13px;margin-top:10px}
 
 /* slider */
 .slider-wrap{padding-top:10px}
-.slider-val{font-size:clamp(40px,8vw,64px);font-weight:700;color:var(--honey);letter-spacing:-.03em}
+.slider-val{font-size:clamp(40px,8vw,64px);font-weight:600;color:var(--ink);letter-spacing:-.03em}
 .slider-val small{font-size:.35em;color:var(--mute);font-weight:500;margin-left:8px;letter-spacing:0}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:9px;margin-top:20px;
   background:linear-gradient(90deg,var(--honey) var(--p,50%),var(--line2) var(--p,50%));outline:none}
@@ -131,29 +131,29 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;background:var(--hone
 
 /* matrix */
 .matrix{display:grid;gap:10px}
-.mrow{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r);background:rgba(20,20,22,.55)}
+.mrow{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r);background:rgba(245,245,247,.92)}
 .mrow .lbl{font-size:15px}
 .mrow .lbl small{display:block;color:var(--mute);font-size:12.5px;margin-top:2px}
 .pills{display:flex;gap:6px}
-.pills button{padding:7px 11px;border-radius:99px;border:1px solid var(--line2);font-size:13px;color:var(--mute);transition:all .15s;white-space:nowrap}
-.pills button.sel{background:var(--honey);color:#111;border-color:var(--honey);font-weight:600}
+.pills button{padding:7px 11px;border-radius:99px;border:1px solid var(--line2);background:#fff;font-size:13px;color:var(--mute);transition:all .15s;white-space:nowrap}
+.pills button.sel{background:var(--honey);color:#111113;border-color:var(--honey);font-weight:600}
 @media (max-width:560px){.mrow{grid-template-columns:1fr}.pills button{flex:1;padding:8px 4px}}
 
 /* rank */
 .rank{display:grid;gap:8px}
-.rk{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line2);border-radius:var(--r);background:rgba(20,20,22,.6);
+.rk{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line2);border-radius:var(--r);background:rgba(245,245,247,.92);
   text-align:left;transition:all .18s;font-size:15px}
 .rk .pos{flex:none;width:30px;height:32px;display:grid;place-items:center;font-weight:700;font-size:14px;color:var(--dim);
   background:var(--line);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);transition:all .18s}
-.rk.sel{border-color:var(--honey)}
-.rk.sel .pos{background:var(--honey);color:#111}
+.rk.sel{border-color:var(--honey);background:#FFF6E8}
+.rk.sel .pos{background:var(--honey);color:#111113}
 .rk .t small{display:block;color:var(--mute);font-size:12.5px;margin-top:2px}
 
 /* buttons */
 .actions{display:flex;align-items:center;gap:16px;margin-top:34px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:10px;background:var(--honey);color:#111;font-weight:600;padding:14px 24px;border-radius:12px;
-  font-size:16px;transition:all .2s;box-shadow:0 10px 30px -12px var(--honey)}
-.btn:hover{background:var(--honey2);transform:translateY(-1px)}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;font-weight:600;padding:14px 24px;border-radius:12px;
+  font-size:16px;transition:all .2s;box-shadow:0 10px 24px -14px rgba(17,17,19,.6)}
+.btn:hover{background:#2a2a2e;transform:translateY(-1px)}
 .btn:disabled{opacity:.35;pointer-events:none;box-shadow:none}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line2);box-shadow:none}
 .hint{color:var(--dim);font-size:13px}
@@ -163,35 +163,35 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;background:var(--hone
 
 /* nav */
 .nav{position:fixed;right:clamp(16px,4vw,40px);bottom:22px;z-index:10;display:flex;gap:6px}
-.nav button{width:42px;height:42px;border-radius:11px;border:1px solid var(--line2);background:rgba(20,20,22,.8);backdrop-filter:blur(8px);display:grid;place-items:center;transition:all .15s}
-.nav button:hover{border-color:var(--honey);color:var(--honey)}
+.nav button{width:42px;height:42px;border-radius:11px;border:1px solid var(--line2);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);display:grid;place-items:center;transition:all .15s}
+.nav button:hover{border-color:var(--ink)}
 .nav button:disabled{opacity:.3;pointer-events:none}
 .foot{position:fixed;left:clamp(16px,4vw,40px);bottom:30px;z-index:10;font-size:12px;color:var(--dim)}
 
 /* welcome */
-.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--honey);
-  border:1px solid rgba(255,159,10,.35);padding:7px 12px;border-radius:99px;margin-bottom:26px;background:rgba(255,159,10,.06)}
-.eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--honey);box-shadow:0 0 10px var(--honey);animation:blink 1.6s infinite}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);
+  border:1px solid var(--line2);padding:7px 12px;border-radius:99px;margin-bottom:26px;background:#fff}
+.eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--honey);animation:blink 1.6s infinite}
 @keyframes blink{50%{opacity:.3}}
 .cobrand{display:flex;align-items:center;gap:18px;margin-bottom:34px}
 .cobrand .panal-logo{height:38px}
 .cobrand .domina{height:30px}
 .cobrand .x{font-size:22px}
 .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:34px}
-.fact{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:rgba(20,20,22,.55)}
-.fact b{font-size:26px;color:var(--honey);display:block;letter-spacing:-.02em}
+.fact{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:rgba(245,245,247,.92)}
+.fact b{font-size:26px;color:var(--ink);font-weight:600;display:block;letter-spacing:-.02em}
 .fact span{color:var(--mute);font-size:13px}
 @media (max-width:560px){.facts{grid-template-columns:1fr 1fr}.facts .fact:last-child{grid-column:span 2}}
 
 /* section intro */
 .sec-num{font-size:clamp(80px,18vw,160px);font-weight:700;line-height:.9;letter-spacing:-.05em;
-  -webkit-text-stroke:1.5px var(--honey);color:transparent;margin-bottom:10px}
+  color:var(--line2);margin-bottom:10px}
 .sec-list{margin-top:26px;display:flex;flex-wrap:wrap;gap:8px}
-.sec-list span{font-size:13px;border:1px solid var(--line2);padding:6px 11px;border-radius:99px;color:var(--mute)}
+.sec-list span{font-size:13px;background:#fff;border:1px solid var(--line2);padding:6px 11px;border-radius:99px;color:var(--mute)}
 
 /* final */
 .summary{margin-top:30px;display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
-.sum{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:rgba(20,20,22,.6)}
+.sum{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:rgba(245,245,247,.92)}
 .sum span{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.1em}
 .sum b{display:block;font-size:19px;margin-top:6px;line-height:1.25}
 .meter{height:8px;border-radius:9px;background:var(--line);margin-top:10px;overflow:hidden}
@@ -219,9 +219,9 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;background:var(--hone
 
 <header>
   <div class="brand">
-    <img class="panal-logo" src="/panal-logo-white.svg" alt="Panal">
+    <img class="panal-logo" src="/panal-logo-dark.svg" alt="Panal">
     <span class="x">×</span>
-    <img class="domina" src="/domina-white.png" alt="Domina">
+    <img class="domina" src="/domina-black.png" alt="Domina">
   </div>
   <div class="section-tag" id="sectionTag"></div>
 </header>
@@ -456,11 +456,11 @@ function welcome(){
   return `<div class="stagger">
     <div class="eyebrow" style="animation-delay:.05s"><i></i> Diagnóstico previo · Programa IA</div>
     <div class="cobrand" style="animation-delay:.12s">
-      <img class="panal-logo" src="/panal-logo-white.svg" alt="Panal">
-      <span class="x">×</span><img class="domina" src="/domina-white.png" alt="Domina">
+      <img class="panal-logo" src="/panal-logo-dark.svg" alt="Panal">
+      <span class="x">×</span><img class="domina" src="/domina-black.png" alt="Domina">
     </div>
     <h1 style="animation-delay:.2s">Construyamos el curso de IA <em>de Domina</em>.</h1>
-    <p class="help" style="animation-delay:.3s;font-size:clamp(16px,2.2vw,19px)">Antes de diseñar el programa de <b style="color:var(--ink)">Inteligencia Artificial y Automatización de Procesos</b>, queremos entender cómo trabajan, qué les quita tiempo y hasta dónde quieren llegar. Sus respuestas definen el rumbo de cada una de las 6 horas.</p>
+    <p class="help" style="animation-delay:.3s;font-size:clamp(16px,2.2vw,19px)">Antes de diseñar el programa de <b style="color:var(--ink);font-weight:600">Inteligencia Artificial y Automatización de Procesos</b>, queremos entender cómo trabajan, qué les quita tiempo y hasta dónde quieren llegar. Sus respuestas definen el rumbo de cada una de las 6 horas.</p>
     <div class="facts" style="animation-delay:.4s">
       <div class="fact"><b>~8 min</b><span>para completarlo</span></div>
       <div class="fact"><b>${qTotal()}</b><span>preguntas rápidas</span></div>
@@ -505,7 +505,7 @@ function input(q){
         <span class="lv">${k+1}<span style="display:flex;gap:3px;margin-left:4px">${[0,1,2,3,4].map(b=>`<i style="${b<=k?'background:'+(v===k?'var(--honey)':'#55545a'):''};height:${8+b*3.5}px"></i>`).join('')}</span></span>
         <div><b>${o.t}</b><span>${o.d}</span></div></button>`).join('')}</div>`;
     case 'scale': return `<div class="scale" style="--n:${q.n}">${Array.from({length:q.n},(_,k)=>`<button class="${v===k+1?'sel':''}" data-k="${k+1}">${k+1}</button>`).join('')}</div>
-        <div class="scale-l"><span>${q.labels[0]}</span><span id="scaleV" style="color:var(--honey)">${v&&q.valueLabels?q.valueLabels[v-1]:''}</span><span>${q.labels[1]}</span></div>`;
+        <div class="scale-l"><span>${q.labels[0]}</span><span id="scaleV" style="color:var(--ink);font-weight:600">${v&&q.valueLabels?q.valueLabels[v-1]:''}</span><span>${q.labels[1]}</span></div>`;
     case 'slider': { const val=v??q.def; return `<div class="slider-wrap"><div class="slider-val" id="sv"></div>
         <input type="range" id="rg" min="${q.min}" max="${q.max}" step="${q.step}" value="${val}"></div>`; }
     case 'matrix': return `<div class="matrix">${q.rows.map((r,k)=>`<div class="mrow"><div class="lbl">${r[0]}<small>${r[1]}</small></div>
@@ -610,7 +610,7 @@ function showThanks(ok,payload){
   box.innerHTML = `
     <div class="check"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>
     <h1 style="font-size:clamp(34px,6vw,58px)">¡Gracias${name?', '+esc(name):''}!</h1>
-    <p class="help">${ok?'Recibimos tus respuestas. Con esto, el equipo de <b style="color:var(--ink)">Panal</b> diseñará una propuesta de curso a la medida de Domina y te la compartirá en los próximos días.':'No pudimos enviar automáticamente. Por favor descarga tus respuestas y compártelas con Panal.'}</p>
+    <p class="help">${ok?'Recibimos tus respuestas. Con esto, el equipo de <b style="color:var(--ink);font-weight:600">Panal</b> diseñará una propuesta de curso a la medida de Domina y te la compartirá en los próximos días.':'No pudimos enviar automáticamente. Por favor descarga tus respuestas y compártelas con Panal.'}</p>
     <div class="summary">
       <div class="sum"><span>Nivel de IA actual</span><b>${lvl?lvl+' / 5 · '+lvlName:'—'}</b><div class="meter"><i data-w="${lvl?lvl*20:0}"></i></div></div>
       <div class="sum"><span>Tiempo recuperable</span><b>~${yearly.toLocaleString('es')} h / año</b><div style="color:var(--mute);font-size:13px;margin-top:6px">por persona, si automatizamos lo repetitivo</div></div>
@@ -620,7 +620,7 @@ function showThanks(ok,payload){
       <button class="btn ${ok?'ghost':''}" id="dl">Descargar mis respuestas</button>
       <button class="skip" id="edit">Revisar o cambiar respuestas</button>
     </div>
-    <div style="margin-top:44px;display:flex;align-items:center;gap:14px"><img src="/panal-symbol.svg" alt="" style="height:34px"><span style="font-weight:600;letter-spacing:-.02em;font-size:18px">Tú completas el panal.</span></div>`;
+    <div style="margin-top:44px;display:flex;align-items:center;gap:14px"><img src="/panal-symbol-dark.svg" alt="" style="height:34px"><span style="font-weight:600;letter-spacing:-.02em;font-size:18px">Tú completas el panal.</span></div>`;
   requestAnimationFrame(()=>box.querySelectorAll('.meter i').forEach(m=>m.style.width=m.dataset.w+'%'));
   $('#dl').onclick=()=>download(payload);
   $('#edit').onclick=()=>{ i=1; render(-1); };
@@ -673,9 +673,9 @@ render=function(dir){ _render(dir); if(Q[i].type==='final'){ setTimeout(submit,9
         const near=Math.max(0,1-d/220);
         const fade = Math.min(1, (cx/W)*1.3) * 0.9;  // más visible a la derecha
         x.lineWidth=1;
-        x.strokeStyle=`rgba(255,159,10,${(0.035+wave*0.05+near*0.35)*fade})`;
+        x.strokeStyle= near>0.05 ? `rgba(255,159,10,${(near*0.55)*fade})` : `rgba(17,17,19,${(0.03+wave*0.035)*fade})`;
         hex(cx,cy,R-2); x.stroke();
-        if(near>0.25 || (wave>0.985)){ x.fillStyle=`rgba(255,159,10,${(near*0.12+ (wave>0.985?0.04:0))*fade})`; x.fill(); }
+        if(near>0.25 || (wave>0.985)){ x.fillStyle=`rgba(255,159,10,${(near*0.10+ (wave>0.985?0.05:0))*fade})`; x.fill(); }
       }
     }
     if(!reduce) requestAnimationFrame(draw);

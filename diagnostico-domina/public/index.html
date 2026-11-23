@@ -8,7 +8,7 @@
 <meta property="og:title" content="Panal × Domina · Diagnóstico IA">
 <meta property="og:description" content="8 minutos para diseñar un programa de IA a la medida de Domina.">
 <meta name="theme-color" content="#FFFFFF">
-<link rel="icon" href="/panal-symbol-dark.svg" type="image/svg+xml">
+<link rel="icon" href="panal-symbol-dark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -219,9 +219,9 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;background:var(--hone
 
 <header>
   <div class="brand">
-    <img class="panal-logo" src="/panal-logo-dark.svg" alt="Panal">
+    <img class="panal-logo" src="panal-logo-dark.svg" alt="Panal">
     <span class="x">×</span>
-    <img class="domina" src="/domina-black.png" alt="Domina">
+    <img class="domina" src="domina-black.png" alt="Domina">
   </div>
   <div class="section-tag" id="sectionTag"></div>
 </header>
@@ -456,8 +456,8 @@ function welcome(){
   return `<div class="stagger">
     <div class="eyebrow" style="animation-delay:.05s"><i></i> Diagnóstico previo · Programa IA</div>
     <div class="cobrand" style="animation-delay:.12s">
-      <img class="panal-logo" src="/panal-logo-dark.svg" alt="Panal">
-      <span class="x">×</span><img class="domina" src="/domina-black.png" alt="Domina">
+      <img class="panal-logo" src="panal-logo-dark.svg" alt="Panal">
+      <span class="x">×</span><img class="domina" src="domina-black.png" alt="Domina">
     </div>
     <h1 style="animation-delay:.2s">Construyamos el curso de IA <em>de Domina</em>.</h1>
     <p class="help" style="animation-delay:.3s;font-size:clamp(16px,2.2vw,19px)">Antes de diseñar el programa de <b style="color:var(--ink);font-weight:600">Inteligencia Artificial y Automatización de Procesos</b>, queremos entender cómo trabajan, qué les quita tiempo y hasta dónde quieren llegar. Sus respuestas definen el rumbo de cada una de las 6 horas.</p>
@@ -620,7 +620,7 @@ function showThanks(ok,payload){
       <button class="btn ${ok?'ghost':''}" id="dl">Descargar mis respuestas</button>
       <button class="skip" id="edit">Revisar o cambiar respuestas</button>
     </div>
-    <div style="margin-top:44px;display:flex;align-items:center;gap:14px"><img src="/panal-symbol-dark.svg" alt="" style="height:34px"><span style="font-weight:600;letter-spacing:-.02em;font-size:18px">Tú completas el panal.</span></div>`;
+    <div style="margin-top:44px;display:flex;align-items:center;gap:14px"><img src="panal-symbol-dark.svg" alt="" style="height:34px"><span style="font-weight:600;letter-spacing:-.02em;font-size:18px">Tú completas el panal.</span></div>`;
   requestAnimationFrame(()=>box.querySelectorAll('.meter i').forEach(m=>m.style.width=m.dataset.w+'%'));
   $('#dl').onclick=()=>download(payload);
   $('#edit').onclick=()=>{ i=1; render(-1); };

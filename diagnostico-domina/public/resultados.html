@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Resultados · Panal × Domina</title>
-<link rel="icon" href="/panal-symbol-dark.svg" type="image/svg+xml">
+<link rel="icon" href="panal-symbol-dark.svg" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#FFFFFF;--card:#F5F5F7;--line:#E8E8ED;--ink:#111113;--mute:#6E6E73;--honey:#FF9F0A}
@@ -37,7 +37,7 @@ async function load(key){
   if(!r.ok){ localStorage.removeItem('pd-key'); return login('Clave incorrecta'); }
   localStorage.setItem('pd-key',key);
   const data=await r.json();
-  app.innerHTML=`<header><img src="/panal-logo-dark.svg" alt="Panal" style="height:24px"><span style="color:#5f5e59">×</span><img src="/domina-black.png" alt="Domina"><h1 style="width:100%;margin-top:14px">Respuestas del diagnóstico</h1></header>
+  app.innerHTML=`<header><img src="panal-logo-dark.svg" alt="Panal" style="height:24px"><span style="color:#5f5e59">×</span><img src="domina-black.png" alt="Domina"><h1 style="width:100%;margin-top:14px">Respuestas del diagnóstico</h1></header>
   ${data.length?`<div class="grid">${data.map(d=>`<div class="card"><h2>${esc(d.respuestas?.nombre?.respuesta)}</h2>
     <div class="meta">${esc(d.respuestas?.rol?.respuesta)} · ${new Date(d.recibido||d.enviado).toLocaleString('es')}</div>
     ${Object.values(d.respuestas).map(x=>`<div class="r"><div class="p">${esc(x.pregunta)}</div><div class="a">${fmt(x.respuesta)}</div></div>`).join('')}

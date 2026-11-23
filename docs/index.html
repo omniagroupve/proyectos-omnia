@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panal × Domina · Diagnóstico IA</title>
+<meta name="description" content="Diagnóstico previo al programa de Inteligencia Artificial y Automatización de Procesos diseñado por Panal para Domina.">
+<meta property="og:title" content="Panal × Domina · Diagnóstico IA">
+<meta property="og:description" content="8 minutos para diseñar un programa de IA a la medida de Domina.">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="panal-symbol-dark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF; --bg2:#F5F5F7; --line:#E8E8ED; --line2:#D2D2D7;
+  --ink:#111113; --mute:#6E6E73; --dim:#A1A1A6;
+  --honey:#FF9F0A; --honey2:#FFB340; --honeyDeep:#E68A00;
+  --honeyGlow:rgba(255,159,10,.18); --card:#F5F5F7; --cardHover:#EDEDF0;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text',Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,textarea{font:inherit;color:inherit}
+.help{font-size:17px}
+
+/* ---------- background ---------- */
+#hex{position:fixed;inset:0;z-index:0;opacity:1;pointer-events:none}
+.glow{position:fixed;width:70vmax;height:70vmax;border-radius:50%;filter:blur(100px);opacity:.07;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,var(--honey),transparent 60%);transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+.grain{display:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ---------- top bar ---------- */
+header{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;
+  padding:18px clamp(16px,4vw,40px);gap:12px}
+.brand{display:flex;align-items:center;gap:14px}
+.panal-logo{height:25px;width:auto;display:block}
+.x{color:var(--dim);font-size:15px}
+.domina{height:17px;width:auto;display:block;opacity:.95}
+.section-tag{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);white-space:nowrap;
+  border:1px solid var(--line);padding:7px 12px;border-radius:99px;background:rgba(255,255,255,.8);backdrop-filter:blur(8px);
+  transition:opacity .4s}
+.section-tag b{color:var(--ink);font-weight:600}
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--honeyDeep),var(--honey2));
+  z-index:11;width:0;transition:width .6s cubic-bezier(.2,.8,.2,1);}
+
+/* ---------- stage ---------- */
+main{position:relative;z-index:2;height:100%;display:flex;align-items:center;justify-content:center;padding:90px clamp(16px,5vw,40px) 100px;overflow-y:auto}
+.slide{width:100%;max-width:720px;margin:auto 0}
+.slide.in{animation:in .6s cubic-bezier(.2,.8,.2,1) both}
+.slide.out-up{animation:outUp .35s ease-in both}
+.slide.out-down{animation:outDown .35s ease-in both}
+.slide.in-down{animation:inDown .6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes in{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+@keyframes inDown{from{opacity:0;transform:translateY(-40px)}to{opacity:1;transform:none}}
+@keyframes outUp{to{opacity:0;transform:translateY(-40px)}}
+@keyframes outDown{to{opacity:0;transform:translateY(40px)}}
+.stagger>*{animation:in .6s cubic-bezier(.2,.8,.2,1) both}
+
+.qnum{display:flex;align-items:center;gap:10px;color:var(--mute);font-weight:600;font-size:14px;margin-bottom:16px}
+.qnum .hexi{width:22px;height:24px;display:grid;place-items:center;font-size:11px;color:#111113;
+  background:var(--honey);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+h1,h2{letter-spacing:-.035em;line-height:1.06;font-weight:600}
+h1{font-size:clamp(38px,7vw,72px)}
+h2{font-size:clamp(25px,4.2vw,38px)}
+h2 em,h1 em{font-style:normal;color:var(--mute)}
+.help{color:var(--mute);font-size:clamp(15px,2vw,17px);line-height:1.55;margin-top:14px;max-width:620px}
+.req{color:var(--dim)}
+
+/* ---------- inputs ---------- */
+.field{margin-top:34px}
+.text-in{width:100%;background:transparent;border:0;border-bottom:2px solid var(--line2);padding:10px 2px;font-size:clamp(20px,3vw,28px);
+  outline:none;transition:border-color .25s}
+.text-in:focus{border-color:var(--honey)}
+.text-in::placeholder,textarea::placeholder{color:var(--dim)}
+textarea.text-in{resize:none;min-height:120px;font-size:clamp(17px,2.2vw,21px);line-height:1.5;border:1px solid var(--line2);
+  border-radius:var(--r);padding:16px 18px;background:var(--card)}
+textarea.text-in:focus{border-color:var(--honey);box-shadow:0 0 0 4px var(--honeyGlow)}
+
+.opts{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
+.opts.one{grid-template-columns:1fr}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;padding:14px 16px;border:1px solid var(--line2);border-radius:var(--r);
+  background:rgba(245,245,247,.92);backdrop-filter:blur(6px);transition:all .18s;font-size:15.5px;line-height:1.35;position:relative}
+.opt:hover{border-color:#A1A1A6;background:#EDEDF0}
+.opt .k{flex:none;width:26px;height:26px;border-radius:7px;border:1px solid var(--line2);display:grid;place-items:center;
+  font-size:12px;font-weight:600;color:var(--mute);transition:all .18s}
+.opt .t small{display:block;color:var(--mute);font-size:13px;margin-top:3px}
+.opt.sel{border-color:var(--honey);background:#FFF6E8;box-shadow:0 0 0 1px var(--honey) inset}
+.opt.sel .k{background:var(--honey);border-color:var(--honey);color:#111113}
+.opt .ic{font-size:20px;flex:none}
+.opt.pop{animation:pop .3s}
+@keyframes pop{50%{transform:scale(.97)}}
+.other-in{margin-top:12px;display:none}
+.other-in.show{display:block}
+.counter{margin-top:12px;font-size:13px;color:var(--mute)}
+.counter b{color:var(--ink)}
+
+/* level ladder */
+.ladder{display:grid;gap:10px}
+.rung{display:grid;grid-template-columns:56px 1fr;gap:16px;align-items:center;text-align:left;padding:14px 18px;border:1px solid var(--line2);
+  border-radius:var(--r);background:rgba(245,245,247,.92);transition:all .2s}
+.rung:hover{border-color:#A1A1A6}
+.rung .lv{font-weight:700;font-size:26px;color:var(--dim);display:flex;align-items:center;gap:6px}
+.rung .lv i{display:block;width:8px;height:22px;border-radius:2px;background:var(--line2)}
+.rung b{font-weight:600;font-size:17px;display:block}
+.rung span{color:var(--mute);font-size:14px;line-height:1.4}
+.rung.sel{border-color:var(--honey);background:#FFF6E8;box-shadow:0 0 0 1px var(--honey) inset}
+.rung.sel .lv{color:var(--ink)}
+
+/* scale */
+.scale{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:8px}
+.scale button{aspect-ratio:1/1;max-height:70px;border:1px solid var(--line2);border-radius:12px;font-size:22px;font-weight:600;
+  background:rgba(245,245,247,.92);transition:all .18s}
+.scale button:hover{border-color:#A1A1A6}
+.scale button.sel{background:var(--honey);color:#111113;border-color:var(--honey);transform:translateY(-3px);box-shadow:0 10px 30px -10px var(--honey)}
+.scale-l{display:flex;justify-content:space-between;color:var(--mute);font-size:13px;margin-top:10px}
+
+/* slider */
+.slider-wrap{padding-top:10px}
+.slider-val{font-size:clamp(40px,8vw,64px);font-weight:600;color:var(--ink);letter-spacing:-.03em}
+.slider-val small{font-size:.35em;color:var(--mute);font-weight:500;margin-left:8px;letter-spacing:0}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:9px;margin-top:20px;
+  background:linear-gradient(90deg,var(--honey) var(--p,50%),var(--line2) var(--p,50%));outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:30px;background:var(--honey);cursor:grab;border:0;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+input[type=range]::-moz-range-thumb{width:28px;height:28px;background:var(--honey);border:0;border-radius:50%;cursor:grab}
+
+/* matrix */
+.matrix{display:grid;gap:10px}
+.mrow{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r);background:rgba(245,245,247,.92)}
+.mrow .lbl{font-size:15px}
+.mrow .lbl small{display:block;color:var(--mute);font-size:12.5px;margin-top:2px}
+.pills{display:flex;gap:6px}
+.pills button{padding:7px 11px;border-radius:99px;border:1px solid var(--line2);background:#fff;font-size:13px;color:var(--mute);transition:all .15s;white-space:nowrap}
+.pills button.sel{background:var(--honey);color:#111113;border-color:var(--honey);font-weight:600}
+@media (max-width:560px){.mrow{grid-template-columns:1fr}.pills button{flex:1;padding:8px 4px}}
+
+/* rank */
+.rank{display:grid;gap:8px}
+.rk{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line2);border-radius:var(--r);background:rgba(245,245,247,.92);
+  text-align:left;transition:all .18s;font-size:15px}
+.rk .pos{flex:none;width:30px;height:32px;display:grid;place-items:center;font-weight:700;font-size:14px;color:var(--dim);
+  background:var(--line);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);transition:all .18s}
+.rk.sel{border-color:var(--honey);background:#FFF6E8}
+.rk.sel .pos{background:var(--honey);color:#111113}
+.rk .t small{display:block;color:var(--mute);font-size:12.5px;margin-top:2px}
+
+/* buttons */
+.actions{display:flex;align-items:center;gap:16px;margin-top:34px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;font-weight:600;padding:14px 24px;border-radius:12px;
+  font-size:16px;transition:all .2s;box-shadow:0 10px 24px -14px rgba(17,17,19,.6)}
+.btn:hover{background:#2a2a2e;transform:translateY(-1px)}
+.btn:disabled{opacity:.35;pointer-events:none;box-shadow:none}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line2);box-shadow:none}
+.hint{color:var(--dim);font-size:13px}
+.hint kbd{font-family:inherit;border:1px solid var(--line2);border-radius:5px;padding:1px 6px;color:var(--mute);font-size:12px}
+.err{color:#ff7a59;font-size:14px;margin-top:14px;min-height:20px}
+.skip{color:var(--mute);font-size:14px;text-decoration:underline;text-underline-offset:3px}
+
+/* nav */
+.nav{position:fixed;right:clamp(16px,4vw,40px);bottom:22px;z-index:10;display:flex;gap:6px}
+.nav button{width:42px;height:42px;border-radius:11px;border:1px solid var(--line2);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);display:grid;place-items:center;transition:all .15s}
+.nav button:hover{border-color:var(--ink)}
+.nav button:disabled{opacity:.3;pointer-events:none}
+.foot{position:fixed;left:clamp(16px,4vw,40px);bottom:30px;z-index:10;font-size:12px;color:var(--dim)}
+
+/* welcome */
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);
+  border:1px solid var(--line2);padding:7px 12px;border-radius:99px;margin-bottom:26px;background:#fff}
+.eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--honey);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.3}}
+.cobrand{display:flex;align-items:center;gap:18px;margin-bottom:34px}
+.cobrand .panal-logo{height:38px}
+.cobrand .domina{height:30px}
+.cobrand .x{font-size:22px}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:34px}
+.fact{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:rgba(245,245,247,.92)}
+.fact b{font-size:26px;color:var(--ink);font-weight:600;display:block;letter-spacing:-.02em}
+.fact span{color:var(--mute);font-size:13px}
+@media (max-width:560px){.facts{grid-template-columns:1fr 1fr}.facts .fact:last-child{grid-column:span 2}}
+
+/* section intro */
+.sec-num{font-size:clamp(80px,18vw,160px);font-weight:700;line-height:.9;letter-spacing:-.05em;
+  color:var(--line2);margin-bottom:10px}
+.sec-list{margin-top:26px;display:flex;flex-wrap:wrap;gap:8px}
+.sec-list span{font-size:13px;background:#fff;border:1px solid var(--line2);padding:6px 11px;border-radius:99px;color:var(--mute)}
+
+/* final */
+.summary{margin-top:30px;display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.sum{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:rgba(245,245,247,.92)}
+.sum span{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.1em}
+.sum b{display:block;font-size:19px;margin-top:6px;line-height:1.25}
+.meter{height:8px;border-radius:9px;background:var(--line);margin-top:10px;overflow:hidden}
+.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--honeyDeep),var(--honey2));border-radius:9px;width:0;transition:width 1.4s cubic-bezier(.2,.8,.2,1) .3s}
+.spinner{width:22px;height:22px;border:2.5px solid rgba(0,0,0,.25);border-top-color:#111;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.check{width:84px;height:92px;background:var(--honey);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);display:grid;place-items:center;margin-bottom:26px;animation:pop2 .7s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop2{from{transform:scale(0) rotate(-30deg)}}
+
+@media (max-width:640px){
+  .section-tag{display:none}
+  .domina{height:13px}.panal-logo{height:25px}
+  .foot{display:none}
+  .cobrand{gap:12px}.cobrand .panal-logo{height:26px}.cobrand .domina{height:21px}.cobrand .x{font-size:16px}
+  main{padding-top:80px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="hex"></canvas>
+<div class="glow" id="glow" style="left:-20vmax;top:-30vmax"></div>
+<div class="grain"></div>
+<div class="progress" id="progress"></div>
+
+<header>
+  <div class="brand">
+    <img class="panal-logo" src="panal-logo-dark.svg" alt="Panal">
+    <span class="x">×</span>
+    <img class="domina" src="domina-black.png" alt="Domina">
+  </div>
+  <div class="section-tag" id="sectionTag"></div>
+</header>
+
+<main id="main"><div class="slide" id="slide"></div></main>
+
+<div class="foot" id="foot">Diagnóstico confidencial · Panal × Domina</div>
+<div class="nav">
+  <button id="prev" aria-label="Anterior"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+  <button id="next" aria-label="Siguiente"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>
+</div>
+
+<script>
+/* =========================================================
+   CONTENIDO DEL DIAGNÓSTICO
+   ========================================================= */
+const SECTIONS = {
+  s1:{n:'01',name:'Ustedes',title:'Empecemos por <em>ustedes</em>',desc:'Quién responde y cómo está armada Domina hoy.',items:['Rol','Equipo','Servicios','Proyectos']},
+  s2:{n:'02',name:'Cómo trabajan',title:'Cómo <em>trabajan</em> hoy',desc:'Las herramientas y el flujo de un proyecto, de la primera reunión a la entrega.',items:['Software','Flujo de proyecto','Gestión']},
+  s3:{n:'03',name:'Nivel de IA',title:'Su relación con la <em>IA</em>',desc:'Sin juicio: queremos saber desde dónde arrancamos para no aburrir ni abrumar a nadie.',items:['Madurez','Herramientas','Equipo','Políticas']},
+  s4:{n:'04',name:'Procesos',title:'Dónde se va el <em>tiempo</em>',desc:'La parte más importante. Aquí detectamos qué procesos vale la pena automatizar primero.',items:['Cuellos de botella','Tareas repetitivas','Prioridades']},
+  s5:{n:'05',name:'El curso',title:'Diseñemos el <em>curso</em>',desc:'6 horas pensadas para Domina. Ustedes deciden el rumbo.',items:['Objetivos','Temas','Formato','Participantes']},
+  s6:{n:'06',name:'Cierre',title:'Últimos <em>detalles</em>',desc:'Inquietudes, inversión y cómo se ve el éxito.',items:['Riesgos','Inversión','Éxito']},
+};
+
+const Q = [
+  {type:'welcome'},
+
+  {type:'section',sec:'s1'},
+  {id:'nombre',sec:'s1',type:'text',q:'¿Cómo te llamas?',help:'Para personalizar el resto del diagnóstico.',ph:'Tu nombre',required:true},
+  {id:'rol',sec:'s1',type:'single',q:'Un gusto, {nombre}. ¿Cuál es tu rol en Domina?',options:[
+    'Socio(a) / Fundador(a)','Director(a) de proyectos','Director(a) de obra / construcción','Administración y finanzas','Otro'],other:true,required:true},
+  {id:'contacto',sec:'s1',type:'text',inputType:'email',q:'¿A qué correo o WhatsApp te enviamos la propuesta del curso?',help:'Opcional. Solo lo usaremos para este programa.',ph:'correo@domina.com  ·  +58 ...'},
+  {id:'equipo',sec:'s1',type:'single',q:'¿Cuántas personas trabajan hoy en Domina?',help:'Incluye equipo de oficina y de obra si lo consideras parte del equipo fijo.',options:['1 – 5','6 – 15','16 – 30','31 – 60','Más de 60'],required:true},
+  {id:'areas',sec:'s1',type:'multi',q:'¿Qué servicios ofrece Domina?',help:'Marca todos los que apliquen.',options:[
+    'Diseño arquitectónico','Proyecto ejecutivo / técnico','Construcción y ejecución de obra','Gerencia / supervisión de obra','Diseño de interiores','Remodelaciones','Paisajismo','Desarrollo inmobiliario','Consultoría / trámites y permisos'],other:true,required:true},
+  {id:'clientes',sec:'s1',type:'multi',q:'¿Qué tipo de proyectos y clientes son su fuerte?',options:['Residencial unifamiliar','Residencial multifamiliar','Comercial / retail','Corporativo / oficinas','Hotelería y restaurantes','Industrial','Institucional / público','Inversionistas / desarrolladores'],other:true},
+  {id:'proyectos',sec:'s1',type:'single',q:'¿Cuántos proyectos manejan en paralelo normalmente?',options:['1 – 3','4 – 8','9 – 15','Más de 15']},
+
+  {type:'section',sec:'s2'},
+  {id:'software',sec:'s2',type:'multi',q:'¿Qué herramientas usa el equipo en el día a día?',help:'Diseño, gestión y comunicación. Marca todas.',cols:true,options:[
+    'AutoCAD','Revit','ArchiCAD','SketchUp','Rhino / Grasshopper','Lumion / Enscape / D5','V-Ray / Corona / Twinmotion','Photoshop / Illustrator / InDesign','Excel / Google Sheets','Software de presupuestos (Presto, Opus, Neodata…)','MS Project / Primavera','Notion / Trello / Asana / ClickUp','Google Workspace','Microsoft 365','WhatsApp como canal principal','CRM (HubSpot, Pipedrive…)'],other:true},
+  {id:'flujo',sec:'s2',type:'matrix',q:'¿Qué tan ordenado está cada paso de un proyecto?',help:'Califica cómo funciona hoy cada etapa.',cols3:['Caótico','Funciona','Sistematizado'],rows:[
+    ['Captación de clientes','Leads, primeras reuniones'],
+    ['Propuestas y cotizaciones','Alcance, honorarios, contrato'],
+    ['Diseño y anteproyecto','Conceptos, iteraciones con el cliente'],
+    ['Documentación técnica','Planos, memorias, especificaciones'],
+    ['Presupuestos y cómputos','Cantidades, APU, costos'],
+    ['Ejecución y seguimiento de obra','Avances, bitácora, reportes'],
+    ['Administración','Facturación, pagos, proveedores'],
+  ]},
+  {id:'informacion',sec:'s2',type:'single',q:'Si alguien busca un plano, presupuesto o correo de un proyecto de hace 2 años… ¿qué pasa?',options:[
+    {t:'Lo encuentra en segundos',d:'Todo está en un sistema ordenado y en la nube'},
+    {t:'Lo encuentra, pero cuesta',d:'Hay carpetas, pero cada quien guarda a su manera'},
+    {t:'Hay que preguntarle a alguien',d:'La información vive en la cabeza o el computador de personas'},
+    {t:'Probablemente no aparezca',d:'Se pierde entre WhatsApp, correos y discos duros'}],required:true},
+
+  {type:'section',sec:'s3'},
+  {id:'nivel',sec:'s3',type:'ladder',q:'¿En qué nivel de IA está Domina hoy?',help:'Elige el que mejor describe a la empresa (no a ti individualmente).',options:[
+    {t:'Curiosos',d:'Hemos oído de la IA, pero casi nadie la usa en el trabajo.'},
+    {t:'Exploradores',d:'Algunos usan ChatGPT o similares de vez en cuando, cada quien por su cuenta.'},
+    {t:'Usuarios',d:'Varios la usamos seguido para redactar, investigar o generar imágenes.'},
+    {t:'Integradores',d:'Tenemos usos definidos en ciertos procesos y herramientas pagas.'},
+    {t:'Automatizados',d:'Hay flujos automáticos conectados entre herramientas (n8n, Make, agentes…).'}],required:true},
+  {id:'herramientas_ia',sec:'s3',type:'multi',q:'¿Cuáles de estas herramientas de IA ya han usado en Domina?',help:'Aunque sea una vez.',skipIf:a=>a.nivel===0,options:[
+    'ChatGPT','Claude','Gemini','Microsoft Copilot','Perplexity','Midjourney','DALL·E / generador de imágenes de ChatGPT','Stable Diffusion / Krea / LookX','Veras / IA dentro de Revit o SketchUp','IA para video (Runway, Sora, Kling…)','Zapier / Make / n8n','Transcripción de reuniones (Otter, Fireflies, tl;dv…)','Ninguna'],other:true},
+  {id:'usos_ia',sec:'s3',type:'multi',q:'¿Para qué la usan hoy?',skipIf:a=>a.nivel===0,options:[
+    'Redactar correos y textos','Memorias descriptivas y documentos','Investigación y normativa','Imágenes conceptuales / moodboards','Mejorar o generar renders','Contenido para redes sociales','Análisis de presupuestos / Excel','Resumir reuniones','Programación / scripts / automatizaciones','Todavía para nada concreto'],other:true},
+  {id:'adopcion',sec:'s3',type:'scale',n:5,q:'¿Qué porcentaje del equipo usa IA al menos una vez por semana?',labels:['Casi nadie','Casi todos'],valueLabels:['0–10%','10–30%','30–50%','50–80%','80%+']},
+  {id:'actitud',sec:'s3',type:'single',q:'¿Cómo describirías la actitud del equipo frente a la IA?',options:[
+    {t:'Entusiasmo',d:'Quieren aprender y ya están probando cosas'},
+    {t:'Curiosidad',d:'Interés, pero no saben por dónde empezar'},
+    {t:'Escepticismo',d:'Dudan de que sirva para arquitectura de verdad'},
+    {t:'Temor',d:'Preocupación por ser reemplazados o por errores'},
+    {t:'Mixta',d:'Hay de todo un poco'}]},
+  {id:'politica',sec:'s3',type:'single',q:'¿Tienen alguna política o lineamiento sobre el uso de IA?',options:['Sí, escrita y comunicada','Algo informal','No, cada quien hace lo que quiere','No, y nadie la usa todavía']},
+  {id:'cuentas',sec:'s3',type:'single',q:'¿Pagan alguna suscripción de IA a nivel empresa?',options:['Sí, para varias personas','Solo algunas personas por su cuenta','No, solo versiones gratuitas','No lo sé']},
+
+  {type:'section',sec:'s4'},
+  {id:'dolores',sec:'s4',type:'rank',max:5,q:'¿Dónde pierden más tiempo? Elige tus 5 en orden.',help:'Toca en orden de importancia: el primero es el que más duele.',options:[
+    ['Propuestas y cotizaciones','Armar alcances y honorarios'],
+    ['Presupuestos y cómputos métricos','Cantidades, APU, actualización de precios'],
+    ['Memorias descriptivas y especificaciones','Redactar y formatear documentos técnicos'],
+    ['Renders y presentaciones','Visualización para clientes'],
+    ['Cambios y revisiones con el cliente','Iteraciones, versiones, aprobaciones'],
+    ['Seguimiento y reportes de obra','Avances, fotos, bitácoras, informes'],
+    ['Comunicación con clientes','WhatsApp, correos, actualizaciones'],
+    ['Proveedores y compras','Cotizaciones, comparativas, órdenes'],
+    ['Normativa, permisos y trámites','Investigar ordenanzas, preparar expedientes'],
+    ['Reuniones y minutas','Coordinar, documentar acuerdos y tareas'],
+    ['Administración y facturación','Cobros, pagos, conciliación'],
+    ['Marketing y redes sociales','Portafolio, posts, captación'],
+  ],required:true},
+  {id:'horas',sec:'s4',type:'slider',min:0,max:40,step:1,def:8,unit:'horas / semana',q:'¿Cuántas horas a la semana crees que una persona del equipo dedica a tareas repetitivas?',help:'Copiar y pegar datos, formatear documentos, responder lo mismo, buscar archivos, rehacer tablas…'},
+  {id:'proceso_ideal',sec:'s4',type:'long',q:'Si pudieras automatizar UN proceso mañana, ¿cuál sería?',help:'Cuéntanoslo con detalle: cómo se hace hoy, quién lo hace, cuánto tarda y qué te frustra. Esto lo convertiremos en un caso práctico del curso.',ph:'Ej: cada vez que cerramos un proyecto, alguien tiene que pasar las cantidades del Excel al formato del cliente, luego…',required:true},
+  {id:'varita',sec:'s4',type:'long',q:'¿Hay alguna tarea que hoy no hacen porque "no hay tiempo", pero que les gustaría hacer?',help:'Ej: dar actualizaciones semanales a clientes, analizar la rentabilidad de cada proyecto, publicar en redes, documentar lecciones aprendidas…',ph:'Escribe libremente…'},
+
+  {type:'section',sec:'s5'},
+  {id:'objetivos',sec:'s5',type:'multi',max:3,q:'Al terminar el curso, ¿qué es lo más importante que el equipo se lleve?',help:'Elige hasta 3.',options:[
+    {t:'Automatizaciones funcionando',d:'Salir con flujos reales ya armados para Domina'},
+    {t:'Productividad diaria',d:'Que cada persona use IA para trabajar más rápido'},
+    {t:'Criterio y estrategia',d:'Entender qué es posible y dónde invertir'},
+    {t:'Visualización y diseño con IA',d:'Imágenes, renders, conceptos y presentaciones'},
+    {t:'Documentación y propuestas',d:'Generar textos, memorias y cotizaciones en minutos'},
+    {t:'Cultura de innovación',d:'Perder el miedo y crear el hábito'},
+    {t:'Un plan de implementación',d:'Hoja de ruta de IA para los próximos 6–12 meses'}],required:true},
+  {id:'temas',sec:'s5',type:'matrix',q:'¿Cuánto interés tienen en cada tema?',help:'Esto define cómo repartimos las 6 horas.',cols3:['Poco','Medio','Mucho'],rows:[
+    ['Fundamentos y buenas prácticas de prompts','ChatGPT, Claude, Gemini aplicados a arquitectura'],
+    ['Asistentes personalizados (GPTs / Proyectos)','Entrenados con la info y estilo de Domina'],
+    ['Automatización de procesos sin código','n8n, Make, Zapier conectando sus herramientas'],
+    ['Agentes de IA','Asistentes que ejecutan tareas por su cuenta'],
+    ['IA para visualización y render','Conceptos, moodboards, mejora de renders'],
+    ['IA para presupuestos y Excel','Análisis, cómputos, comparativas'],
+    ['IA para gestión de obra','Reportes, seguimiento, minutas automáticas'],
+    ['IA para marketing y captación','Contenido, portafolio, respuestas a leads'],
+    ['Datos, privacidad y seguridad','Qué se puede compartir y qué no'],
+  ]},
+  {id:'enfoque',sec:'s5',type:'slider',min:0,max:100,step:10,def:70,q:'¿Qué balance prefieren entre teoría y práctica?',help:'Desliza: izquierda = más conceptual y estratégico, derecha = manos a la obra con sus propios casos.',fmt:v=>`${100-v}% teoría · ${v}% práctica`},
+  {id:'formato',sec:'s5',type:'single',q:'¿Cómo prefieren distribuir las 6 horas?',options:[
+    {t:'1 jornada intensiva',d:'6 horas en un solo día',ic:'⚡'},
+    {t:'2 sesiones de 3 horas',d:'Con tiempo para practicar entre sesiones',ic:'◐'},
+    {t:'3 sesiones de 2 horas',d:'Ritmo semanal, más asimilable',ic:'◔'},
+    {t:'Abiertos a recomendación',d:'Que Panal proponga lo mejor',ic:'✦'}],required:true},
+  {id:'modalidad',sec:'s5',type:'single',q:'¿Modalidad?',options:['Presencial en la oficina de Domina','Online en vivo','Híbrido','Indistinto']},
+  {id:'asistentes',sec:'s5',type:'single',q:'¿Cuántas personas participarían?',options:['Solo los socios (2)','3 – 5','6 – 10','11 – 20','Más de 20'],required:true},
+  {id:'perfiles',sec:'s5',type:'multi',q:'¿Qué perfiles estarían en la sala?',options:['Socios / dirección','Arquitectos de diseño','Proyectistas / dibujantes','Ingenieros / residentes de obra','Presupuestos y compras','Administración','Marketing / comercial','Pasantes'],other:true},
+  {id:'nivel_tec',sec:'s5',type:'scale',n:5,q:'¿Qué tan cómodo es el grupo con la tecnología en general?',labels:['Lo básico','Muy avanzado']},
+  {id:'compu',sec:'s5',type:'single',q:'Durante el curso, ¿cada participante tendría su propio computador?',options:['Sí, todos con laptop','Algunos','No, sería más tipo presentación']},
+
+  {type:'section',sec:'s6'},
+  {id:'inquietudes',sec:'s6',type:'multi',q:'¿Qué les preocupa sobre implementar IA en Domina?',options:[
+    'Confidencialidad de planos y datos de clientes','Calidad y errores de la IA','Costo de las herramientas','Curva de aprendizaje del equipo','Que no se adapte a la arquitectura','Derechos de autor de imágenes y diseños','Dependencia de herramientas externas','Que el equipo no la adopte después del curso','Nada en particular'],other:true},
+  {id:'inversion',sec:'s6',type:'single',q:'Después del curso, ¿cuánto estarían dispuestos a invertir mensualmente en herramientas de IA?',help:'Referencial, para recomendar herramientas acordes.',options:['Solo herramientas gratuitas','Hasta USD 50 / mes','USD 50 – 200 / mes','USD 200 – 500 / mes','Más de USD 500 / mes','Depende del retorno']},
+  {id:'acompanamiento',sec:'s6',type:'single',q:'¿Les interesaría que Panal implemente automatizaciones después del curso?',options:[
+    {t:'Sí, definitivamente',d:'Queremos que nos ayuden a construirlas'},
+    {t:'Tal vez',d:'Depende de lo que veamos en el curso'},
+    {t:'No por ahora',d:'Preferimos hacerlo internamente'}]},
+  {id:'fecha',sec:'s6',type:'single',q:'¿Para cuándo les gustaría hacer el curso?',options:['Lo antes posible','En el próximo mes','En 1 – 3 meses','Sin fecha definida']},
+  {id:'exito',sec:'s6',type:'long',q:'Imagina que pasaron 3 meses después del curso. ¿Qué tendría que haber cambiado para decir "valió la pena"?',ph:'Ej: que las propuestas salgan en un día en vez de una semana…',required:true},
+  {id:'comentarios',sec:'s6',type:'long',q:'¿Algo más que debamos saber?',help:'Opcional. Cualquier contexto, idea o expectativa.',ph:'Escribe aquí…'},
+
+  {type:'final'},
+];
+
+/* =========================================================
+   MOTOR
+   ========================================================= */
+const A = {};          // respuestas
+let i = 0, busy = false, submitted = false;
+const $ = s => document.querySelector(s);
+const slide = $('#slide');
+const KEYS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const STORE = 'panal-domina-v1';
+try{ const s = JSON.parse(localStorage.getItem(STORE)||'null'); if(s){Object.assign(A,s.A||{}); submitted=!!s.submitted;} }catch(e){}
+const save = () => { try{ localStorage.setItem(STORE, JSON.stringify({A,submitted})); }catch(e){} };
+
+const optT = o => typeof o==='string'?o:(Array.isArray(o)?o[0]:o.t);
+const optD = o => Array.isArray(o)?o[1]:(o&&o.d)||'';
+const fill = s => s.replace(/\{(\w+)\}/g,(_,k)=> (A[k]||'').toString().split(' ')[0] || '');
+const visible = q => !(q.skipIf && q.skipIf(A));
+const questions = Q.filter(q=>q.id);
+const qIndex = q => questions.filter(visible).indexOf(q)+1;
+const qTotal = () => questions.filter(visible).length;
+
+function step(dir){
+  let j=i+dir;
+  while(Q[j] && !visible(Q[j])) j+=dir;
+  return j;
+}
+
+function go(dir){
+  if(busy) return;
+  if(dir>0 && !validate()) return;
+  const j = step(dir);
+  if(j<0 || j>=Q.length) return;
+  if(Q[i].type==='final') return;
+  busy=true;
+  slide.classList.remove('in','in-down');
+  slide.classList.add(dir>0?'out-up':'out-down');
+  setTimeout(()=>{ i=j; render(dir); busy=false; },300);
+}
+
+function validate(){
+  const q=Q[i]; if(!q.id || !q.required) return true;
+  const v=A[q.id];
+  let ok = v!==undefined && v!=='' && !(Array.isArray(v)&&!v.length);
+  if(ok && q.type==='rank' && v.length<Math.min(3,q.options.length)) ok=false;
+  if(!ok){
+    const e=$('#err'); if(e){ e.textContent = q.type==='rank'?'Elige al menos 3 para continuar.':'Esta respuesta nos ayuda mucho — por favor complétala.'; }
+    slide.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:280});
+  }
+  return ok;
+}
+
+function header(q){
+  const s = SECTIONS[q.sec];
+  $('#sectionTag').innerHTML = s ? `<b>${s.n}</b> · ${s.name}` : 'Diagnóstico IA';
+  const answered = q.id ? qIndex(q)-1 : (q.type==='final'?qTotal():(q.type==='welcome'?0:questions.filter(visible).findIndex(x=>x.sec===q.sec)));
+  $('#progress').style.width = (q.type==='final'?100:Math.max(0,answered)/qTotal()*100)+'%';
+  $('#prev').disabled = i===0 || q.type==='final';
+  $('#next').disabled = q.type==='final' || q.type==='welcome';
+  $('#glow').style.transform = `translate(${(i*13)%60}vmax, ${(i*23)%55}vmax)`;
+}
+
+function actions(label='OK', enterHint=true){
+  return `<div class="actions"><button class="btn" id="okBtn">${label} <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  ${enterHint?'<span class="hint">o presiona <kbd>Enter ↵</kbd></span>':''}</div><div class="err" id="err"></div>`;
+}
+
+function render(dir=1){
+  const q=Q[i];
+  header(q);
+  slide.className='slide '+(dir>0?'in':'in-down');
+  let h='';
+  if(q.type==='welcome') h=welcome();
+  else if(q.type==='section') h=sectionIntro(q);
+  else if(q.type==='final') h=finalScreen();
+  else{
+    h=`<div class="qnum"><span class="hexi">${qIndex(q)}</span> de ${qTotal()}</div>
+       <h2>${fill(q.q)}${q.required?' <span class="req">*</span>':''}</h2>
+       ${q.help?`<p class="help">${q.help}</p>`:''}
+       <div class="field">${input(q)}</div>
+       ${actions(q.type==='long'?'Continuar':'OK', q.type!=='long')}
+       ${q.type==='long'?'<div class="hint" style="margin-top:6px"><kbd>Shift</kbd> + <kbd>Enter</kbd> para nueva línea · <kbd>Enter</kbd> para continuar</div>':''}`;
+  }
+  slide.innerHTML=h;
+  bind(q);
+  $('#main').scrollTop=0;
+}
+
+function welcome(){
+  return `<div class="stagger">
+    <div class="eyebrow" style="animation-delay:.05s"><i></i> Diagnóstico previo · Programa IA</div>
+    <div class="cobrand" style="animation-delay:.12s">
+      <img class="panal-logo" src="panal-logo-dark.svg" alt="Panal">
+      <span class="x">×</span><img class="domina" src="domina-black.png" alt="Domina">
+    </div>
+    <h1 style="animation-delay:.2s">Construyamos el curso de IA <em>de Domina</em>.</h1>
+    <p class="help" style="animation-delay:.3s;font-size:clamp(16px,2.2vw,19px)">Antes de diseñar el programa de <b style="color:var(--ink);font-weight:600">Inteligencia Artificial y Automatización de Procesos</b>, queremos entender cómo trabajan, qué les quita tiempo y hasta dónde quieren llegar. Sus respuestas definen el rumbo de cada una de las 6 horas.</p>
+    <div class="facts" style="animation-delay:.4s">
+      <div class="fact"><b>~8 min</b><span>para completarlo</span></div>
+      <div class="fact"><b>${qTotal()}</b><span>preguntas rápidas</span></div>
+      <div class="fact"><b>6 h</b><span>de curso a la medida</span></div>
+    </div>
+    <div style="animation-delay:.5s">${actions(Object.keys(A).length?'Continuar donde quedé':'Comenzar')}</div>
+  </div>`;
+}
+
+function sectionIntro(q){
+  const s=SECTIONS[q.sec];
+  return `<div class="stagger">
+    <div class="sec-num">${s.n}</div>
+    <h2 style="animation-delay:.08s;font-size:clamp(32px,5.5vw,52px)">${s.title}</h2>
+    <p class="help" style="animation-delay:.16s">${s.desc}</p>
+    <div class="sec-list" style="animation-delay:.24s">${s.items.map(x=>`<span>${x}</span>`).join('')}</div>
+    <div style="animation-delay:.32s">${actions('Vamos')}</div>
+  </div>`;
+}
+
+function input(q){
+  const v=A[q.id];
+  switch(q.type){
+    case 'text': return `<input class="text-in" id="ti" type="${q.inputType==='email'?'text':'text'}" placeholder="${q.ph||''}" value="${esc(v||'')}" autocomplete="off">`;
+    case 'long': return `<textarea class="text-in" id="ti" rows="4" placeholder="${q.ph||''}">${esc(v||'')}</textarea>`;
+    case 'single': case 'multi': {
+      const multi=q.type==='multi';
+      const arr = multi?(v||[]):[v];
+      const known = q.options.map(optT);
+      const otherVal = (multi?arr.find(x=>x&&x.startsWith('Otro: ')):(v&&v.startsWith&&v.startsWith('Otro: ')?v:null));
+      const opts=q.options.map((o,k)=>{
+        const t=optT(o), d=optD(o), sel=arr.includes(t);
+        return `<button class="opt ${sel?'sel':''}" data-v="${esc(t)}"><span class="k">${KEYS[k]}</span>${o.ic?`<span class="ic">${o.ic}</span>`:''}<span class="t">${t}${d?`<small>${d}</small>`:''}</span></button>`;
+      }).join('');
+      const other = q.other?`<button class="opt ${otherVal?'sel':''}" data-other="1"><span class="k">${KEYS[q.options.length]}</span><span class="t">Otro…</span></button>`:'';
+      const one = q.options.some(o=>optD(o)) || q.options.length<=4;
+      return `<div class="opts ${one&&!q.cols?'one':''}">${opts}${other}</div>
+        ${q.other?`<input class="text-in other-in ${otherVal?'show':''}" id="otherIn" placeholder="Especifica…" value="${esc(otherVal?otherVal.slice(6):'')}">`:''}
+        ${multi?`<div class="counter" id="cnt">${q.max?`Elige hasta <b>${q.max}</b> · `:''}<b>${arr.filter(Boolean).length}</b> seleccionadas</div>`:''}`;
+    }
+    case 'ladder': return `<div class="ladder">${q.options.map((o,k)=>`<button class="rung ${v===k?'sel':''}" data-k="${k}">
+        <span class="lv">${k+1}<span style="display:flex;gap:3px;margin-left:4px">${[0,1,2,3,4].map(b=>`<i style="${b<=k?'background:'+(v===k?'var(--honey)':'#55545a'):''};height:${8+b*3.5}px"></i>`).join('')}</span></span>
+        <div><b>${o.t}</b><span>${o.d}</span></div></button>`).join('')}</div>`;
+    case 'scale': return `<div class="scale" style="--n:${q.n}">${Array.from({length:q.n},(_,k)=>`<button class="${v===k+1?'sel':''}" data-k="${k+1}">${k+1}</button>`).join('')}</div>
+        <div class="scale-l"><span>${q.labels[0]}</span><span id="scaleV" style="color:var(--ink);font-weight:600">${v&&q.valueLabels?q.valueLabels[v-1]:''}</span><span>${q.labels[1]}</span></div>`;
+    case 'slider': { const val=v??q.def; return `<div class="slider-wrap"><div class="slider-val" id="sv"></div>
+        <input type="range" id="rg" min="${q.min}" max="${q.max}" step="${q.step}" value="${val}"></div>`; }
+    case 'matrix': return `<div class="matrix">${q.rows.map((r,k)=>`<div class="mrow"><div class="lbl">${r[0]}<small>${r[1]}</small></div>
+        <div class="pills" data-row="${esc(r[0])}">${q.cols3.map(c=>`<button class="${v&&v[r[0]]===c?'sel':''}" data-c="${c}">${c}</button>`).join('')}</div></div>`).join('')}</div>`;
+    case 'rank': { const arr=v||[]; return `<div class="rank">${q.options.map(o=>{const t=optT(o),p=arr.indexOf(t);
+        return `<button class="rk ${p>=0?'sel':''}" data-v="${esc(t)}"><span class="pos">${p>=0?p+1:'·'}</span><span class="t">${t}<small>${optD(o)}</small></span></button>`}).join('')}</div>
+        <div class="counter" id="cnt"><b>${arr.length}</b> de ${q.max} elegidas ${arr.length?'· toca de nuevo para quitar':''}</div>`; }
+  }
+}
+
+function bind(q){
+  const ok=$('#okBtn'); if(ok) ok.onclick=()=>{ if(q.type==='final') return; go(1); };
+  if(!q.id) return;
+  const ti=$('#ti');
+  if(ti){ ti.oninput=()=>{A[q.id]=ti.value.trim(); save();}; setTimeout(()=>ti.focus({preventScroll:true}),350);
+    if(q.type==='long'){ const fit=()=>{ti.style.height='auto';ti.style.height=Math.min(ti.scrollHeight,320)+'px'}; ti.addEventListener('input',fit); setTimeout(fit,0);} }
+
+  if(q.type==='single'||q.type==='multi'){
+    const multi=q.type==='multi'; const oi=$('#otherIn');
+    slide.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+      if(b.dataset.other){
+        if(multi){ const on=!b.classList.contains('sel'); b.classList.toggle('sel',on); oi.classList.toggle('show',on);
+          A[q.id]=(A[q.id]||[]).filter(x=>!x.startsWith('Otro: ')); if(on){ if(oi.value) A[q.id].push('Otro: '+oi.value); oi.focus(); } }
+        else { slide.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); oi.classList.add('show'); A[q.id]= oi.value?'Otro: '+oi.value:''; oi.focus(); }
+        save(); updCount(q); return;
+      }
+      const val=b.dataset.v;
+      if(multi){
+        let arr=A[q.id]||[];
+        if(val==='Ninguna'||val==='Nada en particular'||val==='Todavía para nada concreto'){ arr = arr.includes(val)?[]:[val]; }
+        else { arr=arr.filter(x=>x!=='Ninguna'&&x!=='Nada en particular'&&x!=='Todavía para nada concreto');
+          if(arr.includes(val)) arr=arr.filter(x=>x!==val); else { if(q.max && arr.length>=q.max){ flash(); return;} arr.push(val);} }
+        A[q.id]=arr; slide.querySelectorAll('.opt[data-v]').forEach(x=>x.classList.toggle('sel',arr.includes(x.dataset.v)));
+        updCount(q); save();
+      } else {
+        slide.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+        if(oi) oi.classList.remove('show');
+        A[q.id]=val; save(); setTimeout(()=>go(1),380);
+      }
+    });
+    if(oi) oi.oninput=()=>{ const v='Otro: '+oi.value.trim();
+      if(multi){ A[q.id]=(A[q.id]||[]).filter(x=>!x.startsWith('Otro: ')); if(oi.value.trim()) A[q.id].push(v); updCount(q);} else A[q.id]=oi.value.trim()?v:'';
+      save(); };
+  }
+  if(q.type==='ladder') slide.querySelectorAll('.rung').forEach(b=>b.onclick=()=>{A[q.id]=+b.dataset.k; A[q.id+'_txt']=q.options[+b.dataset.k].t; save(); render(1); setTimeout(()=>go(1),450);});
+  if(q.type==='scale') slide.querySelectorAll('.scale button').forEach(b=>b.onclick=()=>{A[q.id]=+b.dataset.k; save();
+      slide.querySelectorAll('.scale button').forEach(x=>x.classList.toggle('sel',x===b)); if(q.valueLabels) $('#scaleV').textContent=q.valueLabels[A[q.id]-1]; setTimeout(()=>go(1),420);});
+  if(q.type==='slider'){ const rg=$('#rg'),sv=$('#sv');
+    const upd=()=>{ const v=+rg.value; A[q.id]=v; save(); rg.style.setProperty('--p',((v-q.min)/(q.max-q.min)*100)+'%');
+      sv.innerHTML = q.fmt? `<span style="font-size:.55em">${q.fmt(v)}</span>` : `${v}${v===q.max?'+':''}<small>${q.unit}</small>`; };
+    rg.oninput=upd; upd(); }
+  if(q.type==='matrix') slide.querySelectorAll('.pills').forEach(p=>p.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+      A[q.id]=A[q.id]||{}; A[q.id][p.dataset.row]=b.dataset.c; save(); p.querySelectorAll('button').forEach(x=>x.classList.toggle('sel',x===b)); }));
+  if(q.type==='rank') slide.querySelectorAll('.rk').forEach(b=>b.onclick=()=>{
+      let arr=A[q.id]||[]; const v=b.dataset.v;
+      if(arr.includes(v)) arr=arr.filter(x=>x!==v); else { if(arr.length>=q.max){flash();return;} arr.push(v); }
+      A[q.id]=arr; save();
+      slide.querySelectorAll('.rk').forEach(x=>{const p=arr.indexOf(x.dataset.v); x.classList.toggle('sel',p>=0); x.querySelector('.pos').textContent=p>=0?p+1:'·';});
+      $('#cnt').innerHTML=`<b>${arr.length}</b> de ${q.max} elegidas ${arr.length?'· toca de nuevo para quitar':''}`;
+      if(arr.length===q.max) setTimeout(()=>{ if(Q[i]===q) $('#okBtn').animate([{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:400}); },100);
+  });
+}
+function updCount(q){ const c=$('#cnt'); if(c){ const n=(A[q.id]||[]).filter(Boolean).length; c.innerHTML=`${q.max?`Elige hasta <b>${q.max}</b> · `:''}<b>${n}</b> seleccionadas`; } }
+function flash(){ const c=$('#cnt'); if(c) c.animate([{color:'#ff7a59'},{color:''}],{duration:700}); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+/* ---------- final / envío ---------- */
+function finalScreen(){
+  return `<div id="finalBox" class="stagger"><div class="check"><div class="spinner" style="border-color:rgba(0,0,0,.2);border-top-color:#111"></div></div>
+    <h2>Enviando tus respuestas…</h2></div>`;
+}
+async function submit(){
+  const payload = buildPayload();
+  let ok=false;
+  try{
+    const r = await fetch('/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    ok = r.ok;
+  }catch(e){}
+  submitted = ok; save();
+  showThanks(ok,payload);
+}
+function buildPayload(){
+  const out={ enviado: new Date().toISOString(), respuestas:{} };
+  questions.forEach(q=>{ if(!visible(q)) return; let v=A[q.id];
+    if(q.type==='ladder' && v!==undefined) v=`${v+1} · ${q.options[v].t}`;
+    if(q.type==='scale' && v && q.valueLabels) v=`${v} (${q.valueLabels[v-1]})`;
+    if(q.type==='slider' && v!==undefined && q.fmt) v=q.fmt(v);
+    if(q.type==='rank' && v) v=v.map((x,k)=>`${k+1}. ${x}`);
+    out.respuestas[q.id]={pregunta:fill(q.q).replace(/<[^>]+>/g,''),respuesta:v??null};
+  });
+  return out;
+}
+function showThanks(ok,payload){
+  const name=(A.nombre||'').split(' ')[0];
+  const lvl = A.nivel!==undefined ? A.nivel+1 : null;
+  const lvlName = lvl? Q.find(q=>q.id==='nivel').options[A.nivel].t : '—';
+  const hrs = A.horas ?? 8;
+  const yearly = Math.round(hrs*46);
+  const top = (A.dolores||[])[0] || '—';
+  const box=$('#finalBox'); if(!box) return;
+  box.innerHTML = `
+    <div class="check"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>
+    <h1 style="font-size:clamp(34px,6vw,58px)">¡Gracias${name?', '+esc(name):''}!</h1>
+    <p class="help">${ok?'Recibimos tus respuestas. Con esto, el equipo de <b style="color:var(--ink);font-weight:600">Panal</b> diseñará una propuesta de curso a la medida de Domina y te la compartirá en los próximos días.':'No pudimos enviar automáticamente. Por favor descarga tus respuestas y compártelas con Panal.'}</p>
+    <div class="summary">
+      <div class="sum"><span>Nivel de IA actual</span><b>${lvl?lvl+' / 5 · '+lvlName:'—'}</b><div class="meter"><i data-w="${lvl?lvl*20:0}"></i></div></div>
+      <div class="sum"><span>Tiempo recuperable</span><b>~${yearly.toLocaleString('es')} h / año</b><div style="color:var(--mute);font-size:13px;margin-top:6px">por persona, si automatizamos lo repetitivo</div></div>
+      <div class="sum"><span>Proceso #1 a atacar</span><b>${esc(top)}</b></div>
+    </div>
+    <div class="actions">
+      <button class="btn ${ok?'ghost':''}" id="dl">Descargar mis respuestas</button>
+      <button class="skip" id="edit">Revisar o cambiar respuestas</button>
+    </div>
+    <div style="margin-top:44px;display:flex;align-items:center;gap:14px"><img src="panal-symbol-dark.svg" alt="" style="height:34px"><span style="font-weight:600;letter-spacing:-.02em;font-size:18px">Tú completas el panal.</span></div>`;
+  requestAnimationFrame(()=>box.querySelectorAll('.meter i').forEach(m=>m.style.width=m.dataset.w+'%'));
+  $('#dl').onclick=()=>download(payload);
+  $('#edit').onclick=()=>{ i=1; render(-1); };
+}
+function download(p){
+  let txt=`DIAGNÓSTICO IA · PANAL × DOMINA\n${new Date().toLocaleString('es')}\n\n`;
+  Object.values(p.respuestas).forEach(r=>{ let v=r.respuesta;
+    if(Array.isArray(v)) v=v.join(', '); else if(v&&typeof v==='object') v=Object.entries(v).map(([k,x])=>`\n   - ${k}: ${x}`).join('');
+    txt+=`■ ${r.pregunta}\n   ${v??'—'}\n\n`; });
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'}));
+  a.download=`diagnostico-ia-domina-${(A.nombre||'respuestas').toLowerCase().replace(/\s+/g,'-')}.txt`; a.click();
+}
+
+/* ---------- teclado / nav ---------- */
+$('#prev').onclick=()=>go(-1);
+$('#next').onclick=()=>go(1);
+document.addEventListener('keydown',e=>{
+  const q=Q[i]; const tag=document.activeElement.tagName;
+  if(e.key==='Enter' && !e.shiftKey){
+    if(q.type==='final') return;
+    e.preventDefault(); go(1); return;
+  }
+  if(tag==='INPUT'||tag==='TEXTAREA') return;
+  if(e.key==='ArrowDown'||e.key==='PageDown'){ e.preventDefault(); go(1);}
+  if(e.key==='ArrowUp'||e.key==='PageUp'){ e.preventDefault(); go(-1);}
+  const k=e.key.toUpperCase(), idx=KEYS.indexOf(k);
+  if(idx>=0 && k.length===1 && (q.type==='single'||q.type==='multi')){ const b=slide.querySelectorAll('.opt')[idx]; if(b) b.click(); }
+  if(/^[1-9]$/.test(e.key)){ if(q.type==='scale'||q.type==='ladder'){ const b=slide.querySelectorAll(q.type==='scale'?'.scale button':'.rung')[+e.key-1]; if(b) b.click(); } }
+});
+// observar llegada a final
+const _render=render;
+render=function(dir){ _render(dir); if(Q[i].type==='final'){ setTimeout(submit,900); } };
+
+/* ---------- fondo de panal ---------- */
+(function(){
+  const c=$('#hex'),x=c.getContext('2d'); let W,H,dpr,t=0,mx=-999,my=-999;
+  const R=34, w=Math.sqrt(3)*R, h=1.5*R;
+  function size(){ dpr=Math.min(2,devicePixelRatio||1); W=innerWidth; H=innerHeight; c.width=W*dpr; c.height=H*dpr; c.style.width=W+'px'; c.style.height=H+'px'; x.setTransform(dpr,0,0,dpr,0,0); }
+  addEventListener('resize',size); size();
+  addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY});
+  function hex(cx,cy,r){ x.beginPath(); for(let k=0;k<6;k++){const a=Math.PI/180*(60*k-30); x.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));} x.closePath(); }
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function draw(){
+    t+=0.008; x.clearRect(0,0,W,H);
+    for(let row=-1; row*h<H+R; row++){
+      for(let col=-1; col*w<W+w; col++){
+        const cx=col*w+(row%2?w/2:0), cy=row*h;
+        const d=Math.hypot(cx-mx,cy-my);
+        const wave=(Math.sin(cx*0.006+cy*0.004+t*2)+1)/2;
+        const near=Math.max(0,1-d/220);
+        const fade = Math.min(1, (cx/W)*1.3) * 0.9;  // más visible a la derecha
+        x.lineWidth=1;
+        x.strokeStyle= near>0.05 ? `rgba(255,159,10,${(near*0.55)*fade})` : `rgba(17,17,19,${(0.03+wave*0.035)*fade})`;
+        hex(cx,cy,R-2); x.stroke();
+        if(near>0.25 || (wave>0.985)){ x.fillStyle=`rgba(255,159,10,${(near*0.10+ (wave>0.985?0.05:0))*fade})`; x.fill(); }
+      }
+    }
+    if(!reduce) requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+render(1);
+</script>
+</body>
+</html>

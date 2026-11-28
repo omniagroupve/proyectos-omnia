@@ -125,6 +125,28 @@ section.s{padding-block:88px; border-bottom:1px solid var(--line)}
 .dont .box svg{width:86%}
 .dont .box::after{content:""; position:absolute; inset:0; background:linear-gradient(to top right, transparent calc(50% - 1px), #C0262D calc(50% - 1px), #C0262D calc(50% + 1px), transparent calc(50% + 1px))}
 
+/* Mascot */
+.masc{display:grid; grid-template-columns:1fr 2fr; gap:22px; align-items:start}
+.ficha{border:1px solid var(--line); border-radius:var(--r); padding:26px; display:grid; gap:16px; background:var(--paper)}
+.ficha .mname{font-family:var(--display); font-style:var(--d-style); font-weight:var(--d-weight); font-variation-settings:var(--d-vars); text-transform:var(--d-case); font-size:clamp(3rem,6vw,4.2rem); color:var(--main); line-height:1}
+.ficha .phon{font-family:var(--mono); font-size:.85rem; color:var(--muted)}
+.ficha dl{display:grid; grid-template-columns:auto 1fr; gap:8px 14px; margin:0; font-size:.92rem}
+.ficha dt{font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--main); font-weight:700; padding-top:4px}
+.ficha dd{margin:0}
+.ficha .quote{font-family:var(--display); font-style:var(--d-style); font-variation-settings:var(--d-vars); font-size:1.6rem; color:var(--ink); line-height:1.15}
+.poses{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px}
+.pose{border-radius:var(--r); overflow:hidden; display:grid; grid-template-rows:auto auto}
+.pose .st{aspect-ratio:1; display:grid; place-items:center; padding:14px}
+.pose .st svg{width:100%; height:100%}
+.pose .cap2{padding:12px 16px 16px; background:var(--paper); border:1px solid var(--line); border-top:0; border-radius:0 0 var(--r) var(--r); font-size:.88rem}
+.pose .cap2 b{display:block; font-family:var(--display); font-style:var(--d-style); font-variation-settings:var(--d-vars); font-weight:var(--d-weight); text-transform:var(--d-case); font-size:1.25rem; color:var(--main)}
+.mrules{grid-column:1/-1; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; font-size:.88rem}
+.mrules div{padding:14px; border-radius:10px; background:color-mix(in srgb, var(--bg) 70%, var(--paper))}
+.mrules b{display:block; margin-bottom:4px}
+.refnote{margin:0 22px 18px; padding:12px 14px; border-radius:10px; font-size:.86rem; background:color-mix(in srgb, var(--p2) 35%, var(--paper))}
+@media (max-width:900px){ .masc{grid-template-columns:1fr} .mrules{grid-template-columns:1fr 1fr} }
+@media (max-width:520px){ .mrules{grid-template-columns:1fr} }
+
 /* Type */
 .types{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px}
 .type-card{border:1px solid var(--line); border-radius:var(--r); padding:26px; display:grid; gap:16px; background:var(--paper); align-content:start}
@@ -313,7 +335,7 @@ footer .wrap{display:flex; justify-content:space-between; gap:16px; flex-wrap:wr
 </section>
 
 <nav class="wrap toc" aria-label="Contenido">
-  <a href="#concepto">Concepto</a><a href="#logos">Logos</a><a href="#tipografia">Tipografía</a><a href="#color">Color</a><a href="#aplicaciones">Aplicaciones</a><a href="#voz">Voz y tono</a><a href="#productos">Línea de galletas</a><a href="#fotografia">Fotografía</a><a href="#siguiente">Siguientes pasos</a>
+  <a href="#concepto">Concepto</a><a href="#logos">Logos</a><a href="#mascota">Mascota</a><a href="#tipografia">Tipografía</a><a href="#color">Color</a><a href="#aplicaciones">Aplicaciones</a><a href="#voz">Voz y tono</a><a href="#productos">Línea de galletas</a><a href="#fotografia">Fotografía</a><a href="#siguiente">Siguientes pasos</a>
 </nav>
 
 <!-- ============ CONCEPTO ============ -->
@@ -396,6 +418,41 @@ footer .wrap{display:flex; justify-content:space-between; gap:16px; flex-wrap:wr
         <h3>Usos incorrectos</h3>
         <div class="donts" id="donts"></div>
         <p style="font-size:.86rem;color:var(--muted);margin-top:14px">No estirar ni deformar · No cambiar los colores fuera de la paleta · No usar contorno · No poner sobre fotos con mucho ruido. Sobre foto, usa un recuadro de color de la paleta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MASCOTA ============ -->
+<section class="s" id="mascota">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Mascota</div>
+      <div>
+        <h2>Kouli, la galleta más cool del Olimpo</h2>
+        <p class="lede">Una galleta de mantequilla con lentes oscuros, corona de laurel y tenis de color Rojo Nemea. Es el anfitrión de la marca: llega a tu puerta con la caja y se despide con un guiño. También cambia con tu paleta.</p>
+      </div>
+    </div>
+    <div class="masc">
+      <div class="ficha">
+        <div>
+          <div class="mname">Kouli</div>
+          <div class="phon">se pronuncia KU-li · viene de koulourákia (κουλουράκια), las galletas griegas de mantequilla</div>
+        </div>
+        <div class="quote">"¡Llegué! Y traje para todos."</div>
+        <dl>
+          <dt>Es</dt><dd>Relajado, buena onda, puntual. Nunca llega con las manos vacías.</dd>
+          <dt>Le gusta</dt><dd>El sol de las islas, la miel, que lo compartan.</dd>
+          <dt>Su detalle</dt><dd>La corona de laurel, que los griegos daban a los ganadores. Kouli se la ganó por ser la mejor galleta.</dd>
+          <dt>Aparece en</dt><dd>Stickers de cierre, historias, reacciones de WhatsApp, tarjeta de pedido y el aviso de "pedido en camino".</dd>
+        </dl>
+      </div>
+      <div class="poses" id="poses"></div>
+      <div class="mrules">
+        <div><b>Siempre con laurel.</b>Es lo que lo hace griego. Los lentes se los puede quitar.</div>
+        <div><b>Colores de la paleta.</b>Tenis y caja en el color madre, cachetes en pastel.</div>
+        <div><b>Acompaña al logo.</b>Nunca lo reemplaza ni va dentro del logo.</div>
+        <div><b>Puede tener mordidas.</b>Con humor, nunca roto en pedazos ni triste.</div>
       </div>
     </div>
   </div>
@@ -621,7 +678,10 @@ const PALS = [
   {id:'P3', name:'Higo y pistacho', story:'Golosa y de temporada. Higos maduros, pistacho y mantequilla.',
    c:[NEMEA,{n:'Crema de leche',hex:'#F8F0E1',role:'Fondo'},{n:'Higo',hex:'#DDB6C8',role:'Pastel 1'},{n:'Pistacho',hex:'#D2E3C1',role:'Pastel 2'},{n:'Mantequilla',hex:'#F6E4AE',role:'Pastel 3'},{n:'Cacao',hex:'#45291F',role:'Texto'}]},
   {id:'P4', name:'Atardecer en Oía', story:'Romántica y fotogénica. El cielo de Santorini al caer el sol.',
-   c:[NEMEA,{n:'Nube',hex:'#FCF3EE',role:'Fondo'},{n:'Durazno',hex:'#F8CDB3',role:'Pastel 1'},{n:'Rosa Oía',hex:'#F0B5BE',role:'Pastel 2'},{n:'Salvia',hex:'#C8D5C0',role:'Pastel 3'},{n:'Tinta de vino',hex:'#3B1B22',role:'Texto'}]}
+   c:[NEMEA,{n:'Nube',hex:'#FCF3EE',role:'Fondo'},{n:'Durazno',hex:'#F8CDB3',role:'Pastel 1'},{n:'Rosa Oía',hex:'#F0B5BE',role:'Pastel 2'},{n:'Salvia',hex:'#C8D5C0',role:'Pastel 3'},{n:'Tinta de vino',hex:'#3B1B22',role:'Texto'}]},
+  {id:'P5', name:'Burdeos y algodón', story:'Hecha con tu referencia: Indian Burgundy y Cotton Whisper, más tres pasteles que combinan con ellos.',
+   note:'Ojo: el código #6D193A es más oscuro y más morado que el color que se ve en tu imagen. Si te gusta el que se ve en pantalla, es más cercano a #7B1D27.',
+   c:[{n:'Indian Burgundy',hex:'#6D193A',role:'Color madre'},{n:'Cotton Whisper',hex:'#FAF1E0',role:'Fondo'},{n:'Rosa té',hex:'#EDC7CB',role:'Pastel 1'},{n:'Vainilla',hex:'#F2DFB4',role:'Pastel 2'},{n:'Salvia suave',hex:'#D2DDC6',role:'Pastel 3'},{n:'Tinta',hex:'#2A0F18',role:'Texto'}]}
 ];
 const LOGOS = [
   {id:'L1', name:'Firma', desc:'Logotipo: el nombre con un trazo de cuchara debajo y el griego en pequeño. Es el más versátil y el más legible.'},
@@ -644,7 +704,7 @@ const PROMPTS = [
 ];
 
 let state = {t:0,p:0,l:0};
-try{ const s = JSON.parse(localStorage.getItem('glyka-combo')||'null'); if(s && [s.t,s.p,s.l].every(v=>Number.isInteger(v)&&v>=0&&v<4)) state=s; }catch(e){}
+try{ const s = JSON.parse(localStorage.getItem('glyka-combo')||'null'); if(s && [[s.t,4],[s.p,5],[s.l,4]].every(([v,n])=>Number.isInteger(v)&&v>=0&&v<n)) state=s; }catch(e){}
 
 const $ = id => document.getElementById(id);
 let uid = 0;
@@ -780,6 +840,7 @@ function renderPals(){
       <div class="swatches">${P.c.map(c=>{const r=rgb(c.hex);return `<button class="sw" style="background:${c.hex};color:${onColor(c.hex,P)}" data-copy="${c.hex}" aria-label="Copiar ${esc(c.n)} ${c.hex}">
         <span><span class="r">${esc(c.role)}</span><br><span class="n">${esc(c.n)}</span></span>
         <span class="v">${c.hex}<br>RGB ${r.join(' ')}<br>CMYK ${cmyk(c.hex)}</span><span class="cp">Copiar HEX</span></button>`}).join('')}</div>
+      ${P.note?`<div class="refnote">${esc(P.note)}</div>`:''}
       <div class="pal-foot"><b style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase">Contraste</b>${checks.map(([t,a,b])=>{const v=ratio(a,b);const ok=v>=4.5?'AA':v>=3?'AA grande':'Solo decorativo';return `<span class="ab" title="${t}"><span class="dot" style="background:${b};color:${a};border:1px solid ${a}">A</span>${t} <i>${v.toFixed(1)}:1 · ${ok}</i></span>`}).join('')}<span class="ratio-note">Proporción de uso: 40 · 22 · 14 · 10 · 8 · 6</span></div>
     </article>`}).join('');
 }
@@ -793,7 +854,7 @@ function renderApps(){
   $('app-card-logo').innerHTML = logoSVG(L===3?0:L,{fg:'var(--main)',bg:'var(--bg)',ac:'var(--p1)'});
   $('app-avatar').innerHTML = logoSVG(1,{fg:'var(--bg)',bg:'var(--main)',ac:'var(--p1)'});
   const tiles=['var(--p1)','var(--main)','var(--p3)','var(--bg)','var(--p2)','var(--p1)'];
-  $('app-grid').innerHTML = tiles.map((t,i)=>`<div style="background:${t}">${i===1?logoSVG(1,{fg:'var(--bg)',bg:'var(--main)',ac:'var(--p1)'}):i===3?'<span style="font-family:var(--display);font-style:var(--d-style);font-variation-settings:var(--d-vars);color:var(--main);font-size:1.1rem;text-align:center;line-height:1.1;padding:6px">Gracias<br>por recibirnos</span>':cookieSVG()}</div>`).join('');
+  $('app-grid').innerHTML = tiles.map((t,i)=>`<div style="background:${t}">${i===1?logoSVG(1,{fg:'var(--bg)',bg:'var(--main)',ac:'var(--p1)'}):i===5?mascot(0):i===3?'<span style="font-family:var(--display);font-style:var(--d-style);font-variation-settings:var(--d-vars);color:var(--main);font-size:1.1rem;text-align:center;line-height:1.1;padding:6px">Gracias<br>por recibirnos</span>':cookieSVG()}</div>`).join('');
 }
 function renderProds(){
   $('prod-rows').innerHTML = PRODS.map(p=>`<tr><td class="pn">${p[0]}</td><td class="gr">${p[1]}</td><td>${p[2]}</td><td>${p[3]}</td><td><span class="dot" style="background:var(--${p[4]})"></span></td></tr>`).join('');
@@ -808,7 +869,64 @@ function renderCombo(){
   $('mycombo').textContent=`${code}\nTipografía: ${T.name} (${T.dName} + ${T.bName})\nPaleta: ${P.name}\nLogo: ${L.name}`;
   $('mycombo').style.whiteSpace='pre-line';
 }
-function renderAll(){ applyTokens(); chips(); renderLogos(); renderTypes(); renderPals(); renderApps(); renderCombo(); requestAnimationFrame(drawBands); }
+const POSES=[
+  ['¡Hola!','Saludo. Para dar la bienvenida, bios y el primer mensaje de cada pedido.','var(--p1)'],
+  ['Guiño','Lentes arriba y guiño. Para lanzamientos, promos y respuestas con humor.','var(--p2)'],
+  ['En camino','Con la caja de Glyká. Para "tu pedido va en camino" y la tarjeta de entrega.','var(--p3)'],
+  ['¡Ey, mi borde!','Mordido. Para "se acabaron", reseñas y el último lote del día.','var(--bg)']
+];
+function mascot(pose){
+  const n=++uid, cx=130, cy=130, R=78, ink='var(--ink)', line='#5A3A2A', glove='#FFF8EE';
+  const pts=[]; for(let k=0;k<44;k++){const a=k/44*Math.PI*2; const r=R+Math.sin(a*5)*2.2+Math.sin(a*11+1)*1.4; pts.push([cx+r*Math.cos(a), cy+r*Math.sin(a)]);}
+  const mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2], f=v=>v.toFixed(1);
+  let d=`M${mid(pts[43],pts[0]).map(f).join(' ')}`; for(let k=0;k<44;k++){const m=mid(pts[k],pts[(k+1)%44]); d+=` Q${f(pts[k][0])} ${f(pts[k][1])} ${f(m[0])} ${f(m[1])}`;} d+='Z';
+  // laurel
+  let laurel=''; for(let a=205;a<=335;a+=12){ for(const [rr,rot] of [[71,28],[81,-28]]){ const t=a*Math.PI/180, x=cx+rr*Math.cos(t), y=cy+rr*Math.sin(t); laurel+=`<ellipse cx="${f(x)}" cy="${f(y)}" rx="8" ry="3.6" transform="rotate(${f(a+90+rot)} ${f(x)} ${f(y)})" fill="${rr>75?'#7E9A5A':'#94B06E'}" stroke="#5E7A40" stroke-width=".8"/>`; } }
+  const hand=(x,y)=>`<circle cx="${x}" cy="${y}" r="9" fill="${glove}" stroke="${line}" stroke-width="2.5"/>`;
+  const arm=dd=>`<path d="${dd}" fill="none" stroke="${line}" stroke-width="6" stroke-linecap="round"/>`;
+  const shoes=`<path d="M78 262 q0 -16 20 -16 q16 0 20 16 z" style="fill:var(--main)"/><rect x="74" y="259" width="46" height="7" rx="3.5" fill="${glove}"/>
+    <path d="M142 262 q4 -16 20 -16 q20 0 20 16 z" style="fill:var(--main)"/><rect x="140" y="259" width="46" height="7" rx="3.5" fill="${glove}"/>`;
+  const legs=arm('M108 196 L100 250')+arm('M152 196 L160 250');
+  const glasses=(tr)=>`<g transform="${tr||''}"><path d="M84 110 L64 104 M176 110 L196 104" style="stroke:${ink}" stroke-width="4" stroke-linecap="round"/>
+    <rect x="82" y="102" width="42" height="27" rx="10" style="fill:${ink}"/><rect x="136" y="102" width="42" height="27" rx="10" style="fill:${ink}"/>
+    <path d="M124 110 Q130 104 136 110" fill="none" style="stroke:${ink}" stroke-width="4"/>
+    <path d="M91 108 L99 121 M145 108 L153 121" stroke="#fff" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/></g>`;
+  const blush=`<ellipse cx="86" cy="146" rx="10" ry="5.5" style="fill:var(--p1)" opacity=".95"/><ellipse cx="174" cy="146" rx="10" ry="5.5" style="fill:var(--p1)" opacity=".95"/>`;
+  let back='', face='', front='', mask='';
+  let leftArm=arm('M56 142 Q34 162 40 186'), leftHand=hand(40,189);
+  if(pose===0){ back=arm('M204 128 Q232 104 226 70'); front=hand(226,66)+`<path d="M242 50 q10 10 3 24 M252 42 q14 15 5 34" fill="none" style="stroke:${ink}" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/>`;
+    face=glasses()+`<path d="M106 152 Q128 170 154 148" fill="none" style="stroke:${ink}" stroke-width="4.5" stroke-linecap="round"/>`; }
+  if(pose===1){ back=arm('M204 142 Q228 160 212 180'); front=hand(210,182);
+    face=glasses('translate(0,-30) rotate(-5 130 115)')+`<ellipse cx="106" cy="120" rx="7" ry="9" style="fill:${ink}"/><circle cx="108.5" cy="116" r="2.6" fill="#fff"/>
+      <path d="M144 121 Q155 112 166 121" fill="none" style="stroke:${ink}" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M104 146 Q130 176 156 146 Z" fill="#4A1A20"/><ellipse cx="130" cy="160" rx="10" ry="5" style="fill:var(--p1)"/>`; }
+  if(pose===2){ back=arm('M204 146 Q222 162 214 176');
+    front=`<g transform="rotate(-6 226 182)"><rect x="196" y="160" width="56" height="44" rx="5" style="fill:var(--main)"/><rect x="221" y="160" width="7" height="44" style="fill:var(--p2)"/><rect x="196" y="178" width="56" height="7" style="fill:var(--p2)"/>
+      <path d="M224 160 q-12 -14 -2 -14 q6 0 4 14 q2 -14 8 -14 q10 0 -6 14" style="fill:var(--p2)"/></g>`+hand(212,178)+hand(244,198);
+    face=glasses()+`<path d="M104 148 Q130 174 156 148 Z" fill="#4A1A20"/><ellipse cx="130" cy="161" rx="9" ry="4.5" style="fill:var(--p1)"/>`; }
+  if(pose===3){ leftArm=arm('M56 130 Q32 110 36 82'); leftHand=hand(36,78); back=arm('M204 126 Q228 106 224 80'); front=hand(224,76)+
+      `<g style="fill:#D7A161"><rect x="212" y="206" width="7" height="6" rx="2" transform="rotate(20 215 209)"/><rect x="222" y="222" width="5" height="5" rx="1.5"/><rect x="206" y="228" width="6" height="5" rx="1.5" transform="rotate(-15 209 230)"/></g>
+      <path d="M182 92 q6 10 0 14 q-6 -4 0 -14z" fill="#9CC6E0"/>`;
+    mask=`<mask id="bt${n}"><rect width="280" height="280" fill="#fff"/><circle cx="200" cy="176" r="20" fill="#000"/><circle cx="186" cy="198" r="17" fill="#000"/><circle cx="208" cy="152" r="14" fill="#000"/></mask>`;
+    face=glasses('rotate(9 130 125) translate(0,12)')+`<circle cx="106" cy="102" r="6" fill="none" style="stroke:${ink}" stroke-width="3.5"/><circle cx="154" cy="102" r="6" fill="none" style="stroke:${ink}" stroke-width="3.5"/>
+      <ellipse cx="130" cy="164" rx="7" ry="9" style="fill:${ink}"/>`; }
+  return `<svg viewBox="0 0 270 280" role="img" aria-label="Kouli, mascota de Glyká">
+    <defs><radialGradient id="kb${n}" cx="42%" cy="38%" r="65%"><stop offset="0" stop-color="#EDC48A"/><stop offset=".7" stop-color="#D9A464"/><stop offset="1" stop-color="#BE8443"/></radialGradient>${mask}</defs>
+    <ellipse cx="132" cy="266" rx="70" ry="7" fill="rgba(60,20,20,.12)"/>
+    ${legs}${shoes}${leftArm}${back}
+    <g ${mask?`mask="url(#bt${n})"`:''}>
+      <path d="${d}" fill="url(#kb${n})" stroke="#A86F35" stroke-width="3"/>
+      <circle cx="130" cy="130" r="64" fill="none" stroke="#B9803F" stroke-width="2" opacity=".35"/>
+      <g fill="#4A2A20"><circle cx="70" cy="182" r="6"/><circle cx="190" cy="124" r="5"/><circle cx="98" cy="198" r="5"/><circle cx="150" cy="80" r="4"/></g>
+      <g style="fill:var(--main)"><circle cx="165" cy="188" r="7"/><circle cx="58" cy="122" r="4.5"/><circle cx="112" cy="80" r="4"/></g>
+      ${blush}
+    </g>
+    ${laurel}${face}${leftHand}${front}</svg>`;
+}
+function renderMascot(){
+  $('poses').innerHTML = POSES.map((p,i)=>`<figure class="pose"><div class="st" style="background:${p[2]}">${mascot(i)}</div><figcaption class="cap2"><b>${esc(p[0])}</b>${esc(p[1])}</figcaption></figure>`).join('');
+}
+function renderAll(){ applyTokens(); chips(); renderMascot(); renderLogos(); renderTypes(); renderPals(); renderApps(); renderCombo(); requestAnimationFrame(drawBands); }
 
 /* ---------- interactions ---------- */
 let tt;

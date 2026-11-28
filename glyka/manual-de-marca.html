@@ -1,0 +1,832 @@
+<title>Glyká · Manual de marca</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..800,0..100,0..1;1,9..144,300..800,0..100,0..1&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=GFS+Didot&family=Marcellus&family=Ysabeau:wght@300..700&family=Manrope:wght@300..700&family=Commissioner:wght@300..700&family=Alegreya+Sans:wght@300;400;500;700&display=swap">
+<style>
+/* Layout: a single long editorial sheet. Sticky "mixer" bar on top recolors and retypes the whole manual live.
+   Deliberately light-only: a brand manual must show colors exactly as they print. */
+:root{
+  color-scheme: light;
+  /* Master brand color, fixed across every palette */
+  --nemea:#9C1C33;        /* Rojo Nemea: burgundy pushed toward red */
+  --nemea-deep:#5E0F1E;
+  /* Live tokens (overwritten by the mixer) */
+  --main:#9C1C33; --bg:#F5E6D8; --p1:#F2C4C8; --p2:#F0D59B; --p3:#CFDDBF; --ink:#3A1820;
+  --display:'Fraunces', 'GFS Didot', Georgia, serif;
+  --body:'Ysabeau', 'Manrope', system-ui, sans-serif;
+  --d-style:italic; --d-weight:500; --d-vars:"SOFT" 100, "WONK" 1; --d-case:none; --d-track:-0.01em;
+  /* Chrome */
+  --paper:#FFFCFA;
+  --line:color-mix(in srgb, var(--ink) 14%, transparent);
+  --muted:color-mix(in srgb, var(--ink) 66%, var(--paper));
+  --mono:ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important;animation:none!important}}
+body{background:var(--paper); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased}
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:30; background:var(--paper)}
+h1,h2,h3,h4{font-family:var(--display); font-style:var(--d-style); font-weight:var(--d-weight); font-variation-settings:var(--d-vars); text-transform:var(--d-case); letter-spacing:var(--d-track); text-wrap:balance; margin:0; line-height:1.08}
+p{margin:0}
+.wrap{max-width:1180px; margin:0 auto; padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px))}
+.eyebrow{font-size:.74rem; letter-spacing:.16em; text-transform:uppercase; font-weight:600; color:var(--main)}
+.lede{font-size:1.15rem; max-width:62ch; color:var(--muted)}
+.greek{font-family:var(--body); letter-spacing:.22em; text-transform:uppercase}
+button{font:inherit; color:inherit}
+:focus-visible{outline:2px solid var(--main); outline-offset:3px; border-radius:6px}
+
+/* ---------- Mixer bar ---------- */
+.mixer{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+.mixer .wrap{display:flex; gap:10px 22px; align-items:center; padding-block:10px; overflow-x:auto; scrollbar-width:thin}
+.mixer .brandmini{font-family:var(--display); font-style:var(--d-style); font-weight:var(--d-weight); font-variation-settings:var(--d-vars); text-transform:var(--d-case); font-size:1.35rem; color:var(--main); white-space:nowrap; margin-right:4px}
+.mgroup{display:flex; align-items:center; gap:6px; flex:none}
+.mgroup > span{font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-right:2px; font-weight:600}
+.chip{border:1px solid var(--line); background:var(--paper); border-radius:999px; padding:5px 11px; font-size:.82rem; cursor:pointer; white-space:nowrap; transition:background .2s, color .2s, border-color .2s}
+.chip:hover{border-color:var(--main)}
+.chip[aria-pressed="true"]{background:var(--main); color:var(--bg); border-color:var(--main)}
+.combo{margin-left:auto; flex:none; font-family:var(--mono); font-size:.78rem; color:var(--muted); white-space:nowrap}
+
+/* ---------- Hero ---------- */
+.hero{background:var(--main); color:var(--bg); position:relative; overflow:hidden}
+.hero .wrap{padding-block:72px 56px; display:grid; grid-template-columns:1.3fr 1fr; gap:40px; align-items:end}
+.hero h1{font-size:clamp(4.2rem, 13vw, 10.5rem); line-height:.9; color:var(--bg)}
+.hero .gk{font-size:clamp(1rem,2.2vw,1.35rem); margin-top:18px; opacity:.85}
+.hero .meta{display:grid; gap:14px; font-size:.95rem; max-width:40ch}
+.hero .meta p{opacity:.9}
+.hero .tag{font-family:var(--display); font-style:var(--d-style); font-variation-settings:var(--d-vars); font-size:1.9rem; line-height:1.15; opacity:1}
+.hero .band{height:34px; color:var(--bg); opacity:.55}
+.hero dl{display:grid; grid-template-columns:auto 1fr; gap:4px 16px; margin:0; font-size:.86rem; opacity:.8}
+.hero dt{letter-spacing:.12em; text-transform:uppercase; font-size:.72rem; padding-top:2px}
+.hero dd{margin:0}
+
+/* ---------- Sections ---------- */
+section.s{padding-block:88px; border-bottom:1px solid var(--line)}
+.shead{display:grid; grid-template-columns:220px 1fr; gap:24px 48px; margin-bottom:44px}
+.shead h2{font-size:clamp(2.2rem,5vw,3.6rem); color:var(--main)}
+.shead .lede{margin-top:14px}
+.toc{display:flex; flex-wrap:wrap; gap:8px 18px; padding-block:22px; font-size:.9rem}
+.toc a{color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line)}
+.toc a:hover{color:var(--main); border-color:var(--main)}
+
+/* Concept */
+.concept{display:grid; grid-template-columns:1.1fr 1fr; gap:48px; align-items:start}
+.word{border:1px solid var(--line); border-radius:var(--r); padding:32px; background:var(--bg)}
+.word .big{font-family:var(--display); font-style:var(--d-style); font-variation-settings:var(--d-vars); font-weight:var(--d-weight); text-transform:var(--d-case); font-size:clamp(3rem,7vw,4.6rem); color:var(--main); line-height:1}
+.word .phon{font-family:var(--mono); font-size:.9rem; color:var(--muted); margin-top:10px}
+.word ol{margin:22px 0 0; padding-left:1.2em; display:grid; gap:10px}
+.pillars{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:28px}
+.pillar{padding:18px; border-radius:12px; background:color-mix(in srgb, var(--p1) 45%, var(--paper))}
+.pillar:nth-child(2){background:color-mix(in srgb, var(--p2) 45%, var(--paper))}
+.pillar:nth-child(3){background:color-mix(in srgb, var(--p3) 50%, var(--paper))}
+.pillar:nth-child(4){background:color-mix(in srgb, var(--bg) 80%, var(--paper))}
+.pillar h4{font-size:1.25rem; color:var(--main); margin-bottom:6px}
+.pillar p{font-size:.92rem}
+.facts{display:grid; gap:20px}
+.facts h3{font-size:1.6rem; margin-bottom:6px}
+.taglines{display:grid; gap:10px; margin-top:12px}
+.taglines div{display:flex; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); align-items:baseline}
+.taglines b{font-family:var(--display); font-style:var(--d-style); font-variation-settings:var(--d-vars); font-weight:var(--d-weight); font-size:1.3rem; color:var(--ink)}
+.taglines small{color:var(--muted); font-size:.78rem; text-align:right}
+.pill{display:inline-block; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; padding:3px 8px; border-radius:999px; background:var(--main); color:var(--bg); font-weight:600; vertical-align:middle; margin-left:6px}
+
+/* Logos */
+.logos{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px}
+.logo-card{border:1px solid var(--line); border-radius:var(--r); overflow:hidden; background:var(--paper); display:flex; flex-direction:column}
+.logo-card.sel{border-color:var(--main); box-shadow:0 0 0 2px var(--main)}
+.logo-stage{aspect-ratio:16/10; display:grid; place-items:center; background:var(--bg); padding:28px}
+.logo-stage svg{width:100%; height:100%; max-height:260px}
+.logo-vars{display:grid; grid-template-columns:1fr 1fr 1fr; border-top:1px solid var(--line)}
+.logo-vars div{aspect-ratio:3/2; display:grid; place-items:center; padding:12px}
+.logo-vars svg{width:100%; height:100%}
+.logo-info{padding:18px 20px 20px; display:grid; gap:8px; border-top:1px solid var(--line)}
+.logo-info .row{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
+.logo-info h3{font-size:1.5rem; color:var(--main)}
+.logo-info p{font-size:.92rem; color:var(--muted)}
+.pick{border:1px solid var(--main); color:var(--main); background:transparent; padding:6px 14px; border-radius:999px; cursor:pointer; font-size:.82rem; white-space:nowrap}
+.pick[aria-pressed="true"]{background:var(--main); color:var(--bg)}
+
+.rules{display:grid; grid-template-columns:1.2fr 1fr; gap:22px; margin-top:28px}
+.rulebox{border:1px solid var(--line); border-radius:var(--r); padding:22px}
+.rulebox h3{font-size:1.4rem; margin-bottom:12px}
+.clear{position:relative; background:var(--bg); border-radius:10px; padding:38px; display:grid; place-items:center}
+.clear .zone{border:1.5px dashed color-mix(in srgb, var(--main) 55%, transparent); padding:22px 26px; position:relative}
+.clear .zone::before,.clear .zone::after{content:"x"; position:absolute; font-family:var(--mono); font-size:.72rem; color:var(--main)}
+.clear .zone::before{top:2px; left:50%; transform:translateX(-50%)}
+.clear .zone::after{left:6px; top:50%; transform:translateY(-50%)}
+.clear svg{width:220px; max-width:100%; display:block}
+.minis{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; font-size:.86rem}
+.minis div{padding:10px 12px; background:color-mix(in srgb, var(--bg) 60%, var(--paper)); border-radius:8px}
+.minis b{display:block; font-family:var(--mono); font-size:.95rem; color:var(--main)}
+.donts{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px}
+.dont{display:grid; gap:6px; font-size:.78rem; color:var(--muted); text-align:center}
+.dont .box{aspect-ratio:1; border-radius:8px; display:grid; place-items:center; overflow:hidden; position:relative; background:var(--bg)}
+.dont .box svg{width:86%}
+.dont .box::after{content:""; position:absolute; inset:0; background:linear-gradient(to top right, transparent calc(50% - 1px), #C0262D calc(50% - 1px), #C0262D calc(50% + 1px), transparent calc(50% + 1px))}
+
+/* Type */
+.types{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px}
+.type-card{border:1px solid var(--line); border-radius:var(--r); padding:26px; display:grid; gap:16px; background:var(--paper); align-content:start}
+.type-card.sel{border-color:var(--main); box-shadow:0 0 0 2px var(--main)}
+.type-card .top{display:flex; justify-content:space-between; gap:10px; align-items:baseline}
+.type-card .top h3{font-family:var(--body); font-style:normal; font-weight:600; font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:var(--main); font-variation-settings:normal}
+.spec-d{font-size:clamp(3.4rem,7vw,5rem); line-height:.95; color:var(--main)}
+.spec-h{font-size:1.6rem; line-height:1.15}
+.spec-b{font-size:1rem; line-height:1.6; color:var(--muted)}
+.spec-g{font-size:.95rem; letter-spacing:.2em}
+.spec-meta{display:grid; grid-template-columns:auto 1fr; gap:4px 14px; font-size:.82rem; border-top:1px solid var(--line); padding-top:14px}
+.spec-meta dt{color:var(--muted)} .spec-meta dd{margin:0}
+.scale{margin-top:28px; border:1px solid var(--line); border-radius:var(--r); overflow-x:auto}
+.scale table{width:100%; border-collapse:collapse; min-width:560px}
+.scale td{padding:14px 18px; border-bottom:1px solid var(--line); vertical-align:middle}
+.scale tr:last-child td{border-bottom:0}
+.scale td:first-child{font-family:var(--mono); font-size:.76rem; color:var(--muted); white-space:nowrap; width:150px}
+.scale td:last-child{font-family:var(--mono); font-size:.76rem; color:var(--muted); white-space:nowrap; text-align:right; width:150px}
+
+/* Palettes */
+.pals{display:grid; gap:26px}
+.pal{border:1px solid var(--line); border-radius:var(--r); overflow:hidden; background:var(--paper)}
+.pal.sel{border-color:var(--main); box-shadow:0 0 0 2px var(--main)}
+.pal-head{display:flex; justify-content:space-between; align-items:center; gap:14px; padding:18px 22px; flex-wrap:wrap}
+.pal-head h3{font-size:1.7rem; color:var(--ink)}
+.pal-head p{font-size:.92rem; color:var(--muted); max-width:60ch}
+.pal-head .l{display:grid; gap:4px; min-width:0}
+.swatches{display:grid; grid-template-columns:2.2fr 1.3fr 1fr 1fr 1fr 1fr}
+.sw{min-height:190px; padding:14px; display:flex; flex-direction:column; justify-content:space-between; gap:8px; cursor:pointer; border:0; text-align:left; font:inherit; min-width:0}
+.sw .n{font-weight:600; font-size:.95rem; line-height:1.2}
+.sw .r{font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; opacity:.75}
+.sw .v{font-family:var(--mono); font-size:.72rem; line-height:1.5; opacity:.85; word-break:break-word}
+.sw .cp{font-size:.68rem; opacity:0; transition:opacity .2s}
+.sw:hover .cp,.sw:focus-visible .cp{opacity:.8}
+.pal-foot{display:flex; flex-wrap:wrap; gap:8px; padding:14px 22px; border-top:1px solid var(--line); font-size:.78rem; align-items:center}
+.ab{display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; border:1px solid var(--line)}
+.ab i{font-style:normal; font-family:var(--mono); font-size:.72rem}
+.ab .dot{width:14px; height:14px; border-radius:50%; display:grid; place-items:center; font-size:.6rem; font-weight:700}
+.ratio-note{color:var(--muted); margin-left:auto}
+.propor{display:flex; height:16px; border-radius:999px; overflow:hidden; margin:0 22px 18px}
+
+/* Applications */
+.apps{display:grid; grid-template-columns:repeat(12, minmax(0,1fr)); gap:22px}
+.app{display:grid; gap:10px; align-content:start; min-width:0}
+.app figcaption{font-size:.82rem; color:var(--muted)}
+.app figcaption b{color:var(--ink); font-weight:600}
+figure{margin:0}
+.ig{grid-column:span 4}
+.box{grid-column:span 8}
+.card{grid-column:span 5}
+.prof{grid-column:span 7}
+.ig .post{aspect-ratio:1; background:var(--p1); border-radius:10px; position:relative; overflow:hidden; display:grid; grid-template-rows:auto 1fr auto; padding:7%; color:var(--ink)}
+.post .ptop{display:flex; justify-content:space-between; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; font-weight:600; color:var(--main)}
+.post .cookie{width:62%; justify-self:center; align-self:center}
+.post .pname{font-family:var(--display); font-style:var(--d-style); font-weight:var(--d-weight); font-variation-settings:var(--d-vars); text-transform:var(--d-case); font-size:clamp(1.6rem,3.3vw,2.4rem); line-height:1; color:var(--main)}
+.post .pdesc{font-size:.82rem; margin-top:4px}
+.post .pbot{display:flex; justify-content:space-between; align-items:end; gap:10px}
+.post .pbot svg{width:54px; flex:none}
+.box .tin{aspect-ratio:16/9; border-radius:10px; background:var(--main); position:relative; overflow:hidden; display:grid; place-items:center; color:var(--bg)}
+.tin .band{position:absolute; left:0; right:0; height:9%; color:var(--p1)}
+.tin .band.t{top:7%} .tin .band.b{bottom:7%}
+.tin .lg{width:42%}
+.tin .lg svg{width:100%; height:auto; display:block}
+.tin .seal{position:absolute; right:6%; bottom:14%; width:17%; transform:rotate(-12deg)}
+.tin .ribbon{position:absolute; top:0; bottom:0; left:12%; width:5%; background:var(--p2); opacity:.95}
+.card .note{aspect-ratio:5/4; background:var(--bg); border-radius:10px; padding:9%; display:grid; align-content:space-between; box-shadow:0 1px 0 var(--line), 0 18px 40px -24px color-mix(in srgb, var(--ink) 45%, transparent); color:var(--ink)}
+.note h4{font-size:clamp(1.6rem,3vw,2.3rem); color:var(--main)}
+.note p{font-size:.9rem; margin-top:10px; max-width:34ch}
+.note .sig{display:flex; justify-content:space-between; align-items:end; font-size:.78rem; color:var(--muted)}
+.note .sig svg{width:90px}
+.prof .phone{border:1px solid var(--line); border-radius:18px; padding:22px; background:var(--paper); display:grid; gap:16px}
+.phone .ph{display:flex; gap:18px; align-items:center}
+.phone .av{width:86px; height:86px; border-radius:50%; flex:none; overflow:hidden; background:var(--main); padding:6px; outline:2px solid var(--p1); outline-offset:3px}
+.phone .av svg{width:100%; height:100%}
+.phone .stats{display:flex; gap:22px; font-size:.82rem; color:var(--muted)}
+.phone .stats b{display:block; color:var(--ink); font-size:1rem}
+.phone .bio{font-size:.88rem}
+.phone .bio b{display:block}
+.phone .hl{display:flex; gap:14px; overflow-x:auto; padding-bottom:4px}
+.phone .hl div{display:grid; gap:4px; justify-items:center; font-size:.7rem; color:var(--muted); flex:none}
+.phone .hl span{width:54px; height:54px; border-radius:50%; display:grid; place-items:center; font-family:var(--display); font-style:var(--d-style); font-variation-settings:var(--d-vars); font-size:1.3rem; color:var(--main); border:1px solid var(--line)}
+.phone .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:4px}
+.phone .grid div{aspect-ratio:1; border-radius:4px; display:grid; place-items:center; overflow:hidden}
+.phone .grid svg{width:60%}
+
+/* Voice */
+.voice{display:grid; grid-template-columns:1fr 1fr; gap:22px}
+.vbox{border:1px solid var(--line); border-radius:var(--r); padding:24px}
+.vbox h3{font-size:1.5rem; margin-bottom:14px}
+.traits{display:grid; gap:12px}
+.traits div{display:grid; grid-template-columns:130px 1fr; gap:12px; font-size:.92rem; padding-bottom:12px; border-bottom:1px solid var(--line)}
+.traits div:last-child{border-bottom:0; padding-bottom:0}
+.traits b{font-family:var(--display); font-style:var(--d-style); font-variation-settings:var(--d-vars); font-weight:var(--d-weight); font-size:1.15rem; color:var(--main)}
+.dd{display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:.9rem}
+.dd > div{padding:14px; border-radius:10px}
+.dd .yes{background:color-mix(in srgb, var(--p3) 55%, var(--paper))}
+.dd .no{background:color-mix(in srgb, var(--p1) 40%, var(--paper))}
+.dd h4{font-family:var(--body); font-style:normal; font-variation-settings:normal; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; margin-bottom:8px; font-weight:700}
+.dd ul{margin:0; padding-left:1.1em; display:grid; gap:6px}
+.captions{grid-column:1/-1; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px}
+.cap{background:var(--bg); border-radius:12px; padding:18px; font-size:.92rem; display:grid; gap:10px; align-content:start}
+.cap .k{font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--main); font-weight:700}
+.cap .h{color:var(--main); font-size:.84rem}
+
+/* Products */
+.prods{border:1px solid var(--line); border-radius:var(--r); overflow-x:auto}
+.prods table{width:100%; border-collapse:collapse; min-width:640px}
+.prods th{text-align:left; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); padding:14px 18px; border-bottom:1px solid var(--line); font-weight:600}
+.prods td{padding:16px 18px; border-bottom:1px solid var(--line); vertical-align:middle}
+.prods tr:last-child td{border-bottom:0}
+.prods .pn{font-family:var(--display); font-style:var(--d-style); font-variation-settings:var(--d-vars); font-weight:var(--d-weight); text-transform:var(--d-case); font-size:1.5rem; color:var(--main); white-space:nowrap}
+.prods .gr{font-family:var(--body); color:var(--ink); font-size:1.05rem; white-space:nowrap}
+.prods .dot{display:inline-block; width:22px; height:22px; border-radius:50%; vertical-align:middle; border:1px solid var(--line)}
+
+/* Photo */
+.photo{display:grid; grid-template-columns:1fr 1.4fr; gap:28px}
+.photo ul{margin:12px 0 0; padding-left:1.1em; display:grid; gap:8px; font-size:.95rem}
+.prompts{display:grid; gap:12px}
+.prompt{border:1px solid var(--line); border-radius:12px; padding:16px 18px; display:grid; gap:8px; background:var(--paper)}
+.prompt .t{display:flex; justify-content:space-between; gap:10px; align-items:center}
+.prompt b{font-size:.95rem}
+.prompt code{font-family:var(--mono); font-size:.8rem; line-height:1.55; color:var(--muted); white-space:pre-wrap; display:block}
+.copy{border:1px solid var(--line); background:var(--paper); border-radius:999px; padding:4px 12px; font-size:.76rem; cursor:pointer}
+.copy:hover{border-color:var(--main); color:var(--main)}
+
+/* Next */
+.next{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px}
+.step{border-radius:var(--r); padding:24px; display:grid; gap:10px; align-content:start}
+.step:nth-child(1){background:var(--main); color:var(--bg)}
+.step:nth-child(2){background:color-mix(in srgb, var(--p1) 60%, var(--paper))}
+.step:nth-child(3){background:color-mix(in srgb, var(--p3) 60%, var(--paper))}
+.step .k{font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; font-weight:700; opacity:.8}
+.step h3{font-size:1.7rem}
+.step p{font-size:.92rem}
+.step .mycombo{font-family:var(--mono); font-size:.85rem; background:color-mix(in srgb, var(--bg) 18%, transparent); padding:10px 12px; border-radius:8px; word-break:break-word}
+.step .copy{justify-self:start; background:var(--bg); color:var(--main); border-color:var(--bg)}
+footer{padding-block:40px 60px; color:var(--muted); font-size:.82rem}
+footer .wrap{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap}
+
+.toast{position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom,0px)); transform:translate(-50%, 20px); background:var(--ink); color:var(--paper); padding:9px 16px; border-radius:999px; font-size:.85rem; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:50}
+.toast.on{opacity:1; transform:translate(-50%,0)}
+
+@media (max-width: 900px){
+  .hero .wrap{grid-template-columns:1fr; padding-block:56px 40px}
+  .shead{grid-template-columns:1fr}
+  .concept,.rules,.voice,.photo{grid-template-columns:1fr}
+  .logos,.types{grid-template-columns:1fr}
+  .swatches{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .sw{min-height:150px}
+  .ig,.box,.card,.prof{grid-column:1/-1}
+  .captions,.next{grid-template-columns:1fr}
+  .donts{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width: 520px){
+  .pillars,.dd,.minis{grid-template-columns:1fr}
+  .swatches{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .traits div{grid-template-columns:1fr; gap:2px}
+  section.s{padding-block:64px}
+}
+</style>
+
+<header class="mixer" aria-label="Combinador de marca">
+  <div class="wrap">
+    <div class="brandmini">Glyká</div>
+    <div class="mgroup" role="group" aria-label="Tipografía"><span>Tipografía</span><div id="mx-t" style="display:flex;gap:6px"></div></div>
+    <div class="mgroup" role="group" aria-label="Paleta"><span>Paleta</span><div id="mx-p" style="display:flex;gap:6px"></div></div>
+    <div class="mgroup" role="group" aria-label="Logo"><span>Logo</span><div id="mx-l" style="display:flex;gap:6px"></div></div>
+    <div class="combo" id="combo">T1 · P1 · L1</div>
+  </div>
+</header>
+
+<section class="hero" id="inicio">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow" style="color:var(--bg);opacity:.75">Manual de marca · Versión 1 · Noviembre 2026</div>
+      <h1>Glyká</h1>
+      <div class="gk greek">Γλυκά · dulces</div>
+    </div>
+    <div class="meta">
+      <p class="tag">Dulces para recibir.</p>
+      <p>Galletas de autor horneadas a mano en pequeños lotes. Este manual reúne la idea de la marca, 4 tipografías, 4 paletas y 4 logos. Combínalos con la barra de arriba y todo el manual cambia contigo.</p>
+      <dl><dt>Color madre</dt><dd>Rojo Nemea · #9C1C33</dd><dt>Estilo</dt><dd>Artesanal premium</dd><dt>Canal</dt><dd>Instagram y delivery</dd></dl>
+    </div>
+  </div>
+  <svg class="band" id="hero-band" width="100%" aria-hidden="true"></svg>
+</section>
+
+<nav class="wrap toc" aria-label="Contenido">
+  <a href="#concepto">Concepto</a><a href="#logos">Logos</a><a href="#tipografia">Tipografía</a><a href="#color">Color</a><a href="#aplicaciones">Aplicaciones</a><a href="#voz">Voz y tono</a><a href="#productos">Línea de galletas</a><a href="#fotografia">Fotografía</a><a href="#siguiente">Siguientes pasos</a>
+</nav>
+
+<!-- ============ CONCEPTO ============ -->
+<section class="s" id="concepto">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Concepto</div>
+      <div>
+        <h2>El dulce que se ofrece al que llega</h2>
+        <p class="lede">En Grecia, cuando alguien llega a tu casa, lo recibes con algo dulce. Es parte de la <em>filoxenía</em>, el amor por el huésped. Glyká lleva esa costumbre a una caja de galletas que llega a tu puerta.</p>
+      </div>
+    </div>
+    <div class="concept">
+      <div>
+        <div class="word">
+          <div class="eyebrow">El nombre</div>
+          <div class="big">Glyká</div>
+          <div class="phon">Γλυκά · se pronuncia gli-KÁ · plural de γλυκός, "dulce"</div>
+          <ol>
+            <li><b>Es real y cotidiano.</b> Los griegos dicen <em>glyká</em> para hablar de los dulces caseros, como los <em>glyká tou koutalioú</em> (dulces de cuchara) que se sirven a las visitas.</li>
+            <li><b>Suena bien en español.</b> Dos sílabas, acento claro en la última, fácil de decir y de escribir en Instagram.</li>
+            <li><b>La tilde es parte de la marca.</b> Se escribe siempre <b>Glyká</b>, con tilde. En usuarios y URL, donde no hay tildes, va <b>glyka</b>.</li>
+          </ol>
+        </div>
+        <div class="pillars">
+          <div class="pillar"><h4>Filoxenía</h4><p>Cada pedido se trata como una visita que llega a casa.</p></div>
+          <div class="pillar"><h4>Mano y horno</h4><p>Lotes pequeños, mantequilla de verdad, horneado el mismo día.</p></div>
+          <div class="pillar"><h4>Mediterráneo</h4><p>Miel, pistacho, almendra, higo, granada, naranja.</p></div>
+          <div class="pillar"><h4>Regalo</h4><p>Empaque pensado para abrirse frente a alguien.</p></div>
+        </div>
+      </div>
+      <div class="facts">
+        <div>
+          <div class="eyebrow">Promesa</div>
+          <h3>Galletas premium, hechas a mano, para compartir o regalar.</h3>
+          <p style="color:var(--muted)">Para quien quiere quedar bien con alguien (o consigo mismo): cumpleaños, visitas, agradecimientos, la oficina, el antojo del viernes.</p>
+        </div>
+        <div>
+          <div class="eyebrow">Público</div>
+          <p>Personas de 24 a 45 años que compran por Instagram, valoran lo artesanal y pagan más por un detalle bien presentado. Regalan seguido y comparten lo que reciben en sus historias.</p>
+        </div>
+        <div>
+          <div class="eyebrow">Frases de marca</div>
+          <div class="taglines">
+            <div><b>Dulces para recibir. <span class="pill">Principal</span></b><small>Recibir visitas y recibir un pedido</small></div>
+            <div><b>Horneado para compartir.</b><small>Posts de producto</small></div>
+            <div><b>Un dulce griego en tu puerta.</b><small>Delivery y anuncios</small></div>
+            <div><b>Para los que llegan.</b><small>Cajas de regalo</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LOGOS ============ -->
+<section class="s" id="logos">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Logos · 4 propuestas</div>
+      <div>
+        <h2>Cuatro formas de firmar</h2>
+        <p class="lede">Los cuatro se dibujan con la tipografía y la paleta que elijas arriba. Cada uno se muestra en positivo, negativo y sobre un color pastel. Al final la marca usa uno como principal y puede tomar el sello como versión corta.</p>
+      </div>
+    </div>
+    <div class="logos" id="logos-grid"></div>
+
+    <div class="rules">
+      <div class="rulebox">
+        <h3>Área de protección y tamaño mínimo</h3>
+        <div class="clear"><div class="zone" id="clear-logo"></div></div>
+        <div class="minis">
+          <div><b>x = alto de la "G"</b>Deja ese espacio libre alrededor del logo.</div>
+          <div><b>120 px · 30 mm</b>Ancho mínimo de la firma o la greca.</div>
+          <div><b>48 px · 15 mm</b>Diámetro mínimo del sello. Sirve como foto de perfil.</div>
+          <div><b>Tilde siempre</b>Glyká, nunca Glyka, salvo en usuarios y URL.</div>
+        </div>
+      </div>
+      <div class="rulebox">
+        <h3>Usos incorrectos</h3>
+        <div class="donts" id="donts"></div>
+        <p style="font-size:.86rem;color:var(--muted);margin-top:14px">No estirar ni deformar · No cambiar los colores fuera de la paleta · No usar contorno · No poner sobre fotos con mucho ruido. Sobre foto, usa un recuadro de color de la paleta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TIPOGRAFÍA ============ -->
+<section class="s" id="tipografia">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Tipografía · 4 parejas</div>
+      <div>
+        <h2>Una voz para titular y otra para contar</h2>
+        <p class="lede">Cada pareja trae una fuente de títulos con carácter y otra de texto fácil de leer en el celular. Todas son de Google Fonts, gratis y con licencia libre para uso comercial. Donde la fuente de títulos no tiene letras griegas, el griego se compone con la de texto.</p>
+      </div>
+    </div>
+    <div class="types" id="types-grid"></div>
+    <div class="scale" id="scale"></div>
+  </div>
+</section>
+
+<!-- ============ COLOR ============ -->
+<section class="s" id="color">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Color · 4 paletas</div>
+      <div>
+        <h2>Rojo Nemea con pasteles</h2>
+        <p class="lede">El color madre es el mismo en las cuatro: un burdeos llevado hacia el rojo, como el vino de Nemea, la región de tintos más famosa de Grecia. Lo que cambia son los pasteles que lo acompañan. Toca cualquier color para copiar su HEX.</p>
+      </div>
+    </div>
+    <div class="pals" id="pals"></div>
+  </div>
+</section>
+
+<!-- ============ APLICACIONES ============ -->
+<section class="s" id="aplicaciones">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Aplicaciones</div>
+      <div>
+        <h2>Así se ve en la vida real</h2>
+        <p class="lede">Bocetos de las piezas que más vas a usar al empezar por Instagram y delivery. Cambian con tu combinación.</p>
+      </div>
+    </div>
+    <div class="apps">
+      <figure class="app ig">
+        <div class="post">
+          <div class="ptop"><span>Nueva</span><span>Edición de invierno</span></div>
+          <div class="cookie" id="app-cookie"></div>
+          <div class="pbot"><div><div class="pname">Fistíki</div><div class="pdesc">Pistacho, chocolate blanco y una pizca de sal.</div></div><div id="app-ig-seal"></div></div>
+        </div>
+        <figcaption><b>Post de producto, 1080 × 1080.</b> Fondo pastel, galleta al centro, nombre griego en la fuente de títulos.</figcaption>
+      </figure>
+      <figure class="app box">
+        <div class="tin">
+          <div class="ribbon"></div>
+          <svg class="band t" id="tin-band-t" width="100%" aria-hidden="true"></svg>
+          <div class="lg" id="app-box-logo"></div>
+          <svg class="band b" id="tin-band-b" width="100%" aria-hidden="true"></svg>
+          <div class="seal" id="app-box-seal"></div>
+        </div>
+        <figcaption><b>Caja de 12 galletas, vista superior.</b> Caja en Rojo Nemea, logo en el color de fondo, cinta pastel y sello de cierre.</figcaption>
+      </figure>
+      <figure class="app card">
+        <div class="note">
+          <div><h4>Gracias por recibirnos.</h4><p>Estas galletas salieron del horno esta mañana. Duran 7 días en un frasco cerrado, si es que llegan a tanto.</p></div>
+          <div class="sig"><span>Con cariño,<br>el equipo de Glyká</span><div id="app-card-logo"></div></div>
+        </div>
+        <figcaption><b>Tarjeta para cada pedido, A6.</b> Es el momento de la filoxenía: la nota que encuentran al abrir la caja.</figcaption>
+      </figure>
+      <figure class="app prof">
+        <div class="phone">
+          <div class="ph">
+            <div class="av" id="app-avatar"></div>
+            <div class="stats"><div><b>48</b>posts</div><div><b>2.310</b>seguidores</div><div><b>180</b>seguidos</div></div>
+          </div>
+          <div class="bio"><b>Glyká · Galletas de autor</b>Dulces para recibir. Horneadas a mano en lotes pequeños.<br>Pedidos por DM · entregas de martes a sábado</div>
+          <div class="hl"><div><span>M</span>Menú</div><div><span>R</span>Regalos</div><div><span>P</span>Pedidos</div><div><span>Γ</span>Nosotros</div><div><span>★</span>Reseñas</div></div>
+          <div class="grid" id="app-grid"></div>
+        </div>
+        <figcaption><b>Perfil de Instagram.</b> El sello funciona como foto de perfil; los destacados usan la inicial en la fuente de títulos. Las cifras son de ejemplo. Verifica que el usuario <b>@glyka</b> esté libre.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VOZ ============ -->
+<section class="s" id="voz">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Voz y tono</div>
+      <div>
+        <h2>Hablamos como el anfitrión que te abre la puerta</h2>
+        <p class="lede">Cálidos y generosos, con detalle de artesano y un poco de humor. Tuteamos, hablamos de los ingredientes como los conocemos y de vez en cuando dejamos caer una palabra en griego, explicada.</p>
+      </div>
+    </div>
+    <div class="voice">
+      <div class="vbox">
+        <h3>Personalidad</h3>
+        <div class="traits">
+          <div><b>Hospitalaria</b><span>Recibe, agradece, se acuerda de ti. "Te guardamos las de pistacho."</span></div>
+          <div><b>Artesana</b><span>Dice cómo y cuándo se hizo cada cosa. "Horneadas hoy a las 7 a. m."</span></div>
+          <div><b>Mediterránea</b><span>Sabores y palabras de Grecia, siempre con su traducción.</span></div>
+          <div><b>Con chispa</b><span>Un guiño por mensaje, nunca un chiste forzado.</span></div>
+        </div>
+      </div>
+      <div class="vbox">
+        <h3>Sí y no</h3>
+        <div class="dd">
+          <div class="yes"><h4>Sí</h4><ul><li>"Recién horneadas, llegan tibias."</li><li>Nombrar el ingrediente: "pistacho de Egina".</li><li>Agradecer cada pedido.</li><li>Una palabra griega por post, explicada.</li></ul></div>
+          <div class="no"><h4>No</h4><ul><li>"¡¡¡Las mejores galletas del mundo!!!"</li><li>Exceso de emojis o mayúsculas.</li><li>Mitología forzada en cada texto.</li><li>Prometer lo que el delivery no cumple.</li></ul></div>
+        </div>
+      </div>
+      <div class="captions">
+        <div class="cap"><div class="k">Lanzamiento</div><p>Se llama <b>Fistíki</b>, que en griego quiere decir pistacho. Mucho pistacho, chocolate blanco y una pizca de sal para que no puedas comer solo una. Disponible desde el viernes.</p><div class="h">#Glyká #DulcesParaRecibir</div></div>
+        <div class="cap"><div class="k">Regalo</div><p>¿Visita el fin de semana? En Grecia nadie llega sin que lo reciban con algo dulce. Nuestra caja de 12 llega a tu puerta con tarjeta escrita a mano. Pídela por DM antes del jueves.</p><div class="h">#Filoxenía #RegalosConSabor</div></div>
+        <div class="cap"><div class="k">Detrás del horno</div><p>7:04 a. m. Primera bandeja de <b>Méli</b>: miel, almendra tostada y canela. Hoy horneamos 60 y ya quedan 18. Así funcionan los lotes pequeños.</p><div class="h">#HechoAMano #Glyká</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRODUCTOS ============ -->
+<section class="s" id="productos">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Línea de galletas</div>
+      <div>
+        <h2>Cada galleta lleva su nombre en griego</h2>
+        <p class="lede">Una propuesta de carta inicial. Los nombres son palabras griegas reales para el ingrediente principal, así cada galleta enseña algo y la carta se recuerda.</p>
+      </div>
+    </div>
+    <div class="prods">
+      <table>
+        <thead><tr><th>Nombre</th><th>En griego</th><th>Significa</th><th>Sabor</th><th>Color de etiqueta</th></tr></thead>
+        <tbody id="prod-rows"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOTOGRAFÍA ============ -->
+<section class="s" id="fotografia">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Fotografía</div>
+      <div>
+        <h2>Luz de mañana, migas y manos</h2>
+        <p class="lede">Desde aquí no puedo generar imágenes con Magnific, así que te dejo la dirección de arte y tres prompts listos para pegar allá cuando lo abras.</p>
+      </div>
+    </div>
+    <div class="photo">
+      <div>
+        <div class="eyebrow">Dirección de arte</div>
+        <ul>
+          <li>Luz natural de ventana, lateral y suave. Nunca flash directo.</li>
+          <li>Fondos en los pasteles de la paleta, telas de lino, mármol blanco.</li>
+          <li>Un toque de Rojo Nemea en cada foto: plato, cinta, caja o granada.</li>
+          <li>Galletas partidas que muestren el relleno. Migas permitidas.</li>
+          <li>Manos que ofrecen o reciben. Es el gesto de la marca.</li>
+          <li>Ingredientes reales a la vista: miel, pistacho, higos, almendras.</li>
+        </ul>
+      </div>
+      <div class="prompts" id="prompts"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SIGUIENTE ============ -->
+<section class="s" id="siguiente" style="border-bottom:0">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Siguientes pasos</div>
+      <div><h2>Elige y seguimos</h2></div>
+    </div>
+    <div class="next">
+      <div class="step">
+        <div class="k">Paso 1 · Ahora</div>
+        <h3>Escoge tu combinación</h3>
+        <p>Juega con la barra de arriba. Cuando te guste una, copia el código y mándamelo. Si quieres mezclar (por ejemplo, el logo 2 con otro color), dime.</p>
+        <div class="mycombo" id="mycombo"></div>
+        <button class="copy" id="copy-combo">Copiar mi elección</button>
+      </div>
+      <div class="step">
+        <div class="k">Paso 2</div>
+        <h3>Página web</h3>
+        <p>Una web de una sola página con la carta, cajas de regalo, zona de entrega y pedido directo por WhatsApp o Instagram, con la marca que elijas.</p>
+      </div>
+      <div class="step">
+        <div class="k">Paso 3</div>
+        <h3>Dashboard de cuentas</h3>
+        <p>Ventas por galleta y por canal, costo de ingredientes, margen por caja, pedidos por día y flujo de caja. Para armarlo me dices en qué moneda trabajas y dónde anotas hoy tus ventas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>Glyká · Manual de marca v1 · Noviembre 2026</span><span>Fuentes: Google Fonts (licencia OFL). Los valores CMYK son aproximados: confírmalos con tu imprenta.</span></div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+const TYPES = [
+  {id:'T1', name:'Horno de leña', display:"'Fraunces', 'GFS Didot', Georgia, serif", body:"'Ysabeau', 'Manrope', system-ui, sans-serif",
+   dName:'Fraunces', bName:'Ysabeau', style:'italic', weight:500, vars:'"SOFT" 100, "WONK" 1', caseT:'none', track:'-0.01em',
+   mood:'Cálida y redonda. Serifa suave con remates como masa recién cortada.', greek:'Griego en Ysabeau', why:'La más cercana y antojable. Ideal si la marca habla mucho de horno y mantequilla.'},
+  {id:'T2', name:'Pergamino', display:"'EB Garamond', Georgia, serif", body:"'Manrope', system-ui, sans-serif",
+   dName:'EB Garamond', bName:'Manrope', style:'italic', weight:500, vars:'normal', caseT:'none', track:'0em',
+   mood:'Clásica y literaria. Garamond itálica, como una receta escrita en un libro viejo.', greek:'Griego nativo en ambas', why:'Elegante sin ser fría. Funciona muy bien en tarjetas y cajas de regalo.'},
+  {id:'T3', name:'Sociedad griega', display:"'GFS Didot', Georgia, serif", body:"'Commissioner', system-ui, sans-serif",
+   dName:'GFS Didot', bName:'Commissioner', style:'normal', weight:400, vars:'normal', caseT:'none', track:'-0.005em',
+   mood:'Alto contraste, de pastelería fina. Una Didot hecha por la Greek Font Society.', greek:'Griego nativo en ambas', why:'La más premium y la más griega de verdad. Brilla en tamaños grandes.'},
+  {id:'T4', name:'Inscripción', display:"'Marcellus', 'GFS Didot', Georgia, serif", body:"'Alegreya Sans', system-ui, sans-serif",
+   dName:'Marcellus', bName:'Alegreya Sans', style:'normal', weight:400, vars:'normal', caseT:'uppercase', track:'0.08em',
+   mood:'Monumental y serena. Letras de inscripción tallada, en mayúsculas espaciadas.', greek:'Griego en Alegreya Sans', why:'La más sobria. Ideal si quieres un look de tienda de lujo mediterránea.'}
+];
+const NEMEA = {n:'Rojo Nemea', hex:'#9C1C33', role:'Color madre'};
+const PALS = [
+  {id:'P1', name:'Granada y almendra', story:'La más cálida y la más "galleta". Tonos de masa, miel y granada abierta.',
+   c:[NEMEA,{n:'Almendra',hex:'#F5E6D8',role:'Fondo'},{n:'Rosa granada',hex:'#F2C4C8',role:'Pastel 1'},{n:'Miel',hex:'#F0D59B',role:'Pastel 2'},{n:'Pistacho',hex:'#CFDDBF',role:'Pastel 3'},{n:'Tinta de higo',hex:'#3A1820',role:'Texto'}]},
+  {id:'P2', name:'Mar Egeo', story:'Fresca y luminosa. Mármol blanco, agua de las Cícladas y lavanda.',
+   c:[NEMEA,{n:'Mármol',hex:'#F6F3F1',role:'Fondo'},{n:'Azul Egeo',hex:'#BDD5E4',role:'Pastel 1'},{n:'Lavanda',hex:'#D8D0EA',role:'Pastel 2'},{n:'Concha',hex:'#F3D3D0',role:'Pastel 3'},{n:'Tinta de mar',hex:'#2E1A24',role:'Texto'}]},
+  {id:'P3', name:'Higo y pistacho', story:'Golosa y de temporada. Higos maduros, pistacho y mantequilla.',
+   c:[NEMEA,{n:'Crema de leche',hex:'#F8F0E1',role:'Fondo'},{n:'Higo',hex:'#DDB6C8',role:'Pastel 1'},{n:'Pistacho',hex:'#D2E3C1',role:'Pastel 2'},{n:'Mantequilla',hex:'#F6E4AE',role:'Pastel 3'},{n:'Cacao',hex:'#45291F',role:'Texto'}]},
+  {id:'P4', name:'Atardecer en Oía', story:'Romántica y fotogénica. El cielo de Santorini al caer el sol.',
+   c:[NEMEA,{n:'Nube',hex:'#FCF3EE',role:'Fondo'},{n:'Durazno',hex:'#F8CDB3',role:'Pastel 1'},{n:'Rosa Oía',hex:'#F0B5BE',role:'Pastel 2'},{n:'Salvia',hex:'#C8D5C0',role:'Pastel 3'},{n:'Tinta de vino',hex:'#3B1B22',role:'Texto'}]}
+];
+const LOGOS = [
+  {id:'L1', name:'Firma', desc:'Logotipo: el nombre con un trazo de cuchara debajo y el griego en pequeño. Es el más versátil y el más legible.'},
+  {id:'L2', name:'Sello', desc:'Sello circular, como el que se estampa en la galleta o se pega en la caja. Ideal como foto de perfil y sticker.'},
+  {id:'L3', name:'Greca', desc:'Etiqueta con greca (meandro) arriba y abajo, el borde griego por excelencia. Pensado para cajas y frascos.'},
+  {id:'L4', name:'Arco', desc:'El nombre dentro de un arco de puerta de las islas: la entrada donde se recibe a la visita.'}
+];
+const PRODS = [
+  ['Méli','μέλι','miel','Miel, almendra tostada y canela','p2'],
+  ['Fistíki','φιστίκι','pistacho','Pistacho, chocolate blanco y sal en escamas','p3'],
+  ['Ródi','ρόδι','granada','Frutos rojos, granada y chocolate amargo','main'],
+  ['Kakáo','κακάο','cacao','Doble chocolate con centro suave','ink'],
+  ['Síko','σύκο','higo','Higo, nuez y un toque de anís','p1'],
+  ['Portokáli','πορτοκάλι','naranja','Naranja confitada y almendra','bg']
+];
+const PROMPTS = [
+  ['Galleta partida, cenital','Overhead editorial food photo of artisanal butter cookies on blush pink linen, one cookie broken in half showing pistachio and white chocolate, scattered crumbs, a deep burgundy ceramic plate, soft natural window light from the left, pastel almond background, 50mm, shallow depth of field, premium bakery, no text'],
+  ['Manos que reciben','Lifestyle photo of hands offering an open burgundy cookie box with a cream Greek key border to a guest at a whitewashed doorway, warm morning light, Mediterranean island mood, pastel tones, candid and elegant, soft shadows, no text, no logos'],
+  ['Bodegón de ingredientes','Minimal still life of halved pomegranates, honey dripping from a wooden dipper, almonds and pistachios next to a neat stack of golden cookies on white marble, pastel blue and blush backdrop, soft diffused light, high-end food styling, no text']
+];
+
+let state = {t:0,p:0,l:0};
+try{ const s = JSON.parse(localStorage.getItem('glyka-combo')||'null'); if(s && [s.t,s.p,s.l].every(v=>Number.isInteger(v)&&v>=0&&v<4)) state=s; }catch(e){}
+
+const $ = id => document.getElementById(id);
+let uid = 0;
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+/* ---------- color helpers ---------- */
+function rgb(hex){const n=parseInt(hex.slice(1),16);return [n>>16&255,n>>8&255,n&255]}
+function lum(hex){return rgb(hex).map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)}).reduce((a,v,i)=>a+v*[0.2126,0.7152,0.0722][i],0)}
+function ratio(a,b){const A=lum(a),B=lum(b);return (Math.max(A,B)+0.05)/(Math.min(A,B)+0.05)}
+function cmyk(hex){const [r,g,b]=rgb(hex).map(v=>v/255);const k=1-Math.max(r,g,b);if(k>=1)return '0 0 0 100';const f=v=>Math.round((1-v-k)/(1-k)*100);return `${f(r)} ${f(g)} ${f(b)} ${Math.round(k*100)}`}
+function onColor(hex,pal){return lum(hex)>0.35?pal.c[5].hex:pal.c[1].hex}
+
+/* ---------- meander band ---------- */
+function meander(h, color, sw){
+  const id='mq'+(++uid); const u=h; // square unit
+  const s=u/12;
+  const d=`M0 ${11*s} H${10*s} V${1*s} H${2*s} V${9*s} H${8*s} V${3*s} H${4*s} V${7*s} H${6*s} M${10*s} ${11*s} H${12*s}`;
+  return `<defs><pattern id="${id}" width="${u}" height="${u}" patternUnits="userSpaceOnUse"><path d="${d}" fill="none" style="stroke:${color}" stroke-width="${sw||s*1.1}" stroke-linecap="square"/></pattern></defs><rect width="100%" height="${u}" fill="url(#${id})"/>`;
+}
+function drawBands(){
+  const hb=$('hero-band'); hb.setAttribute('height',34); hb.innerHTML = meander(34,'currentColor',2.4);
+  ['tin-band-t','tin-band-b'].forEach(i=>{const el=$(i); const h=el.getBoundingClientRect().height||28; el.setAttribute('height',h); el.innerHTML=meander(h,'currentColor',Math.max(1.6,h/12));});
+}
+
+/* ---------- logos ---------- */
+const D = 'font-family:var(--display);font-style:var(--d-style);font-weight:var(--d-weight);font-variation-settings:var(--d-vars);text-transform:var(--d-case);letter-spacing:var(--d-track)';
+const B = 'font-family:var(--body);font-weight:600;letter-spacing:.32em;text-transform:uppercase';
+function logoSVG(i, c){ // c: {fg, bg, ac}
+  const fg=c.fg, bg=c.bg, ac=c.ac;
+  if(i===0) return `<svg viewBox="0 0 400 190" role="img" aria-label="Glyká, logotipo firma">
+    <text x="200" y="112" text-anchor="middle" font-size="104" style="${D};fill:${fg}">Glyká</text>
+    <path d="M96 138 C150 128, 240 126, 300 134 C312 136, 318 140, 308 143" fill="none" style="stroke:${ac}" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="316" cy="132" r="5" style="fill:${ac}"/>
+    <text x="200" y="174" text-anchor="middle" font-size="13" style="${B};fill:${fg}">ΓΛΥΚΑ · Horneado a mano</text></svg>`;
+  if(i===1){ const id='cp'+(++uid); return `<svg viewBox="0 0 240 240" role="img" aria-label="Glyká, sello">
+    <defs><path id="${id}" d="M120,120 m-94,0 a94,94 0 1,1 188,0 a94,94 0 1,1 -188,0"/></defs>
+    <circle cx="120" cy="120" r="116" style="fill:${bg};stroke:${fg}" stroke-width="3"/>
+    <circle cx="120" cy="120" r="78" fill="none" style="stroke:${fg}" stroke-width="1.5"/>
+    <text font-size="15.5" style="${B};letter-spacing:.2em;fill:${fg}"><textPath href="#${id}" textLength="580" lengthAdjust="spacing">GLYKÁ · DULCES PARA RECIBIR · ΓΛΥΚΑ ·</textPath></text>
+    <text x="120" y="146" text-anchor="middle" font-size="84" style="${D};text-transform:none;letter-spacing:0;fill:${fg}">G</text>
+    <path d="M92 164 H148" style="stroke:${ac}" stroke-width="3" stroke-linecap="round"/>
+    <text x="120" y="182" text-anchor="middle" font-size="10" style="${B};fill:${fg}">MMXXVI</text></svg>`; }
+  if(i===2){ const s=24; return `<svg viewBox="0 0 400 220" role="img" aria-label="Glyká, etiqueta con greca">
+    <rect x="3" y="3" width="394" height="214" rx="16" style="fill:${bg};stroke:${fg}" stroke-width="2.5"/>
+    <svg x="20" y="16" width="360" height="${s}" overflow="hidden">${meander(s,ac,2.2)}</svg>
+    <svg x="20" y="${220-16-s}" width="360" height="${s}" overflow="hidden">${meander(s,ac,2.2)}</svg>
+    <text x="200" y="130" text-anchor="middle" font-size="76" style="${D};fill:${fg}">Glyká</text>
+    <text x="200" y="160" text-anchor="middle" font-size="11.5" style="${B};fill:${fg}">Galletas de autor</text></svg>`; }
+  return `<svg viewBox="0 0 240 290" role="img" aria-label="Glyká, logo arco">
+    <path d="M24 284 V118 A96 96 0 0 1 216 118 V284 Z" style="fill:${fg}"/>
+    <path d="M38 270 V120 A82 82 0 0 1 202 120 V270 Z" fill="none" style="stroke:${bg}" stroke-width="1.5"/>
+    <path d="M120 52 l5 11 l12 2 l-9 8 l2 12 l-10 -6 l-10 6 l2 -12 l-9 -8 l12 -2 z" style="fill:${ac}"/>
+    <text x="120" y="172" text-anchor="middle" font-size="50" style="${D};fill:${bg}">Glyká</text>
+    <text x="120" y="200" text-anchor="middle" font-size="11" style="${B};fill:${bg}">ΓΛΥΚΑ</text>
+    <path d="M90 228 H150" style="stroke:${ac}" stroke-width="2"/>
+    <text x="120" y="252" text-anchor="middle" font-size="10" style="${B};fill:${bg}">2026</text></svg>`;
+}
+function cookieSVG(){
+  return `<svg viewBox="0 0 200 200" aria-hidden="true">
+    <defs><radialGradient id="ck${++uid}" cx="45%" cy="40%" r="60%"><stop offset="0" stop-color="#E9BE82"/><stop offset=".75" stop-color="#D7A161"/><stop offset="1" stop-color="#B9803F"/></radialGradient></defs>
+    <ellipse cx="104" cy="112" rx="88" ry="84" fill="rgba(60,20,20,.12)"/>
+    <path d="M100 12 C150 10 190 48 188 100 C190 150 150 188 100 186 C48 188 12 150 14 98 C12 50 52 12 100 12 Z" fill="url(#ck${uid})"/>
+    <circle cx="100" cy="99" r="54" fill="none" stroke="#B9803F" stroke-width="2" opacity=".6"/>
+    <text x="100" y="124" text-anchor="middle" font-size="70" style="${D};text-transform:none;fill:#B47A3B;opacity:.85">G</text>
+    <g style="fill:var(--main)"><circle cx="52" cy="66" r="7"/><circle cx="150" cy="140" r="8"/><circle cx="140" cy="54" r="5"/><circle cx="60" cy="148" r="6"/></g>
+    <g style="fill:var(--p3)" opacity=".95"><ellipse cx="160" cy="92" rx="7" ry="4" transform="rotate(-30 160 92)"/><ellipse cx="38" cy="108" rx="6" ry="3.5" transform="rotate(20 38 108)"/><ellipse cx="104" cy="170" rx="6" ry="3.5"/></g>
+    <g fill="#FFF8EE"><rect x="118" y="26" width="9" height="7" rx="2" transform="rotate(15 122 30)"/><rect x="80" y="160" width="8" height="6" rx="2"/></g></svg>`;
+}
+
+/* ---------- render ---------- */
+function chips(){
+  const mk=(el,arr,key,label)=>{ $(el).innerHTML = arr.map((x,i)=>`<button class="chip" data-k="${key}" data-i="${i}" aria-pressed="${state[key]===i}" title="${esc(x.name)}">${x.id.slice(1)} · ${esc(x.name)}</button>`).join(''); };
+  mk('mx-t',TYPES,'t'); mk('mx-p',PALS,'p'); mk('mx-l',LOGOS,'l');
+}
+function applyTokens(){
+  const T=TYPES[state.t], P=PALS[state.p], r=document.documentElement.style;
+  r.setProperty('--display',T.display); r.setProperty('--body',T.body);
+  r.setProperty('--d-style',T.style); r.setProperty('--d-weight',T.weight); r.setProperty('--d-vars',T.vars);
+  r.setProperty('--d-case',T.caseT); r.setProperty('--d-track',T.track);
+  const [m,bg,p1,p2,p3,ink]=P.c.map(x=>x.hex);
+  r.setProperty('--main',m); r.setProperty('--bg',bg); r.setProperty('--p1',p1); r.setProperty('--p2',p2); r.setProperty('--p3',p3); r.setProperty('--ink',ink);
+}
+function renderLogos(){
+  $('logos-grid').innerHTML = LOGOS.map((L,i)=>`
+    <article class="logo-card ${state.l===i?'sel':''}">
+      <div class="logo-stage">${logoSVG(i,{fg:'var(--main)',bg:'var(--bg)',ac:'var(--main)'})}</div>
+      <div class="logo-vars">
+        <div style="background:var(--paper)">${logoSVG(i,{fg:'var(--main)',bg:'var(--paper)',ac:'var(--p2)'})}</div>
+        <div style="background:var(--main)">${logoSVG(i,{fg:'var(--bg)',bg:'var(--main)',ac:'var(--p1)'})}</div>
+        <div style="background:var(--p3)">${logoSVG(i,{fg:'var(--ink)',bg:'var(--p3)',ac:'var(--main)'})}</div>
+      </div>
+      <div class="logo-info">
+        <div class="row"><h3>${L.id.slice(1)} · ${esc(L.name)}</h3><button class="pick" data-k="l" data-i="${i}" aria-pressed="${state.l===i}">${state.l===i?'Elegido':'Elegir'}</button></div>
+        <p>${esc(L.desc)}</p>
+      </div>
+    </article>`).join('');
+  $('clear-logo').innerHTML = logoSVG(state.l,{fg:'var(--main)',bg:'var(--bg)',ac:'var(--main)'});
+  const L=state.l;
+  $('donts').innerHTML = [
+    ['Estirar', `<div style="transform:scaleX(1.5) scaleY(.75);width:70%">${logoSVG(L,{fg:'var(--main)',bg:'var(--bg)',ac:'var(--p1)'})}</div>`,'var(--bg)'],
+    ['Otros colores', logoSVG(L,{fg:'#2A7F62',bg:'#FFE15A',ac:'#3B5BDB'}),'var(--bg)'],
+    ['Contorno', `<div style="width:86%">${logoSVG(L,{fg:'transparent',bg:'transparent',ac:'transparent'}).replace(/style="([^"]*)fill:transparent/g,'style="$1fill:transparent;stroke:var(--main);stroke-width:1.2')}</div>`,'var(--bg)'],
+    ['Fondo con ruido', logoSVG(L,{fg:'var(--main)',bg:'transparent',ac:'var(--p2)'}),'repeating-linear-gradient(45deg,var(--p1) 0 6px,var(--p3) 6px 12px,var(--p2) 12px 18px)']
+  ].map(([t,svg,bgc])=>`<div class="dont"><div class="box" style="background:${bgc}">${svg}</div>${t}</div>`).join('');
+}
+function renderTypes(){
+  $('types-grid').innerHTML = TYPES.map((T,i)=>{
+    const ds=`font-family:${T.display};font-style:${T.style};font-weight:${T.weight};font-variation-settings:${T.vars};text-transform:${T.caseT};letter-spacing:${T.track}`;
+    const bs=`font-family:${T.body}`;
+    return `<article class="type-card ${state.t===i?'sel':''}">
+      <div class="top"><h3>${T.id} · ${esc(T.name)}</h3><button class="pick" data-k="t" data-i="${i}" aria-pressed="${state.t===i}">${state.t===i?'Elegida':'Elegir'}</button></div>
+      <div class="spec-d" style="${ds}">Glyká</div>
+      <div class="spec-h" style="${ds}">Horneadas esta mañana, en lotes pequeños.</div>
+      <p class="spec-b" style="${bs}">${esc(T.mood)} Mantequilla, miel de tomillo y pistacho tostado: cada galleta se hace a mano y se entrega el mismo día. 0123456789</p>
+      <div class="spec-g" style="${bs}">ΓΛΥΚΑ · Γλυκά · Φιλοξενία</div>
+      <dl class="spec-meta" style="${bs}"><dt>Títulos</dt><dd>${esc(T.dName)}</dd><dt>Texto</dt><dd>${esc(T.bName)}</dd><dt>Griego</dt><dd>${esc(T.greek)}</dd><dt>Por qué</dt><dd>${esc(T.why)}</dd></dl>
+    </article>`}).join('');
+  const T=TYPES[state.t];
+  const rows=[['Display · 72/76','Glyká',`font-size:clamp(2.6rem,6vw,4.5rem);line-height:1.05`, 'd', T.dName],
+    ['Título 1 · 40/44','Dulces para recibir','font-size:clamp(1.8rem,4vw,2.5rem);line-height:1.1','d',T.dName],
+    ['Título 2 · 26/32','La caja de regalo','font-size:1.6rem;line-height:1.2','d',T.dName],
+    ['Texto · 16/26','Horneamos cada mañana con mantequilla de verdad y harina de trigo de molino.','font-size:1rem;line-height:1.6','b',T.bName+' 400'],
+    ['Etiqueta · 12, +16%','PEDIDOS POR DM','font-size:.75rem;letter-spacing:.16em;font-weight:700','b',T.bName+' 700']];
+  $('scale').innerHTML = `<table><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td style="${r[3]==='d'?D:'font-family:var(--body)'};${r[2]};color:${r[3]==='d'?'var(--main)':'var(--ink)'}">${r[1]}</td><td>${esc(r[4])}</td></tr>`).join('')}</tbody></table>`;
+}
+function renderPals(){
+  $('pals').innerHTML = PALS.map((P,i)=>{
+    const bg=P.c[1].hex, ink=P.c[5].hex, m=P.c[0].hex;
+    const checks=[['Rojo sobre fondo',m,bg],['Fondo sobre rojo',bg,m],['Texto sobre fondo',ink,bg],['Texto sobre pastel 1',ink,P.c[2].hex],['Rojo sobre pastel 2',m,P.c[3].hex]];
+    return `<article class="pal ${state.p===i?'sel':''}">
+      <div class="pal-head"><div class="l"><div class="eyebrow">${P.id}</div><h3>${esc(P.name)}</h3><p>${esc(P.story)}</p></div><button class="pick" data-k="p" data-i="${i}" aria-pressed="${state.p===i}">${state.p===i?'Elegida':'Elegir'}</button></div>
+      <div class="propor" aria-hidden="true">${[[bg,40],[m,22],[P.c[2].hex,14],[P.c[3].hex,10],[P.c[4].hex,8],[ink,6]].map(([c,w])=>`<span style="background:${c};flex:${w}"></span>`).join('')}</div>
+      <div class="swatches">${P.c.map(c=>{const r=rgb(c.hex);return `<button class="sw" style="background:${c.hex};color:${onColor(c.hex,P)}" data-copy="${c.hex}" aria-label="Copiar ${esc(c.n)} ${c.hex}">
+        <span><span class="r">${esc(c.role)}</span><br><span class="n">${esc(c.n)}</span></span>
+        <span class="v">${c.hex}<br>RGB ${r.join(' ')}<br>CMYK ${cmyk(c.hex)}</span><span class="cp">Copiar HEX</span></button>`}).join('')}</div>
+      <div class="pal-foot"><b style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase">Contraste</b>${checks.map(([t,a,b])=>{const v=ratio(a,b);const ok=v>=4.5?'AA':v>=3?'AA grande':'Solo decorativo';return `<span class="ab" title="${t}"><span class="dot" style="background:${b};color:${a};border:1px solid ${a}">A</span>${t} <i>${v.toFixed(1)}:1 · ${ok}</i></span>`}).join('')}<span class="ratio-note">Proporción de uso: 40 · 22 · 14 · 10 · 8 · 6</span></div>
+    </article>`}).join('');
+}
+function renderApps(){
+  const L=state.l;
+  $('app-cookie').innerHTML = cookieSVG();
+  $('app-ig-seal').innerHTML = logoSVG(1,{fg:'var(--main)',bg:'var(--p1)',ac:'var(--main)'});
+  const boxLogo = L===1 ? logoSVG(1,{fg:'var(--bg)',bg:'var(--main)',ac:'var(--p1)'}) : logoSVG(L,{fg:'var(--bg)',bg:'var(--main)',ac:'var(--p1)'});
+  $('app-box-logo').innerHTML = boxLogo;
+  $('app-box-seal').innerHTML = logoSVG(1,{fg:'var(--main)',bg:'var(--p2)',ac:'var(--main)'});
+  $('app-card-logo').innerHTML = logoSVG(L===3?0:L,{fg:'var(--main)',bg:'var(--bg)',ac:'var(--p1)'});
+  $('app-avatar').innerHTML = logoSVG(1,{fg:'var(--bg)',bg:'var(--main)',ac:'var(--p1)'});
+  const tiles=['var(--p1)','var(--main)','var(--p3)','var(--bg)','var(--p2)','var(--p1)'];
+  $('app-grid').innerHTML = tiles.map((t,i)=>`<div style="background:${t}">${i===1?logoSVG(1,{fg:'var(--bg)',bg:'var(--main)',ac:'var(--p1)'}):i===3?'<span style="font-family:var(--display);font-style:var(--d-style);font-variation-settings:var(--d-vars);color:var(--main);font-size:1.1rem;text-align:center;line-height:1.1;padding:6px">Gracias<br>por recibirnos</span>':cookieSVG()}</div>`).join('');
+}
+function renderProds(){
+  $('prod-rows').innerHTML = PRODS.map(p=>`<tr><td class="pn">${p[0]}</td><td class="gr">${p[1]}</td><td>${p[2]}</td><td>${p[3]}</td><td><span class="dot" style="background:var(--${p[4]})"></span></td></tr>`).join('');
+}
+function renderPrompts(){
+  $('prompts').innerHTML = PROMPTS.map((p,i)=>`<div class="prompt"><div class="t"><b>${esc(p[0])}</b><button class="copy" data-copy-prompt="${i}">Copiar prompt</button></div><code>${esc(p[1])}</code></div>`).join('');
+}
+function renderCombo(){
+  const T=TYPES[state.t],P=PALS[state.p],L=LOGOS[state.l];
+  const code=`${T.id} · ${P.id} · ${L.id}`;
+  $('combo').textContent=code;
+  $('mycombo').textContent=`${code}\nTipografía: ${T.name} (${T.dName} + ${T.bName})\nPaleta: ${P.name}\nLogo: ${L.name}`;
+  $('mycombo').style.whiteSpace='pre-line';
+}
+function renderAll(){ applyTokens(); chips(); renderLogos(); renderTypes(); renderPals(); renderApps(); renderCombo(); requestAnimationFrame(drawBands); }
+
+/* ---------- interactions ---------- */
+let tt;
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),1600)}
+function copy(text,msg){
+  const done=()=>toast(msg);
+  try{ navigator.clipboard.writeText(text).then(done).catch(()=>fallback()); }catch(e){fallback()}
+  function fallback(){ const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); let ok=false; try{ok=document.execCommand('copy')}catch(e){} ta.remove(); toast(ok?msg:'Selecciona el texto y cópialo a mano'); }
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-k]');
+  if(b){ state[b.dataset.k]=+b.dataset.i; try{localStorage.setItem('glyka-combo',JSON.stringify(state))}catch(_){} renderAll(); const T=TYPES[state.t],P=PALS[state.p],L=LOGOS[state.l]; toast(`${T.name} · ${P.name} · ${L.name}`); return; }
+  const sw=e.target.closest('[data-copy]'); if(sw){ copy(sw.dataset.copy, `Copiado ${sw.dataset.copy}`); return; }
+  const pr=e.target.closest('[data-copy-prompt]'); if(pr){ copy(PROMPTS[+pr.dataset.copyPrompt][1],'Prompt copiado'); return; }
+  if(e.target.closest('#copy-combo')) copy($('mycombo').textContent,'Elección copiada');
+});
+window.addEventListener('resize',()=>{clearTimeout(window.__rb);window.__rb=setTimeout(drawBands,120)});
+renderProds(); renderPrompts(); renderAll();
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>requestAnimationFrame(drawBands));
+})();
+</script>
